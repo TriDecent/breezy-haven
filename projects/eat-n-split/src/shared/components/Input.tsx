@@ -11,7 +11,7 @@ export default function Input({
   ...props
 }: IInput & InputHTMLAttributes<HTMLInputElement>) {
   return (
-    <div className='flex flex-col md:flex-row md:gap-2'>
+    <div className='flex flex-col md:flex-row md:items-center md:gap-2'>
       <label htmlFor={id} className='mb-1 md:mb-0 md:w-32'>
         {labelText}
       </label>
