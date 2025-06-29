@@ -12,10 +12,8 @@ function App() {
             <Friends />
           </section>
 
-          <section className='h-fit flex-1 rounded-lg bg-amber-100/70 p-4 shadow-xs shadow-black'>
-            <h2 className='mb-2 text-lg font-bold tracking-wider uppercase'>
-              Split a bill with clare
-            </h2>
+          <section className='h-fit flex-1'>
+           
             <BillSplitting />
           </section>
         </div>
