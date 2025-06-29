@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Card, Input, PrimaryButton, type RootState } from '../shared';
+import { Card, PrimaryButton, type RootState } from '../shared';
+import AddingFriendForm from './AddingFriendForm';
 import FriendItem from './FriendItem';
 
 export default function Friends() {
@@ -32,6 +33,10 @@ export default function Friends() {
   );
 }
 
+function isOdd(number: number) {
+  return number % 2 !== 0;
+}
+
 function NoFriendState({
   toggleAddFriendForm,
 }: {
@@ -55,34 +60,4 @@ function NoFriendState({
       </article>
     </Card>
   );
-}
-
-function AddingFriendForm({
-  toggleAddFriendForm,
-}: {
-  toggleAddFriendForm: () => void;
-}) {
-  return (
-    <form className='flex flex-col gap-2 rounded-lg bg-amber-100/70 p-4 shadow-xs shadow-black'>
-      <Input
-        id='friendName'
-        labelText='👭 Friend name'
-        name='friendName'
-        type='text'
-      />
-
-      <Input id='url' labelText='📷 Image URL' name='url' type='text' />
-
-      <div className='mt-4 flex gap-4 md:self-end'>
-        <PrimaryButton type='submit'>Add</PrimaryButton>
-        <PrimaryButton type='button' onClick={toggleAddFriendForm}>
-          Close
-        </PrimaryButton>
-      </div>
-    </form>
-  );
-}
-
-function isOdd(number: number) {
-  return number % 2 !== 0;
 }

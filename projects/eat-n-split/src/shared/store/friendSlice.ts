@@ -1,12 +1,13 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit/react';
 import { v4 } from 'uuid';
+import { z } from 'zod';
 
-export interface Friend {
-  readonly id: string;
-  readonly name: string;
-  readonly imgSrc: string;
-}
+export const friendSchema = z.object({
+  name: z.string().min(3, { message: 'Name is required' }),
+  imgSrc: z.string().url({ message: 'URL is not valid' }),
+});
+export type Friend = Readonly<{ id: string } & z.infer<typeof friendSchema>>;
 
 type FriendInput = Omit<Friend, 'id'>;
 

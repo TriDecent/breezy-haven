@@ -3,11 +3,13 @@ import type { InputHTMLAttributes } from 'react';
 interface IInput {
   readonly id: string;
   readonly labelText: string;
+  readonly className?: string;
 }
 
 export default function Input({
   id,
   labelText,
+  className,
   ...props
 }: IInput & InputHTMLAttributes<HTMLInputElement>) {
   return (
@@ -18,7 +20,7 @@ export default function Input({
       <input
         id={id}
         {...props}
-        className='focus:ring-offset-amber-30 min-w-0 flex-1 rounded bg-white px-4 py-1 outline-none focus:ring-1 focus:ring-amber-500 focus:ring-offset-1'
+        className={`focus:ring-offset-amber-30 min-w-0 flex-1 rounded bg-white px-4 py-1 outline-none focus:ring-1 focus:ring-amber-500 focus:ring-offset-1 ${className ?? ''}`}
       />
     </div>
   );
