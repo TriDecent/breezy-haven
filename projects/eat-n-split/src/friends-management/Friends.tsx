@@ -20,15 +20,28 @@ export default function Friends() {
       {isAddingFriend ? (
         <AddingFriendForm
           toggleAddFriendForm={() => {
-            setIsAddingFriend(true);
+            setIsAddingFriend(false);
           }}
         />
       ) : null}
       {friends.length > 0
         ? friends.map((friend, index) => (
-            <FriendItem friend={friend} shouldApplyColor={isOdd(index)} />
+            <FriendItem
+              key={friend.id}
+              friend={friend}
+              shouldApplyColor={isOdd(index)}
+            />
           ))
         : null}
+      {!isAddingFriend && friends.length > 0 ? (
+        <PrimaryButton
+          onClick={() => {
+            setIsAddingFriend(true);
+          }}
+        >
+          Add more friends
+        </PrimaryButton>
+      ) : null}
     </>
   );
 }

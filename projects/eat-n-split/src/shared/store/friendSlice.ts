@@ -19,12 +19,18 @@ const friendSlice = createSlice({
   reducers: {
     addFriend: (state, action: PayloadAction<FriendInput>) => {
       state.push({ id: v4(), ...action.payload });
+      saveFriendsToStorage(key, state);
     },
     removeFriend: (state, action: PayloadAction<string>) => {
       state.filter(friend => friend.id !== action.payload);
+      saveFriendsToStorage(key, state);
     },
   },
 });
+
+function saveFriendsToStorage(key: string, friends: readonly Friend[]): void {
+  localStorage.setItem(key, JSON.stringify(friends));
+}
 
 function getFriendsFromStorage(key: string): readonly Friend[] | null {
   const jsonFriends = localStorage.getItem(key);
@@ -33,4 +39,5 @@ function getFriendsFromStorage(key: string): readonly Friend[] | null {
   return JSON.parse(jsonFriends) as readonly Friend[];
 }
 
+export const friendActions = friendSlice.actions;
 export default friendSlice;

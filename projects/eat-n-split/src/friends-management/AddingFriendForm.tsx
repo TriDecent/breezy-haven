@@ -1,5 +1,12 @@
-import { useActionState } from "react";
-import { friendSchema, Input, PrimaryButton, type FriendType } from "../shared";
+import { useActionState } from 'react';
+import {
+  friendActions,
+  friendSchema,
+  Input,
+  PrimaryButton,
+  type FriendType,
+} from '../shared';
+import { useDispatch } from 'react-redux';
 
 type FormValues = Omit<FriendType, 'id'>;
 type FormErrors = Partial<FormValues>;
@@ -13,6 +20,8 @@ export default function AddingFriendForm({
 }: {
   toggleAddFriendForm: () => void;
 }) {
+  const dispatch = useDispatch();
+
   const addFriendAction = (
     _state: FormState,
     formData: FormData
@@ -33,6 +42,8 @@ export default function AddingFriendForm({
         userEntered: userEntered,
       };
     }
+
+    dispatch(friendActions.addFriend(result.data));
 
     return {
       errors: null,
@@ -89,5 +100,3 @@ export default function AddingFriendForm({
     </form>
   );
 }
-
-
