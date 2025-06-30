@@ -15,15 +15,15 @@ const key = 'friend';
 
 const friendSlice = createSlice({
   name: 'friend',
-  initialState: getFriendsFromStorage(key) ?? [],
+  initialState: {friends: getFriendsFromStorage(key) ?? []},
   reducers: {
     addFriend: (state, action: PayloadAction<FriendInput>) => {
-      state.push({ id: v4(), ...action.payload });
-      saveFriendsToStorage(key, state);
+      state.friends.push({ id: v4(), ...action.payload });
+      saveFriendsToStorage(key, state.friends);
     },
     removeFriend: (state, action: PayloadAction<string>) => {
-      state.filter(friend => friend.id !== action.payload);
-      saveFriendsToStorage(key, state);
+      state.friends.filter(friend => friend.id !== action.payload);
+      saveFriendsToStorage(key, state.friends);
     },
   },
 });

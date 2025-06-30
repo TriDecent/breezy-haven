@@ -8,6 +8,7 @@ import {
   friendSchema,
 } from './store/friendSlice';
 import store, { type RootState } from './store/store';
+import { uiActions } from './store/uiSlice';
 
 export {
   Card,
@@ -17,5 +18,6 @@ export {
   friendActions,
   friendSchema,
   store,
+  uiActions,
 };
 export type { FriendType, RootState };

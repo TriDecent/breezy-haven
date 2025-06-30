@@ -5,7 +5,7 @@ import AddingFriendForm from './AddingFriendForm';
 import FriendItem from './FriendItem';
 
 export default function Friends() {
-  const friends = useSelector((state: RootState) => state.friend);
+  const friends = useSelector((state: RootState) => state.friend.friends);
   const [isAddingFriend, setIsAddingFriend] = useState(false);
 
   return (

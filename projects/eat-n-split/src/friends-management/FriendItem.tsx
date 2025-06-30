@@ -1,4 +1,11 @@
-import { PrimaryButton, type FriendType } from '../shared';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  friendActions,
+  PrimaryButton,
+  uiActions,
+  type FriendType,
+  type RootState,
+} from '../shared';
 
 export default function FriendItem({
   friend,
@@ -7,6 +14,12 @@ export default function FriendItem({
   friend: FriendType;
   shouldApplyColor: boolean;
 }) {
+  const selectedFriend = useSelector(
+    (state: RootState) => state.ui.selectedFriend
+  );
+  const isThisSelectedFriend = selectedFriend?.id === friend.id;
+  const dispatch = useDispatch();
+
   return (
     <article
       className={`flex items-center justify-between rounded-lg p-2 ${shouldApplyColor ? 'bg-amber-100/70' : ''}`}
@@ -23,7 +36,18 @@ export default function FriendItem({
           {/* <span className='text-red-500'>Clare owes you $999</span> */}
         </p>
       </div>
-      <PrimaryButton>Select</PrimaryButton>
+      <PrimaryButton
+        onClick={() => {
+          if (isThisSelectedFriend) {
+            dispatch(uiActions.setSelectedFriend(null));
+            dispatch(friendActions.removeFriend(friend.id));
+            return;
+          }
+          dispatch(uiActions.setSelectedFriend(friend));
+        }}
+      >
+        {!isThisSelectedFriend ? 'Select' : 'Close'}
+      </PrimaryButton>
     </article>
   );
 }
