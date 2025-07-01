@@ -1,12 +1,15 @@
+import type { UnknownAction } from '@reduxjs/toolkit/react';
 import {
   useActionState,
   useEffect,
   useLayoutEffect,
   useRef,
   useState,
+  type Dispatch,
 } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { z } from 'zod';
-import { Input, PrimaryButton } from '../shared';
+import { Input, PrimaryButton, uiActions, type RootState } from '../shared';
 
 const billingShape = {
   billValue: z.coerce
@@ -35,24 +38,27 @@ const billingSchema = z
   });
 
 type FormValues = Readonly<z.infer<typeof billingSchema>>;
-type FormErrors = Readonly<Partial<FormValues>>;
+type FormErrors = Readonly<Partial<FormValues & { splittingSubmit: string }>>;
 interface FormState {
   readonly userEntered: FormValues | null;
   readonly errors: FormErrors | null;
 }
 
-export default function BillSplittingForm({
-  friendName,
-}: {
-  friendName: string;
-}) {
-  const [didFormSubmitSuccess, setDidFormSubmitSuccess] = useState(false);
-
-  const splittingAction = (
-    _state: FormState,
-    formData: FormData
-  ): FormState => {
+const splittingAction =
+  (
+    setFormSubmitSuccessState: (state: boolean) => void,
+    dispatch: Dispatch<UnknownAction>,
+    didTheBillSplitted: boolean
+  ) =>
+  (_state: FormState, formData: FormData): FormState => {
     const userEntered = Object.fromEntries(formData) as unknown as FormValues;
+
+    if (didTheBillSplitted) {
+      return {
+        userEntered: null,
+        errors: { splittingSubmit: 'You two have already splitted the bill' },
+      };
+    }
 
     const result = billingSchema.safeParse(userEntered);
     if (!result.success) {
@@ -66,21 +72,41 @@ export default function BillSplittingForm({
       };
     }
 
-    // if (result.data.payer === 'me') {
-    //   const amount =
-    //     result.data.billValue -
-    //     (result.data.myExpense + result.data.friendExpense);
-    // }
+    const gap = result.data.myExpense - result.data.friendExpense;
 
-    setDidFormSubmitSuccess(true);
+    if (gap > 0) {
+      dispatch(
+        uiActions.setDebtsOwnedToMe(
+          result.data.billValue - result.data.friendExpense
+        )
+      );
+    } else if (gap < 0) {
+      dispatch(
+        uiActions.setDebtsIOwe(result.data.billValue - result.data.myExpense)
+      );
+    }
+
+    setFormSubmitSuccessState(true);
 
     return {
       userEntered: null,
       errors: null,
     };
   };
+
+export default function BillSplittingForm({
+  friendName,
+}: {
+  friendName: string;
+}) {
+  const [didFormSubmitSuccess, setDidFormSubmitSuccess] = useState(false);
+  const dispatch = useDispatch();
+  const didTheBillSplitted = useSelector(
+    (state: RootState) => state.ui.didTheBillSplitted
+  );
+
   const [formState, formAction] = useActionState<FormState, FormData>(
-    splittingAction,
+    splittingAction(setDidFormSubmitSuccess, dispatch, didTheBillSplitted),
     {
       userEntered: null,
       errors: null,
@@ -100,7 +126,6 @@ export default function BillSplittingForm({
 
   useEffect(() => {
     if (didFormSubmitSuccess) {
-      console.log('reset cái qq');
       setPayer('me');
       setBillValue('');
       setMyExpense('');
@@ -196,7 +221,19 @@ export default function BillSplittingForm({
         ) : null}
       </div>
 
-      <PrimaryButton className='md:self-end'>Add</PrimaryButton>
+      <PrimaryButton
+        className='disabled:bg-amber-200 disabled:hover:cursor-not-allowed md:self-end'
+        disabled={didTheBillSplitted}
+      >
+        {didTheBillSplitted
+          ? "You've already splitted the bill"
+          : 'Split the bill'}
+      </PrimaryButton>
+      {formState.errors?.splittingSubmit ? (
+        <p className='text-center text-red-500'>
+          {formState.errors.splittingSubmit}
+        </p>
+      ) : null}
     </form>
   );
 }

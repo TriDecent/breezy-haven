@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import {
   friendActions,
   PrimaryButton,
@@ -14,9 +14,19 @@ export default function FriendItem({
   friend: FriendType;
   shouldApplyColor: boolean;
 }) {
-  const selectedFriend = useSelector(
-    (state: RootState) => state.ui.selectedFriend
-  );
+  const { selectedFriend, debtsIOwe, debtsOwedToMe, didTheBillSplitted } =
+    useSelector(
+      (state: RootState) => ({
+        selectedFriend: state.ui.selectedFriend,
+        debtsIOwe: state.ui.debtsIOwe,
+        debtsOwedToMe: state.ui.debtsOwedToMe,
+        didTheBillSplitted: state.ui.didTheBillSplitted,
+      }),
+      shallowEqual
+    );
+  const doesThisPersonOweMe = debtsOwedToMe > 0;
+  const doesIOweThisPerson = debtsIOwe > 0;
+
   const isThisSelectedFriend = selectedFriend?.id === friend.id;
   const dispatch = useDispatch();
 
@@ -33,7 +43,23 @@ export default function FriendItem({
         />
         <p className='ml-2 flex flex-col'>
           <span className='text-lg font-bold tracking-wide'>{friend.name}</span>
-          {/* <span className='text-red-500'>Clare owes you $999</span> */}
+          {didTheBillSplitted && friend.id === selectedFriend?.id ? (
+            <span
+              className={
+                doesThisPersonOweMe
+                  ? 'text-green-500'
+                  : doesIOweThisPerson
+                    ? 'text-red-500'
+                    : undefined
+              }
+            >
+              {doesThisPersonOweMe
+                ? `${friend.name} owes me $${debtsOwedToMe.toString()}`
+                : doesIOweThisPerson
+                  ? `I owe ${friend.name} ${debtsIOwe.toString()}`
+                  : 'You two split the bill evenly'}
+            </span>
+          ) : null}
         </p>
       </div>
       <PrimaryButton
