@@ -7,9 +7,9 @@ import {
   useState,
   type Dispatch,
 } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { z } from 'zod';
-import { Input, PrimaryButton, uiActions, type RootState } from '../shared';
+import { Input, PrimaryButton, uiActions } from '../shared';
 
 const billingShape = {
   billValue: z.coerce
@@ -48,7 +48,8 @@ const splittingAction =
   (
     setFormSubmitSuccessState: (state: boolean) => void,
     dispatch: Dispatch<UnknownAction>,
-    didTheBillSplitted: boolean
+    didTheBillSplitted: boolean,
+    splittingPersonId: string
   ) =>
   (_state: FormState, formData: FormData): FormState => {
     const userEntered = Object.fromEntries(formData) as unknown as FormValues;
@@ -76,13 +77,17 @@ const splittingAction =
 
     if (gap > 0) {
       dispatch(
-        uiActions.setDebtsOwnedToMe(
-          result.data.billValue - result.data.friendExpense
-        )
+        uiActions.setDebtsOwnedToMe({
+          personId: splittingPersonId,
+          amount: result.data.billValue - result.data.friendExpense,
+        })
       );
     } else if (gap < 0) {
       dispatch(
-        uiActions.setDebtsIOwe(result.data.billValue - result.data.myExpense)
+        uiActions.setDebtsIOwe({
+          personId: splittingPersonId,
+          amount: result.data.billValue - result.data.myExpense,
+        })
       );
     }
 
@@ -95,18 +100,24 @@ const splittingAction =
   };
 
 export default function BillSplittingForm({
+  friendId,
   friendName,
+  didTheBillSplitted,
 }: {
+  friendId: string;
   friendName: string;
+  didTheBillSplitted: boolean;
 }) {
   const [didFormSubmitSuccess, setDidFormSubmitSuccess] = useState(false);
   const dispatch = useDispatch();
-  const didTheBillSplitted = useSelector(
-    (state: RootState) => state.ui.didTheBillSplitted
-  );
 
   const [formState, formAction] = useActionState<FormState, FormData>(
-    splittingAction(setDidFormSubmitSuccess, dispatch, didTheBillSplitted),
+    splittingAction(
+      setDidFormSubmitSuccess,
+      dispatch,
+      didTheBillSplitted,
+      friendId
+    ),
     {
       userEntered: null,
       errors: null,

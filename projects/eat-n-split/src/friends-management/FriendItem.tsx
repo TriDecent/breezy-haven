@@ -14,18 +14,35 @@ export default function FriendItem({
   friend: FriendType;
   shouldApplyColor: boolean;
 }) {
-  const { selectedFriend, debtsIOwe, debtsOwedToMe, didTheBillSplitted } =
-    useSelector(
-      (state: RootState) => ({
-        selectedFriend: state.ui.selectedFriend,
-        debtsIOwe: state.ui.debtsIOwe,
-        debtsOwedToMe: state.ui.debtsOwedToMe,
-        didTheBillSplitted: state.ui.didTheBillSplitted,
-      }),
-      shallowEqual
-    );
-  const doesThisPersonOweMe = debtsOwedToMe > 0;
-  const doesIOweThisPerson = debtsIOwe > 0;
+  const {
+    selectedFriend,
+    debtIOweThisFriend,
+    debtThisFriendOwedToMe,
+    hasThisFriendDebtApproved,
+  } = useSelector(
+    (state: RootState) => ({
+      selectedFriend: state.ui.selectedFriend,
+      debtIOweThisFriend: state.ui.debtsIOwe.find(
+        debt => debt.personId === friend.id
+      ),
+      debtThisFriendOwedToMe: state.ui.debtsOwedToMe.find(
+        debt => debt.personId === friend.id
+      ),
+      hasThisFriendDebtApproved:
+        state.ui.debtsIOwe.find(debt => debt.personId === friend.id)
+          ?.hasTheDebtBeenApproved ??
+        state.ui.debtsOwedToMe.find(debt => debt.personId === friend.id)
+          ?.hasTheDebtBeenApproved ??
+        false,
+    }),
+    shallowEqual
+  );
+  const doesThisFriendOweMe =
+    (debtThisFriendOwedToMe?.amount ?? 0) > 0 &&
+    debtThisFriendOwedToMe?.hasTheDebtBeenApproved;
+  const doIOweThisFriend =
+    (debtIOweThisFriend?.amount ?? 0) > 0 &&
+    debtIOweThisFriend?.hasTheDebtBeenApproved;
 
   const isThisSelectedFriend = selectedFriend?.id === friend.id;
   const dispatch = useDispatch();
@@ -43,20 +60,20 @@ export default function FriendItem({
         />
         <p className='ml-2 flex flex-col'>
           <span className='text-lg font-bold tracking-wide'>{friend.name}</span>
-          {didTheBillSplitted && friend.id === selectedFriend?.id ? (
+          {hasThisFriendDebtApproved && (doesThisFriendOweMe || doIOweThisFriend) ? (
             <span
               className={
-                doesThisPersonOweMe
+                doesThisFriendOweMe
                   ? 'text-green-500'
-                  : doesIOweThisPerson
+                  : doIOweThisFriend
                     ? 'text-red-500'
                     : undefined
               }
             >
-              {doesThisPersonOweMe
-                ? `${friend.name} owes me $${debtsOwedToMe.toString()}`
-                : doesIOweThisPerson
-                  ? `I owe ${friend.name} ${debtsIOwe.toString()}`
+              {doesThisFriendOweMe
+                ? `${friend.name} owes me $${debtThisFriendOwedToMe.amount.toString()}`
+                : doIOweThisFriend
+                  ? `I owe ${friend.name} $${debtIOweThisFriend.amount.toString()}`
                   : 'You two split the bill evenly'}
             </span>
           ) : null}

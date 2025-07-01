@@ -1,16 +1,20 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { Friend } from './friendSlice';
 
+interface Debt {
+  readonly personId: string;
+  readonly amount: number;
+  readonly hasTheDebtBeenApproved: boolean;
+}
+
 const initialState: {
   selectedFriend: Friend | null;
-  debtsIOwe: number;
-  debtsOwedToMe: number;
-  didTheBillSplitted: boolean;
+  debtsIOwe: readonly Debt[];
+  debtsOwedToMe: readonly Debt[];
 } = {
   selectedFriend: null,
-  debtsIOwe: 0,
-  debtsOwedToMe: 0,
-  didTheBillSplitted: false,
+  debtsIOwe: [],
+  debtsOwedToMe: [],
 };
 const uiSlice = createSlice({
   name: 'ui',
@@ -18,17 +22,22 @@ const uiSlice = createSlice({
   reducers: {
     setSelectedFriend: (state, action: PayloadAction<Friend | null>) => {
       state.selectedFriend = action.payload;
-      state.debtsIOwe = 0;
-      state.debtsOwedToMe = 0;
-      state.didTheBillSplitted = false;
     },
-    setDebtsIOwe: (state, action: PayloadAction<number>) => {
-      state.debtsIOwe = action.payload;
-      state.didTheBillSplitted = true;
+    setDebtsIOwe: (
+      state,
+      action: PayloadAction<Omit<Debt, 'hasTheDebtBeenApproved'>>
+    ) => {
+      state.debtsIOwe.push({ ...action.payload, hasTheDebtBeenApproved: true });
+    
     },
-    setDebtsOwnedToMe: (state, action: PayloadAction<number>) => {
-      state.debtsOwedToMe = action.payload;
-      state.didTheBillSplitted = true;
+    setDebtsOwnedToMe: (
+      state,
+      action: PayloadAction<Omit<Debt, 'hasTheDebtBeenApproved'>>
+    ) => {
+      state.debtsOwedToMe.push({
+        ...action.payload,
+        hasTheDebtBeenApproved: true,
+      });
     },
   },
 });
