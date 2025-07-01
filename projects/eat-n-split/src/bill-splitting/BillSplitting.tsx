@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import { Card, type RootState } from '../shared';
-import BillSplittingForm from './BillingSplittingForm';
+import BillSplittingForm from './form/BillingSplittingForm';
 
 export default function BillSplitting() {
   const selectedFriend = useSelector(

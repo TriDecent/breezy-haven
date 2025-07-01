@@ -28,7 +28,6 @@ const uiSlice = createSlice({
       action: PayloadAction<Omit<Debt, 'hasTheDebtBeenApproved'>>
     ) => {
       state.debtsIOwe.push({ ...action.payload, hasTheDebtBeenApproved: true });
-    
     },
     setDebtsOwnedToMe: (
       state,

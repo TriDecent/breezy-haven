@@ -15,7 +15,7 @@ const key = 'friend';
 
 const friendSlice = createSlice({
   name: 'friend',
-  initialState: {friends: getFriendsFromStorage(key) ?? []},
+  initialState: { friends: getFriendsFromStorage(key) ?? [] },
   reducers: {
     addFriend: (state, action: PayloadAction<FriendInput>) => {
       state.friends.push({ id: v4(), ...action.payload });
