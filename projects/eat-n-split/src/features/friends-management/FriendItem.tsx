@@ -5,7 +5,7 @@ import {
   uiActions,
   type FriendType,
   type RootState,
-} from '../shared';
+} from '../../shared';
 
 export default function FriendItem({
   friend,

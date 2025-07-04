@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Card, PrimaryButton, type RootState } from '../shared';
+import { Card, PrimaryButton, type RootState } from '../../shared';
 import AddingFriendForm from './AddingFriendForm';
 import FriendItem from './FriendItem';
 
@@ -24,15 +24,15 @@ export default function Friends() {
           }}
         />
       ) : null}
-      {friends.length > 0
-        ? friends.map((friend, index) => (
-            <FriendItem
-              key={friend.id}
-              friend={friend}
-              shouldApplyColor={isOdd(index)}
-            />
-          ))
-        : null}
+      {friends.length > 0 ? (
+        <ul>
+          {friends.map((friend, index) => (
+            <li key={friend.id}>
+              <FriendItem friend={friend} shouldApplyColor={isOdd(index)} />
+            </li>
+          ))}
+        </ul>
+      ) : null}
       {!isAddingFriend && friends.length > 0 ? (
         <PrimaryButton
           onClick={() => {

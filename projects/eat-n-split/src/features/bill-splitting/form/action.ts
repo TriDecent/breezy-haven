@@ -1,7 +1,7 @@
 import type { UnknownAction } from '@reduxjs/toolkit/react';
 import type { Dispatch } from 'react';
 import type z from 'zod';
-import { uiActions } from '../../shared';
+import { uiActions } from '../../../shared';
 import { billingSchema } from './billingSchema';
 
 export type FormValues = Readonly<

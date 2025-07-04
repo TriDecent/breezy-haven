@@ -5,7 +5,7 @@ import {
   Input,
   PrimaryButton,
   type FriendType,
-} from '../shared';
+} from '../../shared';
 import { useDispatch } from 'react-redux';
 
 type FormValues = Omit<FriendType, 'id'>;

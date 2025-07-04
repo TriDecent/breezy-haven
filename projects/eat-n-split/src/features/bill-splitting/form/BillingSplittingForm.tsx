@@ -7,7 +7,7 @@ import {
   type InputHTMLAttributes,
 } from 'react';
 import { useDispatch } from 'react-redux';
-import { Input, PrimaryButton } from '../../shared';
+import { Input, PrimaryButton } from '../../../shared';
 import { splittingAction, type FormState, type FormValues } from './action';
 
 export default function BillSplittingForm({

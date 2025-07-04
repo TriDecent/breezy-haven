@@ -1,5 +1,5 @@
-import { BillSplitting } from './bill-splitting';
-import { Friends } from './friends-management';
+import { BillSplitting } from './features/bill-splitting';
+import { Friends } from './features/friends-management';
 import { PageLayout } from './shared';
 
 function App() {
@@ -13,7 +13,6 @@ function App() {
           </section>
 
           <section className='h-fit flex-1'>
-           
             <BillSplitting />
           </section>
         </div>
