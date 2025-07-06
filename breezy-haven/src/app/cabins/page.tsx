@@ -3,7 +3,9 @@ import { Counter } from '../shared';
 export default async function Page() {
   const data = await fetch('https://jsonplaceholder.typicode.com/users');
 
-  const users = (await data.json()) as readonly User[];
+  const users = await new Promise<readonly User[]>(resolve =>
+    setTimeout(async () => resolve(await data.json()), 2000)
+  );
 
   console.log(users);
 
