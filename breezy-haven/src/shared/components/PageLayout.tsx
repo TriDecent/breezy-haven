@@ -1,6 +1,7 @@
 /* eslint-disable react/display-name */
 import Image from 'next/image';
 import type { ReactNode } from 'react';
+import facebookLogo from '../../../public/facebook-logo.png';
 
 interface PageLayoutProps {
   readonly children?: ReactNode;
@@ -32,11 +33,10 @@ PageLayout.Footer = ({ children }: PageLayoutProps) => (
             className='text-gray-600 transition-colors hover:text-gray-800'
           >
             <Image
-              src='/facebook-logo.png'
+              src={facebookLogo}
               alt='github logo'
-              width={2400}
-              height={902}
               className='h-12 w-auto'
+              quality={0}
               priority
             />
           </a>
