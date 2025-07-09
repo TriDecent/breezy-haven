@@ -10,7 +10,7 @@ function Logo() {
         width='60'
         alt='The Breezy Haven logo'
       />
-      <span className='text-primary-100 text-xl font-semibold'>
+      <span className='text-primary-100 hidden text-xl font-semibold md:block'>
         The Wild Oasis
       </span>
     </Link>

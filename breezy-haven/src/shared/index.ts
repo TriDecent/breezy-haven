@@ -1,5 +1,6 @@
+import Counter from './components/Counter';
 import Logo from './components/Logo';
 import Navigation from './components/Navigation';
-import Counter from './components/Counter';
+import PageLayout from './components/PageLayout';
 
-export { Navigation, Logo, Counter };
+export { Counter, Logo, Navigation, PageLayout };
