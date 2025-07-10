@@ -1,5 +1,13 @@
 import { SideNavigation } from '@/features/account';
 import { MiniSidebar } from '@/shared';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: {
+    template: '%s - Account | The Breezy Haven',
+    default: 'Account',
+  },
+};
 
 export default function AccountLayout({
   children,
@@ -7,15 +15,15 @@ export default function AccountLayout({
   children: React.ReactNode;
 }) {
   return (
-    <nav className='grid grid-cols-1 md:grid-cols-[16rem_1fr]'>
-      <div className='hidden md:block'>
+    <div className='grid flex-1 grid-cols-1 md:grid-cols-[16rem_1fr]'>
+      <section className='hidden md:block'>
         <SideNavigation />
-      </div>
-      <div>{children}</div>
+      </section>
+      <section className='p-4'>{children}</section>
 
       <MiniSidebar>
         <SideNavigation />
       </MiniSidebar>
-    </nav>
+    </div>
   );
 }

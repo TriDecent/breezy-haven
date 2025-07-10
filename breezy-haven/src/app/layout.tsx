@@ -13,7 +13,7 @@ const josefin: NextFont = Josefin_Sans({
 export const metadata: Metadata = {
   title: {
     template: '%s - The Breezy Haven',
-    default: 'The Breezy Haven',
+    default: 'Welcome to The Breezy Haven',
   },
   icons: '/logo.png',
   description:
