@@ -1,4 +1,4 @@
-import { Cabin, CabinCard } from '@/shared';
+import { Cabin, CabinCard } from '@/features/cabins';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
