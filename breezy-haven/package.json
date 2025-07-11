@@ -10,12 +10,13 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
-    "@supabase/supabase-js": "^2.50.3",
+    "@supabase/supabase-js": "^2.50.5",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.23.3",
     "next": "15.3.5",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "supabase": "^2.30.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
