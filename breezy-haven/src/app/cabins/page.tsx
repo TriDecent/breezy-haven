@@ -1,17 +1,18 @@
-import { Cabin, CabinCard } from '@/features/cabins';
+import { CabinCard } from '@/features/cabins';
+import { cabinService } from '@/services';
+
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Cabins',
 };
 
-export default function Page() {
-  // CHANGE
-  const cabins: readonly Cabin[] = [];
+export default async function Page() {
+  const { data: cabins, error } = await cabinService.getAll();
 
   return (
-    <div>
-      <h1 className='text-accent-400 mb-5 text-xl font-medium lg:text-4xl'>
+    <>
+      <h1 className='text-accent-400 mb-5 text-xl font-medium md:text-2xl lg:text-4xl'>
         Our Luxury Cabins
       </h1>
       <p className='text-primary-200 mb-10 lg:text-lg'>
@@ -23,13 +24,21 @@ export default function Page() {
         Welcome to paradise.
       </p>
 
-      {cabins.length > 0 && (
-        <div className='grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:gap-12 xl:gap-14'>
-          {cabins.map(cabin => (
-            <CabinCard cabin={cabin} key={cabin.id} />
-          ))}
-        </div>
-      )}
-    </div>
+      {error ? (
+        <p>
+          {error.code}: {error.message}
+        </p>
+      ) : cabins.length > 0 ? (
+        <section>
+          <ul className='grid gap-8 md:grid-cols-2 lg:grid-cols-[repeat(auto-fit,_minmax(25rem,_1fr))] lg:gap-12 xl:gap-14'>
+            {cabins.map(cabin => (
+              <li key={cabin.id}>
+                <CabinCard cabin={cabin} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+    </>
   );
 }

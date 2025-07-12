@@ -1,21 +1,28 @@
+import { Cabin } from '@/repositories';
 import { UsersIcon } from '@heroicons/react/24/solid';
 import Image from 'next/image';
-import { Cabin } from './types';
+import Link from 'next/link';
 
 export default function CabinCard({ cabin }: { cabin: Cabin }) {
   const { id, name, maxCapacity, regularPrice, discount, image } = cabin;
 
   return (
-    <div className='border-primary-800 flex border'>
-      <Image
-        src={image}
-        alt={`Cabin ${name}`}
-        className='border-primary-800 flex-1 border-r'
-      />
+    <article className='border-primary-800 0 flex flex-col overflow-hidden rounded-md border lg:flex-row'>
+      <div className='relative h-48 lg:h-auto lg:w-42'>
+        <Image
+          src={image}
+          alt={`Cabin ${name}`}
+          sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+          fill
+          className='border-primary-800 object-cover object-center lg:border-r'
+        />
+        <div className='absolute top-0 h-10 w-full bg-gradient-to-b from-slate-900 to-transparent'></div>
+        <div className='pointer-events-none absolute bottom-0 h-10 w-full bg-gradient-to-t from-slate-900 to-transparent'></div>
+      </div>
 
-      <div className='flex-grow'>
+      <div className='flex-1'>
         <div className='bg-primary-950 px-7 pt-5 pb-4'>
-          <h3 className='text-accent-500 mb-3 text-2xl font-semibold'>
+          <h3 className='text-accent-500 mb-3 text-xl font-bold md:text-2xl md:font-semibold'>
             Cabin {name}
           </h3>
 
@@ -44,14 +51,17 @@ export default function CabinCard({ cabin }: { cabin: Cabin }) {
         </div>
 
         <div className='bg-primary-950 border-t-primary-800 border-t text-right'>
-          <a
+          <Link
             href={`/cabins/${id}`}
-            className='border-primary-800 hover:bg-accent-600 hover:text-primary-900 inline-block border-l px-6 py-4 transition-all'
+            className='border-primary-800 hover:bg-accent-600 hover:text-primary-900 group inline-block border-l px-6 py-4 transition-all'
           >
-            Details & reservation &rarr;
-          </a>
+            Details & reservation{' '}
+            <span className='text-accent-600 group-hover:text-primary-900 animate-pulse text-2xl'>
+              &rarr;
+            </span>
+          </Link>
         </div>
       </div>
-    </div>
+    </article>
   );
 }
