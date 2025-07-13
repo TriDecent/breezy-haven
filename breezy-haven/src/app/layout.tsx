@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { Logo, Navigation, PageLayout } from '../shared';
-import '../styles/globals.css';
+import '@/styles/globals.css';
 
 import { NextFont } from 'next/dist/compiled/@next/font';
 import { Josefin_Sans } from 'next/font/google';
