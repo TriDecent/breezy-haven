@@ -2,7 +2,8 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 type PreviewImageProps = {
   src: string;
@@ -31,35 +32,76 @@ export default function PreviewImage({
     return () => document.body.classList.remove('overflow-hidden');
   });
 
+  const handleClickOnImage = useCallback(() => {
+    setIsPreviewing(state => !state);
+  }, []);
+
+  return isPreviewing ? (
+    <Previewing onClick={handleClickOnImage}>
+      <Image
+        src={src}
+        sizes={sizes}
+        alt={alt}
+        className={className}
+        fill={fill}
+        priority={priority}
+      />
+    </Previewing>
+  ) : (
+    <Normal onClick={handleClickOnImage}>
+      <Image
+        src={src}
+        sizes={sizes}
+        alt={alt}
+        className={className}
+        fill={fill}
+        priority={priority}
+      />
+    </Normal>
+  );
+}
+
+function Previewing({
+  onClick,
+  children,
+}: {
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  const [isClient, setIsClient] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) return null;
+
+  return createPortal(
+    <motion.div
+      onClick={onClick}
+      className='fixed inset-0 z-100 flex items-center justify-center p-5 backdrop-blur-xs hover:cursor-pointer'
+    >
+      <div className='relative aspect-video w-full max-w-5xl'>{children}</div>,
+    </motion.div>,
+    document.getElementById('image-previewing')!
+  );
+}
+
+function Normal({
+  onClick,
+  children,
+}: {
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
   return (
     <motion.div
-      onClick={() => setIsPreviewing(state => !state)}
-      className={`backdrop-blur-xs hover:cursor-pointer ${
-        isPreviewing
-          ? 'fixed inset-0 z-100 flex items-center justify-center p-5'
-          : 'relative h-full w-full'
-      }`}
+      onClick={onClick}
+      className='relative h-full w-full hover:cursor-pointer'
     >
-      {isPreviewing ? (
-        <div className='relative aspect-video w-full max-w-5xl'>
-          <Image
-            src={src}
-            sizes={sizes}
-            alt={alt}
-            className={className}
-            fill={fill}
-            priority={priority}
-          />
-        </div>
-      ) : (
-        <Image
-          src={src}
-          sizes={sizes}
-          alt={alt}
-          className={className}
-          fill={fill}
-        />
-      )}
+      {children}
+      <div className='pointer-events-none absolute top-0 h-10 w-full bg-gradient-to-b from-slate-900 to-transparent lg:top-0 lg:bottom-0 lg:left-0 lg:h-full lg:w-6 lg:bg-gradient-to-r'></div>
+      <div className='pointer-events-none absolute bottom-0 h-10 w-full bg-gradient-to-t from-slate-900 to-transparent lg:top-0 lg:right-0 lg:bottom-0 lg:h-full lg:w-6 lg:bg-gradient-to-l'></div>
     </motion.div>
   );
 }
