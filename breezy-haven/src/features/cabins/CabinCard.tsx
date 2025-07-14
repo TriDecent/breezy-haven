@@ -1,7 +1,7 @@
 import { Cabin } from '@/repositories';
 import { UsersIcon } from '@heroicons/react/24/solid';
-import Image from 'next/image';
 import Link from 'next/link';
+import PreviewImage from './PreviewImage';
 
 export default function CabinCard({ cabin }: { cabin: Cabin }) {
   const { id, name, maxCapacity, regularPrice, discount, image } = cabin;
@@ -9,7 +9,7 @@ export default function CabinCard({ cabin }: { cabin: Cabin }) {
   return (
     <article className='border-primary-800 0 flex flex-col overflow-hidden rounded-md border lg:flex-row'>
       <div className='relative h-48 lg:h-auto lg:w-42'>
-        <Image
+        <PreviewImage
           src={image}
           alt={`Cabin ${name}`}
           sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
