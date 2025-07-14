@@ -31,6 +31,7 @@ export default function RootLayout({
         className={`bg-primary-950 text-primary-100 ${josefin.className} antialiased`}
       >
         <div id='mini-sidebar' className='md:hidden'></div>
+        <div id='image-previewing'></div>
         <PageLayout>
           <PageLayout.Header>
             <div className='mx-auto flex items-center justify-between p-2 md:p-6 lg:p-8'>

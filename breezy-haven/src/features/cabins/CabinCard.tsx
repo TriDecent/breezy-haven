@@ -23,8 +23,6 @@ export default function CabinCard({
           priority={isFirstCabin}
           className='border-primary-800 object-cover object-center lg:border-r'
         />
-        <div className='pointer-events-none absolute top-0 h-10 w-full bg-gradient-to-b from-slate-900 to-transparent lg:top-0 lg:bottom-0 lg:left-0 lg:h-full lg:w-6 lg:bg-gradient-to-r'></div>
-        <div className='pointer-events-none absolute bottom-0 h-10 w-full bg-gradient-to-t from-slate-900 to-transparent lg:top-0 lg:right-0 lg:bottom-0 lg:h-full lg:w-6 lg:bg-gradient-to-l'></div>
       </div>
 
       <div className='flex-1'>
