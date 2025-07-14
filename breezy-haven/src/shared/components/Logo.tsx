@@ -9,6 +9,7 @@ export default function Logo() {
         height='60'
         width='60'
         alt='The Breezy Haven logo'
+        priority
       />
       <span className='text-primary-100 hidden text-xl font-semibold md:block'>
         The Breezy Haven
