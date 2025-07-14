@@ -1,15 +1,13 @@
-import { CabinCard } from '@/features/cabins';
-import { cabinService } from '@/services';
+import { CabinLoading, CabinsList } from '@/features/cabins';
 
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Cabins',
 };
 
 export default async function Page() {
-  const { data: cabins, error } = await cabinService.getAll();
-
   return (
     <>
       <h1 className='text-accent-400 mb-5 text-xl font-medium md:text-2xl lg:text-4xl'>
@@ -24,21 +22,9 @@ export default async function Page() {
         Welcome to paradise.
       </p>
 
-      {error ? (
-        <p>
-          {error.code}: {error.message}
-        </p>
-      ) : cabins.length > 0 ? (
-        <section>
-          <ul className='grid gap-8 md:grid-cols-2 lg:grid-cols-[repeat(auto-fit,_minmax(25rem,_1fr))] lg:gap-12 xl:gap-14'>
-            {cabins.map(cabin => (
-              <li key={cabin.id}>
-                <CabinCard cabin={cabin} />
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
+      <Suspense fallback={<CabinLoading />}>
+        <CabinsList />
+      </Suspense>
     </>
   );
 }

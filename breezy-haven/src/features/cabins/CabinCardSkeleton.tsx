@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 export default function CabinCardSkeleton() {
   return (
-    <article className='border-primary-800 flex flex-col overflow-hidden rounded-md border lg:flex-row'>
+    <article className='border-primary-800 flex animate-pulse flex-col overflow-hidden rounded-md border lg:flex-row'>
       <div className='relative h-48 overflow-hidden bg-slate-300 lg:h-auto lg:w-42'>
         <motion.div
           className='absolute inset-0 z-100 bg-gradient-to-r from-transparent via-white to-transparent'
