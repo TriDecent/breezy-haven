@@ -1,5 +1,5 @@
 import { Spinner } from '@/shared';
 
-export default function Loading() {
+export default function RootLoading() {
   return <Spinner />;
 }
