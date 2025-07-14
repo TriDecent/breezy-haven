@@ -10,6 +10,7 @@ type PreviewImageProps = {
   alt: string;
   className?: string;
   fill?: boolean;
+  priority?: boolean;
 };
 
 export default function PreviewImage({
@@ -18,6 +19,7 @@ export default function PreviewImage({
   alt,
   className,
   fill,
+  priority,
 }: PreviewImageProps) {
   const [isPreviewing, setIsPreviewing] = useState<boolean>(false);
 
@@ -46,6 +48,7 @@ export default function PreviewImage({
             alt={alt}
             className={className}
             fill={fill}
+            priority={priority}
           />
         </div>
       ) : (

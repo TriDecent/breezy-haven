@@ -3,7 +3,13 @@ import { UsersIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import PreviewImage from './PreviewImage';
 
-export default function CabinCard({ cabin }: { cabin: Cabin }) {
+export default function CabinCard({
+  cabin,
+  isFirstCabin,
+}: {
+  cabin: Cabin;
+  isFirstCabin: boolean;
+}) {
   const { id, name, maxCapacity, regularPrice, discount, image } = cabin;
 
   return (
@@ -14,6 +20,7 @@ export default function CabinCard({ cabin }: { cabin: Cabin }) {
           alt={`Cabin ${name}`}
           sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
           fill
+          priority={isFirstCabin}
           className='border-primary-800 object-cover object-center lg:border-r'
         />
         <div className='pointer-events-none absolute top-0 h-10 w-full bg-gradient-to-b from-slate-900 to-transparent lg:top-0 lg:bottom-0 lg:left-0 lg:h-full lg:w-6 lg:bg-gradient-to-r'></div>
