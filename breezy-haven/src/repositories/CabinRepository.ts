@@ -8,7 +8,7 @@ export default class CabinRepository implements IRepository<RawCabin> {
     const { data, error } = await supabase.from('cabins').select();
 
     if (error) {
-      console.error('Error fetching cabins:', error);
+      console.log('Error fetching cabins:', error);
       return error;
     }
 
@@ -23,7 +23,7 @@ export default class CabinRepository implements IRepository<RawCabin> {
       .single();
 
     if (error) {
-      console.error('Error fetching cabin:', error);
+      console.log('Error fetching cabin:', error);
       return error;
     }
 
@@ -41,7 +41,7 @@ export default class CabinRepository implements IRepository<RawCabin> {
       .single();
 
     if (error) {
-      console.error('Error fetching cabin property:', error);
+      console.log('Error fetching cabin property:', error);
       return error;
     }
 
@@ -56,7 +56,7 @@ export default class CabinRepository implements IRepository<RawCabin> {
       .single();
 
     if (error) {
-      console.error('Error creating cabin:', error);
+      console.log('Error creating cabin:', error);
       return error;
     }
 
@@ -75,7 +75,7 @@ export default class CabinRepository implements IRepository<RawCabin> {
       .single();
 
     if (error) {
-      console.error('Error updating cabin:', error);
+      console.log('Error updating cabin:', error);
       return error;
     }
 
@@ -86,7 +86,7 @@ export default class CabinRepository implements IRepository<RawCabin> {
     const { error } = await supabase.from('cabins').delete().eq('id', id);
 
     if (error) {
-      console.error('Error deleting cabin:', error);
+      console.log('Error deleting cabin:', error);
       return error;
     }
 

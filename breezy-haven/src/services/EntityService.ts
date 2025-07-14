@@ -38,7 +38,9 @@ export class EntityService<RawType, ProcessedType extends RawType>
     error: PostgrestError | null;
   }> {
     const raw = await this._repository.getAll();
-    if (raw instanceof PostgrestError) return { data: [], error: raw };
+    if (raw && typeof raw === 'object' && 'code' in raw)
+      return { data: [], error: raw };
+
     return { data: (raw as RawType[]).map(this._mapper), error: null };
   }
 
@@ -46,7 +48,9 @@ export class EntityService<RawType, ProcessedType extends RawType>
     id: number
   ): Promise<{ data: ProcessedType | null; error: PostgrestError | null }> {
     const raw = await this._repository.getById(id);
-    if (raw instanceof PostgrestError) return { data: null, error: raw };
+    if (raw && typeof raw === 'object' && 'code' in raw)
+      return { data: null, error: raw };
+
     return { data: this._mapper(raw as RawType), error: null };
   }
 
@@ -54,7 +58,9 @@ export class EntityService<RawType, ProcessedType extends RawType>
     item: Partial<RawType>
   ): Promise<{ data: ProcessedType | null; error: PostgrestError | null }> {
     const raw = await this._repository.create(item);
-    if (raw instanceof PostgrestError) return { data: null, error: raw };
+    if (raw && typeof raw === 'object' && 'code' in raw)
+      return { data: null, error: raw };
+
     return { data: this._mapper(raw as RawType), error: null };
   }
 
@@ -63,7 +69,8 @@ export class EntityService<RawType, ProcessedType extends RawType>
     updatedFields: Partial<RawType>
   ): Promise<{ data: ProcessedType | null; error: PostgrestError | null }> {
     const raw = await this._repository.update(id, updatedFields);
-    if (raw instanceof PostgrestError) return { data: null, error: raw };
+    if (raw && typeof raw === 'object' && 'code' in raw)
+      return { data: null, error: raw };
     return { data: this._mapper(raw as RawType), error: null };
   }
 
@@ -77,7 +84,9 @@ export class EntityService<RawType, ProcessedType extends RawType>
     id: number
   ): Promise<{ data: ProcessedType[K] | null; error: PostgrestError | null }> {
     const raw = await this._repository.get(key, id);
-    if (raw instanceof PostgrestError) return { data: null, error: raw };
+    if (raw && typeof raw === 'object' && 'code' in raw)
+      return { data: null, error: raw };
+
     return { data: raw as ProcessedType[K], error: null };
   }
 }

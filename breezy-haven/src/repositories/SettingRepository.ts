@@ -8,7 +8,7 @@ export default class SettingRepository implements IRepository<RawSetting> {
     const { data, error } = await supabase.from('settings').select();
 
     if (error) {
-      console.error('Error fetching settings:', error);
+      console.log('Error fetching settings:', error);
       return error;
     }
 
@@ -23,7 +23,7 @@ export default class SettingRepository implements IRepository<RawSetting> {
       .single();
 
     if (error) {
-      console.error('Error fetching setting:', error);
+      console.log('Error fetching setting:', error);
       return error;
     }
 
@@ -41,7 +41,7 @@ export default class SettingRepository implements IRepository<RawSetting> {
       .single();
 
     if (error) {
-      console.error('Error fetching setting property:', error);
+      console.log('Error fetching setting property:', error);
       return error;
     }
 
@@ -58,7 +58,7 @@ export default class SettingRepository implements IRepository<RawSetting> {
       .single();
 
     if (error) {
-      console.error('Error creating setting:', error);
+      console.log('Error creating setting:', error);
       return error;
     }
 
@@ -77,7 +77,7 @@ export default class SettingRepository implements IRepository<RawSetting> {
       .single();
 
     if (error) {
-      console.error('Error updating setting:', error);
+      console.log('Error updating setting:', error);
       return error;
     }
 
@@ -88,7 +88,7 @@ export default class SettingRepository implements IRepository<RawSetting> {
     const { error } = await supabase.from('settings').delete().eq('id', id);
 
     if (error) {
-      console.error('Error deleting setting:', error);
+      console.log('Error deleting setting:', error);
       return error;
     }
 
@@ -99,7 +99,7 @@ export default class SettingRepository implements IRepository<RawSetting> {
     const { data, error } = await supabase.from('settings').select().single();
 
     if (error) {
-      console.error('Error fetching default settings:', error);
+      console.log('Error fetching default settings:', error);
       return error;
     }
 

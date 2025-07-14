@@ -8,7 +8,7 @@ export default class GuestRepository implements IRepository<RawGuest> {
     const { data, error } = await supabase.from('guests').select();
 
     if (error) {
-      console.error('Error fetching guests:', error);
+      console.log('Error fetching guests:', error);
       return error;
     }
 
@@ -23,7 +23,7 @@ export default class GuestRepository implements IRepository<RawGuest> {
       .single();
 
     if (error) {
-      console.error('Error fetching guest:', error);
+      console.log('Error fetching guest:', error);
       return error;
     }
 
@@ -41,7 +41,7 @@ export default class GuestRepository implements IRepository<RawGuest> {
       .single();
 
     if (error) {
-      console.error('Error fetching guest property:', error);
+      console.log('Error fetching guest property:', error);
       return error;
     }
 
@@ -56,7 +56,7 @@ export default class GuestRepository implements IRepository<RawGuest> {
       .single();
 
     if (error) {
-      console.error('Error creating guest:', error);
+      console.log('Error creating guest:', error);
       return error;
     }
 
@@ -75,7 +75,7 @@ export default class GuestRepository implements IRepository<RawGuest> {
       .single();
 
     if (error) {
-      console.error('Error updating guest:', error);
+      console.log('Error updating guest:', error);
       return error;
     }
 
@@ -86,7 +86,7 @@ export default class GuestRepository implements IRepository<RawGuest> {
     const { error } = await supabase.from('guests').delete().eq('id', id);
 
     if (error) {
-      console.error('Error deleting guest:', error);
+      console.log('Error deleting guest:', error);
       return error;
     }
 

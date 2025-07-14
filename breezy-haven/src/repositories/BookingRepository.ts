@@ -1,4 +1,4 @@
-import {  supabase } from '@/lib';
+import { supabase } from '@/lib';
 import { PostgrestError } from '@supabase/supabase-js';
 import { eachDayOfInterval } from 'date-fns';
 import IRepository from './IRepository';
@@ -9,7 +9,7 @@ export default class BookingRepository implements IRepository<RawBooking> {
     const { data, error } = await supabase.from('bookings').select();
 
     if (error) {
-      console.error('Error fetching bookings:', error);
+      console.log('Error fetching bookings:', error);
       return error;
     }
 
@@ -24,7 +24,7 @@ export default class BookingRepository implements IRepository<RawBooking> {
       .single();
 
     if (error) {
-      console.error('Error fetching booking:', error);
+      console.log('Error fetching booking:', error);
       return error;
     }
 
@@ -42,14 +42,16 @@ export default class BookingRepository implements IRepository<RawBooking> {
       .single();
 
     if (error) {
-      console.error('Error fetching booking property:', error);
+      console.log('Error fetching booking property:', error);
       return error;
     }
 
     return (data as unknown as Record<K, RawBooking[K]>)[key];
   }
 
-  async create(item: Partial<RawBooking>): Promise<RawBooking | PostgrestError> {
+  async create(
+    item: Partial<RawBooking>
+  ): Promise<RawBooking | PostgrestError> {
     const { data, error } = await supabase
       .from('bookings')
       .insert(item)
@@ -57,7 +59,7 @@ export default class BookingRepository implements IRepository<RawBooking> {
       .single();
 
     if (error) {
-      console.error('Error creating booking:', error);
+      console.log('Error creating booking:', error);
       return error;
     }
 
@@ -76,7 +78,7 @@ export default class BookingRepository implements IRepository<RawBooking> {
       .single();
 
     if (error) {
-      console.error('Error updating booking:', error);
+      console.log('Error updating booking:', error);
       return error;
     }
 
@@ -87,7 +89,7 @@ export default class BookingRepository implements IRepository<RawBooking> {
     const { error } = await supabase.from('bookings').delete().eq('id', id);
 
     if (error) {
-      console.error('Error deleting booking:', error);
+      console.log('Error deleting booking:', error);
       return error;
     }
 
@@ -118,11 +120,11 @@ export default class BookingRepository implements IRepository<RawBooking> {
   async getBookedDatesByCabinId(
     cabinId: number
   ): Promise<readonly Date[] | PostgrestError> {
-    const bookings = await this.getByCabinId(cabinId);
+    const raw = await this.getByCabinId(cabinId);
 
-    if (bookings instanceof Error) return bookings;
+    if ('code' in raw) return raw;
 
-    return getBookedDates(bookings);
+    return getBookedDates(raw);
   }
 }
 
