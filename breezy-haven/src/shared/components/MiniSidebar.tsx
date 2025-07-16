@@ -1,10 +1,11 @@
 'use client';
 
 import { Bars3Icon } from '@heroicons/react/24/solid';
-import { AnimatePresence, motion, useScroll } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Variants, { slideVariantKeys } from '../animations/Variants';
+import useScrollDirection from '../hooks/useScrollDirection';
 
 export default function MiniSidebar({
   children,
@@ -13,9 +14,7 @@ export default function MiniSidebar({
 }) {
   const [shouldOpenSideBar, setShouldOpenSideBar] = useState(false);
   const outsideRef = useRef<HTMLDivElement>(null);
-  const lastY = useRef(0);
-  const { scrollY } = useScroll();
-  const [direction, setDirection] = useState<'up' | 'down'>('up');
+  const direction = useScrollDirection();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -29,19 +28,6 @@ export default function MiniSidebar({
       setShouldOpenSideBar(false);
     }
   }, [shouldOpenSideBar]);
-
-  useEffect(() => {
-    if (shouldOpenSideBar) return;
-
-    const unsubscribe = scrollY.on('change', handleScroll);
-    return () => unsubscribe();
-
-    function handleScroll(y: number) {
-      if (y > lastY.current && direction === 'up') setDirection('down');
-      else if (y < lastY.current && direction === 'down') setDirection('up');
-      lastY.current = y;
-    }
-  }, [scrollY, direction, shouldOpenSideBar]);
 
   useEffect(() => {
     setIsMounted(true);
