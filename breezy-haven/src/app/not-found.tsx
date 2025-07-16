@@ -1,3 +1,9 @@
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: '404 - Page not found',
+};
+
 export default function RootNotFound() {
   return (
     <section className='flex flex-1 items-center justify-center space-x-6 py-8'>

@@ -1,36 +1,31 @@
 import PreviewImage from '@/features/cabins/PreviewImage';
 import { cabinService } from '@/services';
 import { EyeSlashIcon, MapPinIcon, UsersIcon } from '@heroicons/react/24/solid';
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-const iconComponents = (maxCapacity: number) =>
-  [
-    <>
-      <UsersIcon className='text-accent-600 h-5 w-5' />
-      <p className='text-lg'>
-        For up to <span className='font-bold'>{maxCapacity}</span> guests
-      </p>
-    </>,
-    <>
-      <MapPinIcon className='text-accent-600 h-5 w-5' />
-      <p className='text-lg'>
-        Located in the heart of the <span className='font-bold'>Dolomites</span>{' '}
-        (Italy)
-      </p>
-    </>,
-    <>
-      <EyeSlashIcon className='text-accent-600 h-5 w-5' />
-      <p className='text-lg'>
-        Privacy <span className='font-bold'>100%</span> guaranteed
-      </p>
-    </>,
-  ] as const;
-
-export default async function Page({
-  params,
-}: {
+interface PageParams {
   params: Promise<{ cabinId: string }>;
-}) {
+}
+
+export async function generateMetadata({
+  params,
+}: PageParams): Promise<Metadata> {
+  const { cabinId } = await params;
+  const { data, error } = await cabinService.getById(Number(cabinId));
+
+  if (error) {
+    if (error.code === 'PGRST116') return { title: 'Cabin not found' };
+
+    return { title: `Error: ${error.message}` };
+  }
+
+  if (!data) return { title: 'Cabin not found' };
+
+  return { title: `Cabin ${data.name}` };
+}
+
+export default async function Page({ params }: PageParams) {
   const { cabinId } = await params;
 
   const { data, error } = await cabinService.getById(Number(cabinId));
@@ -84,3 +79,26 @@ export default async function Page({
     </section>
   );
 }
+
+const iconComponents = (maxCapacity: number) =>
+  [
+    <>
+      <UsersIcon className='text-accent-600 h-5 w-5' />
+      <p className='text-lg'>
+        For up to <span className='font-bold'>{maxCapacity}</span> guests
+      </p>
+    </>,
+    <>
+      <MapPinIcon className='text-accent-600 h-5 w-5' />
+      <p className='text-lg'>
+        Located in the heart of the <span className='font-bold'>Dolomites</span>{' '}
+        (Italy)
+      </p>
+    </>,
+    <>
+      <EyeSlashIcon className='text-accent-600 h-5 w-5' />
+      <p className='text-lg'>
+        Privacy <span className='font-bold'>100%</span> guaranteed
+      </p>
+    </>,
+  ] as const;

@@ -1,5 +1,11 @@
 'use client';
 
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Oops! Something went wrong',
+};
+
 export default function CabinError({
   error,
   reset,
