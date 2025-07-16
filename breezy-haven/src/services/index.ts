@@ -1,17 +1,17 @@
-import type {
-  Booking,
-  Cabin,
-  Guest,
-  RawBooking,
-  RawCabin,
-  RawGuest,
-  RawSetting,
-  Setting,
+import {
+  bookingRepository,
+  cabinRepository,
+  guestRepository,
+  settingRepository,
+  type Booking,
+  type Cabin,
+  type Guest,
+  type RawBooking,
+  type RawCabin,
+  type RawGuest,
+  type RawSetting,
+  type Setting,
 } from '@/repositories';
-import BookingRepository from '@/repositories/BookingRepository';
-import CabinRepository from '@/repositories/CabinRepository';
-import GuestRepository from '@/repositories/GuestRepository';
-import SettingRepository from '@/repositories/SettingRepository';
 import { EntityService } from './EntityService';
 
 const toCabin = (raw: RawCabin): Cabin => ({
@@ -63,18 +63,18 @@ const toSetting = (raw: RawSetting): Setting => ({
 });
 
 export const cabinService = new EntityService<RawCabin, Cabin>(
-  new CabinRepository(),
+  cabinRepository,
   toCabin
 );
 export const bookingService = new EntityService<RawBooking, Booking>(
-  new BookingRepository(),
+  bookingRepository,
   toBooking
 );
 export const guestService = new EntityService<RawGuest, Guest>(
-  new GuestRepository(),
+  guestRepository,
   toGuest
 );
 export const settingService = new EntityService<RawSetting, Setting>(
-  new SettingRepository(),
+  settingRepository,
   toSetting
 );

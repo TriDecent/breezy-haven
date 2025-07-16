@@ -35,7 +35,12 @@ export default async function Page({
 
   const { data, error } = await cabinService.getById(Number(cabinId));
 
-  if (error) throw new Error(error.message);
+  if (error) {
+    if (error.code !== 'PGRST116') throw new Error(error.message);
+
+    notFound();
+  }
+
   if (!data) notFound();
 
   return (
