@@ -1,6 +1,6 @@
-import { Metadata } from 'next';
-import { Logo, Navigation, PageLayout } from '../shared';
+import { Logo, Navigation, PageLayout, PageProgressBar } from '@/shared';
 import '@/styles/globals.css';
+import { Metadata } from 'next';
 
 import { NextFont } from 'next/dist/compiled/@next/font';
 import { Josefin_Sans } from 'next/font/google';
@@ -38,6 +38,7 @@ export default function RootLayout({
               <Logo />
               <Navigation />
             </div>
+            <PageProgressBar />
           </PageLayout.Header>
           <PageLayout.Main>{children}</PageLayout.Main>
           <PageLayout.Footer />

@@ -12,7 +12,7 @@ const PageLayout = ({ children }: PageLayoutProps) => (
 );
 
 PageLayout.Header = ({ children }: PageLayoutProps) => (
-  <header className='inset-x-0 top-0 z-10 w-full'>{children}</header>
+  <header className='w-full'>{children}</header>
 );
 
 PageLayout.Main = ({ children }: PageLayoutProps) => (
