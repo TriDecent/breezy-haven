@@ -5,7 +5,20 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 interface PageParams {
-  params: Promise<{ cabinId: string }>;
+  readonly params: Promise<{ cabinId: string }>;
+}
+
+export async function generateStaticParams(): Promise<
+  {
+    readonly cabinId: string;
+  }[]
+> {
+  const { data: cabins } = await cabinService.getAll();
+  const ids = cabins.map(cabin => ({
+    cabinId: cabin.id.toString(),
+  }));
+
+  return ids;
 }
 
 export async function generateMetadata({

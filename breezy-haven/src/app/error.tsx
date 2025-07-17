@@ -18,10 +18,7 @@ export default function CabinError({
       <h1 className='text-2xl font-bold text-red-500 md:text-3xl'>
         Oops! Something went wrong.
       </h1>
-      <p className='text-lg'>
-        {error.message ||
-          'Unable to load cabin information. Please try again later.'}
-      </p>
+      <p className='text-lg'>{error.message}</p>
       <button
         onClick={reset}
         className='bg-accent-600 hover:bg-accent-600/80 active:bg-accent-600/80 rounded-md px-6 py-4'

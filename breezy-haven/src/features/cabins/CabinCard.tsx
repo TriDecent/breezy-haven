@@ -13,7 +13,7 @@ export default function CabinCard({
   const { id, name, maxCapacity, regularPrice, discount, image } = cabin;
 
   return (
-    <article className='border-primary-800 0 flex flex-col overflow-hidden rounded-md border lg:flex-row'>
+    <article className='border-primary-800 0 hover:shadow-accent-600 active:shadow-accent-600 flex flex-col overflow-hidden rounded-md border transition duration-100 hover:scale-105 hover:shadow-md active:scale-105 active:shadow-md lg:flex-row'>
       <div className='relative h-48 lg:h-auto lg:w-42'>
         <PreviewImage
           src={image}
