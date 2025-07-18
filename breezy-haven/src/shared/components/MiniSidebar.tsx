@@ -23,7 +23,7 @@ export default function MiniSidebar({
 
     return () => document.removeEventListener('click', handleClick);
 
-    function handleClick(e: PointerEvent) {
+    function handleClick(e: MouseEvent) {
       if (outsideRef.current !== e.target) return;
       setShouldOpenSideBar(false);
     }

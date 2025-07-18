@@ -12,12 +12,14 @@ export const formatDistanceFromNow = (date: string) =>
 export function ReservationCard({ booking }: { booking: Booking }) {
   const {
     id,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     guestId,
     startDate,
     endDate,
     numNights,
     totalPrice,
     numGuests,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     status,
     created_at,
     cabin: { name, image },

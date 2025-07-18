@@ -58,6 +58,7 @@ export default function CabinCard({
         <div className='bg-primary-950 border-t-primary-800 border-t text-right'>
           <Link
             href={`/cabins/${id}`}
+            prefetch={true}
             className='border-primary-800 hover:bg-accent-600 hover:text-primary-900 group active:bg-accent-600 inline-block border-l px-6 py-4 transition-all'
           >
             Details & reservation{' '}

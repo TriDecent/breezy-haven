@@ -1,7 +1,11 @@
 import { cabinService } from '@/services';
+// import { connection } from 'next/server';
 import CabinCard from './CabinCard';
 
 export default async function CabinsList() {
+  // await connection();
+  // Everything below will be excluded from prerendering
+
   const { data: cabins, error } = await cabinService.getAll();
 
   return error ? (

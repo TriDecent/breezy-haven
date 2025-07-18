@@ -1,5 +1,6 @@
 import { TrashIcon } from '@heroicons/react/24/solid';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function DeleteReservation({ bookingId }: { bookingId: string }) {
   return (
     <button className='group text-primary-300 hover:bg-accent-600 hover:text-primary-900 flex flex-grow items-center gap-2 px-3 text-xs font-bold uppercase transition-colors'>
