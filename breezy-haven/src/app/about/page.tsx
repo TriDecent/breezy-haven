@@ -1,19 +1,27 @@
+import { cabinRepository } from '@/repositories';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 import about1Image from '../../../public/about-1.jpg';
+import RootLoading from '../loading';
 
-export const metadata: Metadata = {
-  title: 'About',
-};
+export const revalidate = 86400;
 
-export default function Page() {
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'About',
+  };
+}
+
+export default async function Page() {
   return (
     <section>
       <h1 className='text-accent-400 mb-4 text-end text-2xl tracking-widest lg:text-4xl'>
         About us
       </h1>
-      <div className='grid grid-cols-1 gap-x-4 gap-y-12 md:grid-cols-5 md:gap-x-8 md:items-center lg:gap-x-24 lg:gap-y-32'>
+      <div className='grid grid-cols-1 gap-x-4 gap-y-12 md:grid-cols-5 md:items-center md:gap-x-8 lg:gap-x-24 lg:gap-y-32'>
         <div className='md:col-span-3'>
           <h2 className='text-accent-400 mb-4 text-2xl font-medium lg:mb-10 lg:text-4xl'>
             Welcome to The Breezy Haven
@@ -27,12 +35,9 @@ export default function Page() {
               the luxury cabins. It&apos;s about the experience of reconnecting
               with nature and enjoying simple pleasures with family.
             </p>
-            <p>
-              Our 8 luxury cabins provide a cozy base, but the real freedom and
-              peace you&apos;ll find in the surrounding mountains. Wander
-              through lush forests, breathe in the fresh air, and watch the
-              stars twinkle above from the warmth of a campfire or your hot tub.
-            </p>
+            <Suspense fallback={<RootLoading />}>
+              <BreezyHavenIntroduction />
+            </Suspense>
             <p>
               This is where memorable moments are made, surrounded by
               nature&apos;s splendor. It&apos;s a place to slow down, relax, and
@@ -86,5 +91,22 @@ export default function Page() {
         Explore our luxury cabins
       </Link>
     </section>
+  );
+}
+
+async function BreezyHavenIntroduction() {
+  const { count, error } = await cabinRepository.getCount();
+
+  if (error) throw new Error(error.message);
+
+  if (!count) notFound();
+
+  return (
+    <p>
+      Our {count} luxury cabins provide a cozy base, but the real freedom and
+      peace you&apos;ll find in the surrounding mountains. Wander through lush
+      forests, breathe in the fresh air, and watch the stars twinkle above from
+      the warmth of a campfire or your hot tub.
+    </p>
   );
 }
