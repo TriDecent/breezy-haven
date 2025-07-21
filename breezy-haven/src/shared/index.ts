@@ -6,6 +6,8 @@ import PageLayout from './components/PageLayout';
 import PageProgressBar from './components/PageProgressBar';
 import Spinner from './components/Spinner';
 import SpinnerMini from './components/SpinnerMini';
+import ThemeProvider from './providers/ThemeProvider';
+import ThemeToggle from './components/ThemeToggle';
 
 export * from './animations/Variants';
 export {
@@ -17,4 +19,6 @@ export {
   PageProgressBar,
   Spinner,
   SpinnerMini,
+  ThemeProvider,
+  ThemeToggle,
 };

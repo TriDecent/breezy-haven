@@ -1,4 +1,11 @@
-import { Logo, Navigation, PageLayout, PageProgressBar } from '@/shared';
+import {
+  Logo,
+  Navigation,
+  PageLayout,
+  PageProgressBar,
+  ThemeProvider,
+  ThemeToggle,
+} from '@/shared';
 import '@/styles/globals.css';
 import { Metadata } from 'next';
 
@@ -26,23 +33,31 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang='en'>
+    <html lang='en' suppressHydrationWarning>
       <body
         className={`bg-primary-950 text-primary-100 ${josefin.className} antialiased`}
       >
-        <div id='mini-sidebar' className='md:hidden'></div>
-        <div id='image-previewing'></div>
-        <PageLayout>
-          <PageLayout.Header>
-            <div className='mx-auto flex items-center justify-between p-2 md:p-6 lg:p-8'>
-              <Logo />
-              <Navigation />
-            </div>
-            <PageProgressBar />
-          </PageLayout.Header>
-          <PageLayout.Main>{children}</PageLayout.Main>
-          <PageLayout.Footer />
-        </PageLayout>
+        <ThemeProvider
+          attribute='class'
+          defaultTheme='system'
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div id='mini-sidebar' className='md:hidden'></div>
+          <div id='image-previewing'></div>
+          <PageLayout>
+            <PageLayout.Header>
+              <div className='mx-auto flex items-center justify-between p-2 md:p-6 lg:p-8'>
+                <Logo />
+                <Navigation />
+                <ThemeToggle />
+              </div>
+              <PageProgressBar />
+            </PageLayout.Header>
+            <PageLayout.Main>{children}</PageLayout.Main>
+            <PageLayout.Footer />
+          </PageLayout>
+        </ThemeProvider>
       </body>
     </html>
   );
