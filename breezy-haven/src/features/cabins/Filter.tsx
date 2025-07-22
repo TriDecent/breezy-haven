@@ -24,7 +24,7 @@ export default function Filter() {
       const params = new URLSearchParams();
       params.set('capacity', filter);
 
-      router.push(`${pathname}?${params.toString()}#test`, { scroll: false });
+      router.push(`${pathname}?${params.toString()}`, { scroll: false });
     },
     [pathname, router]
   );

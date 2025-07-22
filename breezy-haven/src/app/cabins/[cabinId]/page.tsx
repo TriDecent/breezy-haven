@@ -44,6 +44,8 @@ export async function generateMetadata({
 export default async function Page({ params }: PageParams) {
   const { cabinId } = await params;
 
+  if (Number.isNaN(Number(cabinId))) notFound();
+
   const { data, error } = await cabinService.getById(Number(cabinId));
 
   if (error) {

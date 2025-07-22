@@ -1,3 +1,4 @@
+import NavTrail from './components/NavTrail';
 import Counter from './components/Counter';
 import Logo from './components/Logo';
 import MiniSidebar from './components/MiniSidebar';
@@ -16,6 +17,7 @@ export {
   Logo,
   MiniSidebar,
   Navigation,
+  NavTrail,
   PageLayout,
   PageProgressBar,
   Spinner,

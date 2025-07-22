@@ -26,7 +26,6 @@ export default async function CabinsList({ capacity }: CabinQuery) {
           </li>
         ))}
       </ul>
-      <div id='test'>Test</div>
     </section>
   ) : null;
 }
