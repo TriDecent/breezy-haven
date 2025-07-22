@@ -56,6 +56,7 @@ export default async function Page() {
         <div className='relative order-2 aspect-square md:order-1 md:col-span-2'>
           <Image
             src='/about-2.jpg'
+            sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
             alt='Family that manages The Breezy Haven'
             fill
           />

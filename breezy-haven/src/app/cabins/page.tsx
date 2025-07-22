@@ -1,15 +1,28 @@
-import { CabinLoading, CabinsList } from '@/features/cabins';
+import {
+  CabinLoading,
+  CabinQuery,
+  CabinsList,
+  Filter,
+} from '@/features/cabins';
 
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 
-export const revalidate = 3600;
+// export const revalidate = 3600; // not effective anymore because of searchParams
 
 export const metadata: Metadata = {
   title: 'Cabins',
 };
 
-export default async function Page() {
+type FilterType = Partial<CabinQuery>;
+
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<FilterType>;
+}) {
+  const capacityFilter = (await searchParams).capacity ?? 'all';
+
   return (
     <>
       <h1 className='text-accent-400 mb-5 text-xl font-medium md:text-2xl lg:text-4xl'>
@@ -24,8 +37,12 @@ export default async function Page() {
         Welcome to paradise.
       </p>
 
-      <Suspense fallback={<CabinLoading />}>
-        <CabinsList />
+      <div className='mb-10 sm:self-end'>
+        <Filter />
+      </div>
+
+      <Suspense fallback={<CabinLoading />} key={capacityFilter}>
+        <CabinsList capacity={capacityFilter} />
       </Suspense>
     </>
   );
