@@ -1,5 +1,6 @@
 import PreviewImage from '@/features/cabins/PreviewImage';
 import { cabinService } from '@/services';
+import { TextExpander } from '@/shared';
 import { EyeSlashIcon, MapPinIcon, UsersIcon } from '@heroicons/react/24/solid';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -75,7 +76,7 @@ export default async function Page({ params }: PageParams) {
           </h3>
 
           <p className='text-primary-300 mb-10 md:text-lg'>
-            {data.description}
+            <TextExpander>{data.description}</TextExpander>
           </p>
 
           <ul className='flex flex-col gap-4'>
