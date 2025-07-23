@@ -10,13 +10,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu';
+import { usePathname } from 'next/navigation';
 
 export default function ThemeToggle() {
   const { setTheme } = useTheme();
+  const pathname = usePathname();
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger asChild className={pathname === '/' ? 'hidden' : ''}>
         <Button
           variant='outline'
           size='icon'

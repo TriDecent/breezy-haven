@@ -1,6 +1,6 @@
 import { getCountries } from '@/lib';
 
-export async function SelectCountry({
+export default async function SelectCountry({
   defaultCountry,
   name,
   id,
