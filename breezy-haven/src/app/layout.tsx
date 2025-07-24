@@ -35,9 +35,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en' suppressHydrationWarning>
-      <body
-        className={`bg-primary-950 text-primary-100 ${josefin.className} antialiased`}
-      >
+      <body className={`${josefin.className} antialiased`}>
         <ThemeProvider
           attribute='class'
           defaultTheme='dark'
