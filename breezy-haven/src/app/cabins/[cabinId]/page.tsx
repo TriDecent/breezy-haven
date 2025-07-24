@@ -1,3 +1,7 @@
+import {
+  ReservationDateRangeSelector,
+  ReservationForm,
+} from '@/features/account/profile';
 import PreviewImage from '@/features/cabins/PreviewImage';
 import { cabinService } from '@/services';
 import { TextExpander } from '@/shared';
@@ -46,7 +50,7 @@ export default async function Page({ params }: PageParams) {
 
   if (Number.isNaN(Number(cabinId))) notFound();
 
-  const { data, error } = await cabinService.getById(Number(cabinId));
+  const { data: cabin, error } = await cabinService.getById(Number(cabinId));
 
   if (error) {
     if (error.code !== 'PGRST116') throw new Error(error.message);
@@ -54,47 +58,56 @@ export default async function Page({ params }: PageParams) {
     notFound();
   }
 
-  if (!data) notFound();
+  if (!cabin) notFound();
 
   return (
-    <section>
-      <article className='md:border-primary-800 mb-12 flex flex-col gap-4 rounded-md md:mb-24 md:flex-row md:gap-16 md:border md:px-8 md:py-6'>
-        <div className='shadow-accent-500/65 relative h-64 overflow-hidden rounded-2xl md:h-180 md:flex-2/5 md:-translate-x-3 md:translate-y-4 md:scale-[1.2] md:shadow-[10px_15px_10px] lg:h-168 lg:-translate-x-4 lg:-translate-y-3.5 lg:scale-[1.15] xl:h-148 xl:scale-[1.2]'>
-          <PreviewImage
-            src={data.image}
-            alt={`Cabin ${data.name}`}
-            fill
-            sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-            priority
-            className='object-cover'
-          />
-        </div>
+    <>
+      <section>
+        <article className='md:border-primary-800 mb-12 flex flex-col gap-4 rounded-md md:mb-24 md:flex-row md:gap-16 md:border md:px-8 md:py-6'>
+          <div className='shadow-accent-500/65 relative h-64 overflow-hidden rounded-2xl md:h-180 md:flex-2/5 md:-translate-x-3 md:translate-y-4 md:scale-[1.2] md:shadow-[10px_15px_10px] lg:h-168 lg:-translate-x-4 lg:-translate-y-3.5 lg:scale-[1.15] xl:h-148 xl:scale-[1.2]'>
+            <PreviewImage
+              src={cabin.image}
+              alt={`Cabin ${cabin.name}`}
+              fill
+              sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+              priority
+              className='object-cover'
+            />
+          </div>
 
-        <div className='md:flex-3/5'>
-          <h3 className='bg-primary-950 w-max rounded text-center text-2xl leading-loose font-black tracking-wide md:-translate-x-2/5 md:pt-2 md:pl-6 md:text-left md:text-7xl'>
-            <p className='from-accent-300 to-accent-600 via-accent-500 bg-gradient-to-r from-5% bg-clip-text text-transparent'>
-              Cabin {data.name}
+          <div className='md:flex-3/5'>
+            <h3 className='bg-primary-950 w-max rounded text-center text-2xl leading-loose font-black tracking-wide md:-translate-x-2/5 md:pt-2 md:pl-6 md:text-left md:text-7xl'>
+              <p className='from-accent-300 to-accent-600 via-accent-500 bg-gradient-to-r from-5% bg-clip-text text-transparent'>
+                Cabin {cabin.name}
+              </p>
+            </h3>
+
+            <p className='text-primary-300 mb-10 md:text-lg'>
+              <TextExpander>{cabin.description}</TextExpander>
             </p>
-          </h3>
 
-          <p className='text-primary-300 mb-10 md:text-lg'>
-            <TextExpander>{data.description}</TextExpander>
-          </p>
+            <ul className='flex flex-col gap-4'>
+              {iconComponents(cabin.maxCapacity).map((icon, index) => (
+                <li key={index} className='flex items-center gap-3'>
+                  {icon}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </article>
+      </section>
 
-          <ul className='flex flex-col gap-4'>
-            {iconComponents(data.maxCapacity).map((icon, index) => (
-              <li key={index} className='flex items-center gap-3'>
-                {icon}
-              </li>
-            ))}
-          </ul>
+      <section>
+        <h2 className='text-accent-500 mb-8 text-center text-xl font-semibold tracking-wide md:text-5xl'>
+          Reserve {cabin.name} today. Pay on arrival.
+        </h2>
+
+        <div className='flex flex-col gap-4 md:flex-row'>
+          <ReservationForm />
+          <ReservationDateRangeSelector />
         </div>
-      </article>
-
-      <h2 className='text-accent-500 text-center text-xl font-semibold tracking-wide md:text-5xl'>
-        Reserve today. Pay on arrival.
-      </h2>
-    </section>
+      </section>
+    </>
   );
 }
 

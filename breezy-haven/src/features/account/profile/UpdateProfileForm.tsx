@@ -1,6 +1,7 @@
 'use client';
 
 import countryFlag from '@/../public/germany.webp';
+import { PrimaryButton } from '@/shared';
 import Image from 'next/image';
 import { InputHTMLAttributes } from 'react';
 
@@ -46,9 +47,7 @@ export default function UpdateProfileForm({
         name='nationalID'
       />
 
-      <button className='bg-accent-500 text-primary-800 hover:bg-accent-600 rounded-md px-4 py-2 font-semibold transition-all disabled:cursor-not-allowed disabled:bg-gray-500 disabled:text-gray-300 md:w-fit md:self-center md:px-8 md:py-4'>
-        Update profile
-      </button>
+      <PrimaryButton>Update profile</PrimaryButton>
     </form>
   );
 }
