@@ -34,10 +34,10 @@ export default function DateSelector({
   description,
   ...props
 }: { description: string } & DateSelector) {
-  const [locale, setLocale] = useState<CustomLocale>('en');
+  const [locale, setLocale] = useState<CustomLocale | undefined>(undefined);
 
   return (
-    <Card>
+    <Card className='shadow-lg'>
       <CardHeader>
         <CardTitle>Pick your dates</CardTitle>
         <CardDescription>
@@ -49,7 +49,7 @@ export default function DateSelector({
             onValueChange={value => setLocale(value as CustomLocale)}
           >
             <SelectTrigger className='w-[118px]'>
-              <SelectValue />
+              <SelectValue placeholder='Language' />
             </SelectTrigger>
             <SelectContent align='end'>
               <SelectGroup>
@@ -62,7 +62,11 @@ export default function DateSelector({
         </CardAction>
       </CardHeader>
       <CardContent>
-        <Calendar {...props} locale={locales[locale]} className='w-full' />
+        <Calendar
+          {...props}
+          locale={locales[locale ?? 'en']}
+          className='w-full'
+        />
       </CardContent>
       <CardFooter className='text-muted-foreground justify-center text-sm'>
         {description}

@@ -23,7 +23,7 @@ export default function ReservationDateRangeSelector() {
 
   return (
     <div className='flex flex-col justify-between space-y-4 sm:w-full lg:flex-1/2'>
-      <div className='bg-accent-500 text-primary-800 flex items-baseline justify-evenly gap-2 rounded md:gap-6 md:px-4 lg:px-8'>
+      <div className='bg-accent-500 text-primary-800 flex items-baseline justify-evenly gap-2 rounded shadow-sm shadow-black md:gap-6 md:px-4 lg:px-8'>
         <p className='flex items-center gap-2'>
           {discount > 0 ? (
             <>

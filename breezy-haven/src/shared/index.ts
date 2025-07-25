@@ -9,6 +9,7 @@ import PageProgressBar from './components/PageProgressBar';
 import PrimaryButton from './components/PrimaryButton';
 import Spinner from './components/Spinner';
 import SpinnerMini from './components/SpinnerMini';
+import Textarea from './components/Textarea';
 import TextExpander from './components/TextExpander';
 import ThemeToggle from './components/ThemeToggle';
 import ThemeProvider from './providers/ThemeProvider';
@@ -26,6 +27,7 @@ export {
   PrimaryButton,
   Spinner,
   SpinnerMini,
+  Textarea,
   TextExpander,
   ThemeProvider,
   ThemeToggle,

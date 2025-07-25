@@ -47,7 +47,9 @@ export default function UpdateProfileForm({
         name='nationalID'
       />
 
-      <PrimaryButton>Update profile</PrimaryButton>
+      <div className='md:w-fit md:self-center'>
+        <PrimaryButton>Update profile</PrimaryButton>
+      </div>
     </form>
   );
 }

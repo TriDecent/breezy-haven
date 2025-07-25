@@ -1,11 +1,22 @@
-import { PrimaryButton } from '@/shared';
+'use client';
+import { PrimaryButton, Textarea } from '@/shared';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/shared/components/ui/select';
+
+import { useState } from 'react';
 
 export default function ReservationForm() {
+  const [guestCount, setGuestCount] = useState<number>(0);
   // CHANGE
   const maxCapacity = 23;
 
   return (
-    <article className='md:order-2'>
+    <article className='h-fit shadow-lg md:order-2'>
       <div className='bg-primary-800 text-primary-300 flex items-center justify-between rounded-t-lg px-8 py-4 md:px-16'>
         <p>Logged in as</p>
 
@@ -23,41 +34,41 @@ export default function ReservationForm() {
 
       <form className='bg-primary-900 flex flex-col gap-5 rounded-b-lg px-4 py-5 text-lg sm:px-8 md:py-10 xl:px-16'>
         <div className='space-y-2'>
-          <label htmlFor='numGuests'>How many guests?</label>
-          <select
-            name='numGuests'
-            id='numGuests'
-            className='bg-primary-200 text-primary-800 w-full rounded-sm px-5 py-3 shadow-sm'
-            required
+          <label htmlFor='guestCount'>How many guests?</label>
+          <Select
+            name='guestCount'
+            value={`${guestCount === 0 ? '' : guestCount}`}
+            onValueChange={value => setGuestCount(Number(value))}
           >
-            <option value='' key=''>
-              Select number of guests...
-            </option>
-            {Array.from({ length: maxCapacity }, (_, i) => i + 1).map(x => (
-              <option value={x} key={x}>
-                {x} {x === 1 ? 'guest' : 'guests'}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger id='guestCount' className='w-full'>
+              <SelectValue placeholder='Select number of guests' />
+            </SelectTrigger>
+            <SelectContent align='start'>
+              {Array.from({ length: maxCapacity }, (_, i) => i + 1).map(x => (
+                <SelectItem key={x} value={`${x}`}>
+                  {x} {x === 1 ? 'guest' : 'guests'}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className='space-y-2'>
           <label htmlFor='observations'>
             Anything we should know about your stay?
           </label>
-          <textarea
+          <Textarea
             name='observations'
             id='observations'
-            className='bg-primary-200 text-primary-800 w-full rounded-sm px-5 py-3 shadow-sm'
             placeholder='Any pets, allergies, special requirements, etc.?'
           />
         </div>
 
-        <div className='flex flex-col gap-6 md:flex-row md:items-center md:justify-end'>
-          <div className='md:order-2'>
+        <div className='flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-end'>
+          <div className='w-full lg:order-2'>
             <PrimaryButton>Reserve now</PrimaryButton>
           </div>
-          <p className='text-primary-300 self-center text-base md:order-1'>
+          <p className='text-muted-foreground self-center text-base lg:order-1'>
             Start by selecting dates
           </p>
         </div>
