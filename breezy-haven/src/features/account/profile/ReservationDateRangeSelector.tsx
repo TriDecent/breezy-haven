@@ -22,20 +22,8 @@ export default function ReservationDateRangeSelector() {
   }, [dateRange]);
 
   return (
-    <div className='flex flex-col justify-between space-y-4 sm:w-full md:order-1 lg:flex-1/2 lg:space-y-0'>
-      <DateSelector
-        className='my-auto'
-        mode='range'
-        selected={dateRange}
-        onSelect={setDateRange}
-        numberOfMonths={2}
-        min={2}
-        max={20}
-        disabled={{ before: new Date(Date.now()) }}
-        description='Your stay must be between 2 and 20 nights'
-      />
-
-      <div className='bg-accent-500 text-primary-800 mt-auto flex items-baseline justify-evenly gap-2 rounded md:gap-6 md:px-4 lg:px-8'>
+    <div className='flex flex-col justify-between space-y-4 sm:w-full lg:flex-1/2'>
+      <div className='bg-accent-500 text-primary-800 flex items-baseline justify-evenly gap-2 rounded md:gap-6 md:px-4 lg:px-8'>
         <p className='flex items-center gap-2'>
           {discount > 0 ? (
             <>
@@ -63,6 +51,17 @@ export default function ReservationDateRangeSelector() {
           </>
         ) : null}
       </div>
+
+      <DateSelector
+        mode='range'
+        selected={dateRange}
+        onSelect={setDateRange}
+        numberOfMonths={2}
+        min={2}
+        max={20}
+        disabled={{ before: new Date(Date.now()) }}
+        description='Your stay must be between 2 and 20 nights'
+      />
     </div>
   );
 }
