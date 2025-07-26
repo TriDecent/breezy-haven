@@ -10,6 +10,7 @@ import { CabinQuery } from './sizeClassifier';
 export {
   CabinCard,
   CabinCardSkeleton,
+  CabinDetail,
   CabinLoading,
   CabinsList,
   Filter,

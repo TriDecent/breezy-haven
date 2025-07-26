@@ -1,11 +1,6 @@
-import {
-  ReservationDateRangeSelector,
-  ReservationForm,
-} from '@/features/cabins';
-import PreviewImage from '@/features/cabins/PreviewImage';
+import { CabinDetail, Reservation } from '@/features/cabins';
 import { cabinService } from '@/services';
-import { TextExpander } from '@/shared';
-import { EyeSlashIcon, MapPinIcon, UsersIcon } from '@heroicons/react/24/solid';
+
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
@@ -32,17 +27,19 @@ export async function generateMetadata({
   params,
 }: PageParams): Promise<Metadata> {
   const { cabinId } = await params;
-  const { data, error } = await cabinService.getById(Number(cabinId));
+  const { data: cabin, error: cabinError } = await cabinService.getById(
+    Number(cabinId)
+  );
 
   if (error) {
     if (error.code === 'PGRST116') return { title: 'Cabin not found' };
 
-    return { title: `Error: ${error.message}` };
+    return { title: 'Cabin not found' };
   }
 
-  if (!data) return { title: 'Cabin not found' };
+  if (!cabin) return { title: 'Cabin not found' };
 
-  return { title: `Cabin ${data.name}` };
+  return { title: `Cabin ${cabin.name}` };
 }
 
 export default async function Page({ params }: PageParams) {
@@ -50,56 +47,26 @@ export default async function Page({ params }: PageParams) {
 
   if (Number.isNaN(Number(cabinId))) notFound();
 
-  const { data: cabin, error } = await cabinService.getById(Number(cabinId));
+  const cabinResult = await cabinService.getById(Number(cabinId));
 
-  if (error) {
-    if (error.code !== 'PGRST116') throw new Error(error.message);
+  if (cabinResult.error) {
+    if (cabinResult.error.code !== 'PGRST116')
+      throw new Error(cabinResult.error.message);
 
     notFound();
   }
 
-  if (!cabin) notFound();
+  if (!cabinResult.data) notFound();
 
   return (
     <>
       <section>
-        <article className='md:border-primary-800 mb-12 flex flex-col gap-4 rounded-md md:mb-24 md:flex-row md:gap-16 md:border md:px-8 md:py-6'>
-          <div className='shadow-accent-500/65 relative h-64 overflow-hidden rounded-2xl md:h-180 md:flex-2/5 md:-translate-x-3 md:translate-y-4 md:scale-[1.2] md:shadow-[10px_15px_10px] lg:h-168 lg:-translate-x-4 lg:-translate-y-3.5 lg:scale-[1.15] xl:h-148 xl:scale-[1.2]'>
-            <PreviewImage
-              src={cabin.image}
-              alt={`Cabin ${cabin.name}`}
-              fill
-              sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-              priority
-              className='object-cover'
-            />
-          </div>
-
-          <div className='md:flex-3/5'>
-            <h3 className='bg-primary-950 w-max rounded text-center text-2xl leading-loose font-black tracking-wide md:-translate-x-2/5 md:pt-2 md:pl-6 md:text-left md:text-7xl'>
-              <p className='from-accent-300 to-accent-600 via-accent-500 bg-gradient-to-r from-5% bg-clip-text text-transparent'>
-                Cabin {cabin.name}
-              </p>
-            </h3>
-
-            <p className='text-primary-300 mb-10 md:text-lg'>
-              <TextExpander>{cabin.description}</TextExpander>
-            </p>
-
-            <ul className='flex flex-col gap-4'>
-              {iconComponents(cabin.maxCapacity).map((icon, index) => (
-                <li key={index} className='flex items-center gap-3'>
-                  {icon}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </article>
+        <CabinDetail cabin={cabinResult.data} />
       </section>
 
       <section>
         <h2 className='text-accent-500 mb-8 text-center text-xl font-semibold tracking-wide md:text-5xl'>
-          Reserve {cabin.name} today. Pay on arrival.
+          Reserve {cabinResult.data.name} today. Pay on arrival.
         </h2>
 
         <div className='flex flex-col gap-4 md:flex-row'>
@@ -110,26 +77,3 @@ export default async function Page({ params }: PageParams) {
     </>
   );
 }
-
-const iconComponents = (maxCapacity: number) =>
-  [
-    <>
-      <UsersIcon className='text-accent-600 h-5 w-5' />
-      <p className='text-lg'>
-        For up to <span className='font-bold'>{maxCapacity}</span> guests
-      </p>
-    </>,
-    <>
-      <MapPinIcon className='text-accent-600 h-5 w-5' />
-      <p className='text-lg'>
-        Located in the heart of the <span className='font-bold'>Dolomites</span>{' '}
-        (Italy)
-      </p>
-    </>,
-    <>
-      <EyeSlashIcon className='text-accent-600 h-5 w-5' />
-      <p className='text-lg'>
-        Privacy <span className='font-bold'>100%</span> guaranteed
-      </p>
-    </>,
-  ] as const;
