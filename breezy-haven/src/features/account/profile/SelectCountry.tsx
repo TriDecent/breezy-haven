@@ -1,33 +1,46 @@
 import { getCountries } from '@/lib';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/shared';
 
 export default async function SelectCountry({
   defaultCountry,
   name,
   id,
-  className,
 }: {
   defaultCountry: string;
   name: string;
   id: string;
-  className: string;
 }) {
   const countries = await getCountries();
   const flag =
     countries.find(country => country.name === defaultCountry)?.flag ?? '';
 
   return (
-    <select
-      id={id}
-      name={name}
-      defaultValue={`${defaultCountry}%${flag}`}
-      className={className}
-    >
-      <option value=''>Select country...</option>
-      {countries.map(country => (
-        <option key={country.name} value={`${country.name}%${country.flag}`}>
-          {country.name}
-        </option>
-      ))}
-    </select>
+    <>
+      <Select name={name}>
+        <SelectTrigger
+          id={id}
+          defaultValue={`${defaultCountry}%${flag}`}
+          className='w-full'
+        >
+          <SelectValue placeholder='Select country...' />
+        </SelectTrigger>
+        <SelectContent align='end' className='max-w-[90vw] md:w-3/4'>
+          {countries.map(country => (
+            <SelectItem
+              key={country.name}
+              value={`${country.name}%${country.flag}`}
+            >
+              {country.name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </>
   );
 }

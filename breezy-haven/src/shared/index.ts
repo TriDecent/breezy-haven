@@ -15,6 +15,9 @@ import ThemeToggle from './components/ThemeToggle';
 import ThemeProvider from './providers/ThemeProvider';
 
 export * from './animations/Variants';
+export * from './components/ui/input';
+export * from './components/ui/select';
+export * from './components/ui/textarea';
 export {
   Counter,
   DateSelector,

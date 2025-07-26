@@ -1,7 +1,7 @@
 'use client';
 
 import countryFlag from '@/../public/germany.webp';
-import { PrimaryButton } from '@/shared';
+import { Input, PrimaryButton } from '@/shared';
 import Image from 'next/image';
 import { InputHTMLAttributes } from 'react';
 
@@ -17,7 +17,8 @@ export default function UpdateProfileForm({
         name='fullName'
         labelText='Full name'
         autoComplete='name'
-        disabled
+        readOnly
+        className='read-only:cursor-not-allowed'
       />
 
       <InputForm
@@ -25,7 +26,8 @@ export default function UpdateProfileForm({
         name='email'
         labelText='Email address'
         autoComplete='email'
-        disabled
+        readOnly
+        className='read-only:cursor-not-allowed'
       />
 
       <div className='space-y-2'>
@@ -62,11 +64,7 @@ function InputForm({
   return (
     <div className='space-y-2'>
       <label htmlFor={id}>{labelText}</label>
-      <input
-        id={id}
-        {...props}
-        className='bg-primary-200 text-primary-800 w-full rounded-sm px-5 py-3 shadow-sm disabled:cursor-not-allowed disabled:bg-gray-600 disabled:text-gray-400'
-      />
+      <Input id={id} {...props} className='xl:!text-base' />
     </div>
   );
 }

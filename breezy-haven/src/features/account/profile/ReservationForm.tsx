@@ -1,12 +1,13 @@
 'use client';
-import { PrimaryButton, Textarea } from '@/shared';
 import {
+  PrimaryButton,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/shared/components/ui/select';
+  Textarea,
+} from '@/shared';
 
 import { useState } from 'react';
 
