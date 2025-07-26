@@ -9,31 +9,33 @@ export default class BookingRepository extends Repository<RawBooking> {
     super('bookings');
   }
 
-  async getByGuestId(guestId: number): Promise<RawBooking[] | PostgrestError> {
+  async getByGuestId(
+    guestId: number
+  ): Promise<{ data: RawBooking[]; error: PostgrestError | null }> {
     const { data, error } = await supabase
       .from('bookings')
       .select()
       .eq('guestId', guestId)
       .order('startDate');
-    if (error) return error;
-    return data ?? [];
+    return { data: data ?? [], error };
   }
 
-  async getByCabinId(cabinId: number): Promise<RawBooking[] | PostgrestError> {
+  async getByCabinId(
+    cabinId: number
+  ): Promise<{ data: RawBooking[]; error: PostgrestError | null }> {
     const { data, error } = await supabase
       .from('bookings')
       .select('*')
       .eq('cabinId', cabinId);
-    if (error) return error;
-    return data ?? [];
+    return { data: data ?? [], error };
   }
 
   async getBookedDatesByCabinId(
     cabinId: number
-  ): Promise<readonly Date[] | PostgrestError> {
-    const raw = await this.getByCabinId(cabinId);
-    if ('code' in raw) return raw;
-    return getBookedDates(raw);
+  ): Promise<{ data: readonly Date[]; error: PostgrestError | null }> {
+    const { data, error } = await this.getByCabinId(cabinId);
+
+    return { data: getBookedDates(data), error: error };
   }
 }
 
