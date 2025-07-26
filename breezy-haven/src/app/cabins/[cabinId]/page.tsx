@@ -1,7 +1,7 @@
 import {
   ReservationDateRangeSelector,
   ReservationForm,
-} from '@/features/account/profile';
+} from '@/features/cabins';
 import PreviewImage from '@/features/cabins/PreviewImage';
 import { cabinService } from '@/services';
 import { TextExpander } from '@/shared';
