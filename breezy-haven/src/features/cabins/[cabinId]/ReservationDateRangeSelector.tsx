@@ -1,10 +1,19 @@
 'use client';
+import { Cabin, Setting } from '@/repositories';
 import { DateSelector } from '@/shared';
 import { isWithinInterval } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 
-export default function ReservationDateRangeSelector() {
+export default function ReservationDateRangeSelector({
+  setting,
+  bookedDates,
+  cabin,
+}: {
+  setting: Setting;
+  bookedDates: readonly Date[];
+  cabin: Cabin;
+}) {
   // CHANGE
   const regularPrice = 23;
   const discount = 23;
@@ -12,8 +21,7 @@ export default function ReservationDateRangeSelector() {
   const cabinPrice = 23;
 
   // SETTINGS
-  const minBookingLength = 1;
-  const maxBookingLength = 23;
+  const { minBookingLength, maxBookingLength } = setting;
 
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
 

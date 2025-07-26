@@ -1,4 +1,5 @@
 'use client';
+import { Cabin } from '@/repositories';
 import {
   PrimaryButton,
   Select,
@@ -11,10 +12,8 @@ import {
 
 import { useState } from 'react';
 
-export default function ReservationForm() {
+export default function ReservationForm({ cabin }: { cabin: Cabin }) {
   const [guestCount, setGuestCount] = useState<number>(0);
-  // CHANGE
-  const maxCapacity = 23;
 
   return (
     <article className='h-fit shadow-lg md:order-2'>
@@ -45,11 +44,13 @@ export default function ReservationForm() {
               <SelectValue placeholder='Select number of guests' />
             </SelectTrigger>
             <SelectContent align='start'>
-              {Array.from({ length: maxCapacity }, (_, i) => i + 1).map(x => (
-                <SelectItem key={x} value={`${x}`}>
-                  {x} {x === 1 ? 'guest' : 'guests'}
-                </SelectItem>
-              ))}
+              {Array.from({ length: cabin.maxCapacity }, (_, i) => i + 1).map(
+                x => (
+                  <SelectItem key={x} value={`${x}`}>
+                    {x} {x === 1 ? 'guest' : 'guests'}
+                  </SelectItem>
+                )
+              )}
             </SelectContent>
           </Select>
         </div>

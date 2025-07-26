@@ -1,5 +1,5 @@
-import ReservationDateRangeSelector from './[cabinId]/ReservationDateRangeSelector';
-import ReservationForm from './[cabinId]/ReservationForm';
+import CabinDetail from './[cabinId]/CabinDetail';
+import Reservation from './[cabinId]/Reservation';
 import CabinCard from './CabinCard';
 import CabinCardSkeleton from './CabinCardSkeleton';
 import CabinLoading from './CabinLoading';
@@ -14,7 +14,6 @@ export {
   CabinLoading,
   CabinsList,
   Filter,
-  ReservationDateRangeSelector,
-  ReservationForm,
+  Reservation,
 };
 export type { CabinQuery };

@@ -3,6 +3,8 @@ import { cabinService } from '@/services';
 
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
+import Loading from './loading';
 
 export const revalidate = 3600;
 
@@ -31,8 +33,9 @@ export async function generateMetadata({
     Number(cabinId)
   );
 
-  if (error) {
-    if (error.code === 'PGRST116') return { title: 'Cabin not found' };
+  if (cabinError) {
+    if (cabinError.code !== 'PGRST116')
+      return { title: `Error: ${cabinError.message}` };
 
     return { title: 'Cabin not found' };
   }
@@ -70,8 +73,9 @@ export default async function Page({ params }: PageParams) {
         </h2>
 
         <div className='flex flex-col gap-4 md:flex-row'>
-          <ReservationForm />
-          <ReservationDateRangeSelector />
+          <Suspense fallback={<Loading />}>
+            <Reservation cabin={cabinResult.data} />
+          </Suspense>
         </div>
       </section>
     </>
