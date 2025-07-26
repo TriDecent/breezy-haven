@@ -18,6 +18,7 @@ import {
   SelectGroup,
   SelectItem,
   SelectLabel,
+  SelectSeparator,
   SelectTrigger,
   SelectValue,
 } from './ui/select';
@@ -54,6 +55,7 @@ export default function DateSelector({
             <SelectContent align='end'>
               <SelectGroup>
                 <SelectLabel>Languages</SelectLabel>
+                <SelectSeparator />
                 <SelectItem value='en'>English</SelectItem>
                 <SelectItem value='vi'>Vietnamese</SelectItem>
               </SelectGroup>
@@ -74,3 +76,4 @@ export default function DateSelector({
     </Card>
   );
 }
+

@@ -1,9 +1,16 @@
 'use client';
 import { Cabin, Setting } from '@/repositories';
-import { DateSelector } from '@/shared';
+import {
+  DateSelector,
+  fromISOToDateRange,
+  RootState,
+  uiActions,
+} from '@/shared';
+
 import { isWithinInterval } from 'date-fns';
-import { useEffect, useState } from 'react';
 import { DateRange } from 'react-day-picker';
+import { useDispatch, useSelector } from 'react-redux';
+import { fromDateRangeToISO } from '../../../shared/store/uiSlice';
 
 export default function ReservationDateRangeSelector({
   setting,
@@ -20,14 +27,10 @@ export default function ReservationDateRangeSelector({
   const numNights = 23;
   const cabinPrice = 23;
 
-  // SETTINGS
   const { minBookingLength, maxBookingLength } = setting;
 
-  const [dateRange, setDateRange] = useState<DateRange | undefined>();
-
-  useEffect(() => {
-    console.log(dateRange);
-  }, [dateRange]);
+  const isoDateRange = useSelector((state: RootState) => state.ui.isoDateRange);
+  const dispatch = useDispatch();
 
   return (
     <div className='flex flex-col justify-between space-y-4 sm:w-full lg:flex-1/2'>
@@ -62,8 +65,18 @@ export default function ReservationDateRangeSelector({
 
       <DateSelector
         mode='range'
-        selected={dateRange}
-        onSelect={setDateRange}
+        selected={
+          isoDateRange ? fromISOToDateRange(isoDateRange) : isoDateRange
+        }
+        onSelect={updatedDateRange =>
+          dispatch(
+            uiActions.updateDateRange(
+              updatedDateRange
+                ? fromDateRangeToISO(updatedDateRange)
+                : undefined
+            )
+          )
+        }
         numberOfMonths={2}
         min={2}
         max={20}

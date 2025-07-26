@@ -4,6 +4,7 @@ import {
   NavTrail,
   PageLayout,
   PageProgressBar,
+  RootProvider,
   ThemeProvider,
   ThemeToggle,
 } from '@/shared';
@@ -36,30 +37,32 @@ export default function RootLayout({
   return (
     <html lang='en' suppressHydrationWarning>
       <body className={`${josefin.className} antialiased`}>
-        <ThemeProvider
-          attribute='class'
-          defaultTheme='dark'
-          enableSystem
-          disableTransitionOnChange
-        >
-          <PageLayout>
-            <PageLayout.Header>
-              <div className='mx-auto flex items-center justify-between p-2 md:p-6 lg:p-8'>
-                <Logo />
-                <Navigation />
-                <ThemeToggle />
-              </div>
-              <div className='px-4 md:px-8 lg:px-12'>
-                <NavTrail />
-              </div>
-            </PageLayout.Header>
-            <PageLayout.Main>{children}</PageLayout.Main>
-            <PageLayout.Footer />
-          </PageLayout>
-          <div id='mini-sidebar' className='md:hidden'></div>
-          <div id='image-previewing'></div>
-          <PageProgressBar />
-        </ThemeProvider>
+        <RootProvider>
+          <ThemeProvider
+            attribute='class'
+            defaultTheme='dark'
+            enableSystem
+            disableTransitionOnChange
+          >
+            <PageLayout>
+              <PageLayout.Header>
+                <div className='mx-auto flex items-center justify-between p-2 md:p-6 lg:p-8'>
+                  <Logo />
+                  <Navigation />
+                  <ThemeToggle />
+                </div>
+                <div className='px-4 md:px-8 lg:px-12'>
+                  <NavTrail />
+                </div>
+              </PageLayout.Header>
+              <PageLayout.Main>{children}</PageLayout.Main>
+              <PageLayout.Footer />
+            </PageLayout>
+            <div id='mini-sidebar' className='md:hidden'></div>
+            <div id='image-previewing'></div>
+            <PageProgressBar />
+          </ThemeProvider>
+        </RootProvider>
       </body>
     </html>
   );

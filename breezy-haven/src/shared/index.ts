@@ -13,11 +13,14 @@ import Textarea from './components/Textarea';
 import TextExpander from './components/TextExpander';
 import ThemeToggle from './components/ThemeToggle';
 import ThemeProvider from './providers/ThemeProvider';
+import RootProvider from './store/RootProvider';
+import { RootState } from './store/store';
 
 export * from './animations/Variants';
 export * from './components/ui/input';
 export * from './components/ui/select';
 export * from './components/ui/textarea';
+export * from './store/uiSlice';
 export {
   Counter,
   DateSelector,
@@ -28,6 +31,7 @@ export {
   PageLayout,
   PageProgressBar,
   PrimaryButton,
+  RootProvider,
   Spinner,
   SpinnerMini,
   Textarea,
@@ -35,3 +39,4 @@ export {
   ThemeProvider,
   ThemeToggle,
 };
+export type { RootState };
