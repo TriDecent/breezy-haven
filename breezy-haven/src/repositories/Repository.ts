@@ -1,4 +1,4 @@
-import { supabase } from '@/lib';
+import { supabase } from '@/lib/supabase';
 import { PostgrestError } from '@supabase/supabase-js';
 import { RawRow, TableName } from './types';
 

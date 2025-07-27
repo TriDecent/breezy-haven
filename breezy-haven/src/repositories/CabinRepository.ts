@@ -1,7 +1,7 @@
-import { supabase } from '@/lib';
 import { PostgrestError } from '@supabase/supabase-js';
 import Repository from './Repository';
 import { RawCabin } from './types';
+import { supabase } from '@/lib/supabase';
 
 export default class CabinRepository extends Repository<RawCabin> {
   constructor() {

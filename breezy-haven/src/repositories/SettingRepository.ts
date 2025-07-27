@@ -1,4 +1,4 @@
-import { supabase } from '@/lib';
+import { supabase } from '@/lib/supabase';
 import { PostgrestError } from '@supabase/supabase-js';
 import { Setting } from '.';
 import Repository from './Repository';
