@@ -18,7 +18,6 @@ export default function UpdateProfileForm({
         labelText='Full name'
         autoComplete='name'
         readOnly
-        className='read-only:cursor-not-allowed'
       />
 
       <InputForm
@@ -27,7 +26,6 @@ export default function UpdateProfileForm({
         labelText='Email address'
         autoComplete='email'
         readOnly
-        className='read-only:cursor-not-allowed'
       />
 
       <div className='space-y-2'>
@@ -64,7 +62,11 @@ function InputForm({
   return (
     <div className='space-y-2'>
       <label htmlFor={id}>{labelText}</label>
-      <Input id={id} {...props} className='xl:!text-base' />
+      <Input
+        id={id}
+        {...props}
+        className='read-only:cursor-not-allowed xl:!text-base'
+      />
     </div>
   );
 }

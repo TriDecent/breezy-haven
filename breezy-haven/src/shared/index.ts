@@ -1,3 +1,4 @@
+import Variants from './animations/Variants';
 import Counter from './components/Counter';
 import DateSelector from './components/DateSelector';
 import Logo from './components/Logo';
@@ -12,8 +13,9 @@ import SpinnerMini from './components/SpinnerMini';
 import Textarea from './components/Textarea';
 import TextExpander from './components/TextExpander';
 import ThemeToggle from './components/ThemeToggle';
+import useScrollDirection from './hooks/useScrollDirection';
+import RootProvider from './providers/RootProvider';
 import ThemeProvider from './providers/ThemeProvider';
-import RootProvider from './store/RootProvider';
 import { RootState } from './store/store';
 
 export * from './animations/Variants';
@@ -38,5 +40,7 @@ export {
   TextExpander,
   ThemeProvider,
   ThemeToggle,
+  useScrollDirection,
+  Variants,
 };
 export type { RootState };

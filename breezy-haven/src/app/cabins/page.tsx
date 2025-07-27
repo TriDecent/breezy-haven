@@ -3,6 +3,7 @@ import {
   CabinQuery,
   CabinsList,
   Filter,
+  ReservationReminder,
 } from '@/features/cabins';
 
 import { Metadata } from 'next';
@@ -43,6 +44,7 @@ export default async function Page({
 
       <Suspense fallback={<CabinLoading />} key={capacityFilter}>
         <CabinsList capacity={capacityFilter} />
+        <ReservationReminder />
       </Suspense>
     </>
   );

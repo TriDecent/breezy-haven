@@ -5,6 +5,7 @@ import CabinCardSkeleton from './CabinCardSkeleton';
 import CabinLoading from './CabinLoading';
 import CabinsList from './CabinsList';
 import Filter from './Filter';
+import ReservationReminder from './ReservationReminder';
 import { CabinQuery } from './sizeClassifier';
 
 export {
@@ -15,5 +16,6 @@ export {
   CabinsList,
   Filter,
   Reservation,
+  ReservationReminder,
 };
 export type { CabinQuery };
