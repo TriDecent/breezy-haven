@@ -12,7 +12,7 @@ const PageLayout = ({ children }: PageLayoutProps) => (
 );
 
 PageLayout.Header = ({ children }: PageLayoutProps) => (
-  <header className='w-full'>{children}</header>
+  <header className='container mx-auto'>{children}</header>
 );
 
 PageLayout.Main = ({ children }: PageLayoutProps) => (
