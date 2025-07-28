@@ -16,6 +16,7 @@ import ThemeToggle from './components/ThemeToggle';
 import useScrollDirection from './hooks/useScrollDirection';
 import RootProvider from './providers/RootProvider';
 import ThemeProvider from './providers/ThemeProvider';
+import { authActions } from './store/authSlice';
 import { RootState } from './store/store';
 
 export * from './animations/Variants';
@@ -24,6 +25,7 @@ export * from './components/ui/select';
 export * from './components/ui/textarea';
 export * from './store/uiSlice';
 export {
+  authActions,
   Counter,
   DateSelector,
   Logo,

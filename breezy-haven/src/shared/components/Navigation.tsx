@@ -1,21 +1,36 @@
-import { Auth } from '@/lib';
-import { Session } from 'next-auth';
-import NavItemList from './NavItemList';
+'use client';
 
-export default async function Navigation() {
-  const session: Session | null = await Auth.auth();
+import { useSession } from 'next-auth/react';
+import NavItem from './NavItem';
+
+interface Route {
+  readonly title: string;
+  readonly href: string;
+}
+
+const routes: readonly Route[] = [
+  { title: 'Cabins', href: '/cabins' },
+  { title: 'About', href: '/about' },
+  { title: 'Guest area', href: '/account' },
+];
+
+export default function Navigation() {
+  const { data } = useSession();
 
   return (
     <nav className='z-10 md:text-xl'>
       <ul className='flex items-center gap-4 sm:gap-6 lg:gap-16'>
-        {!session?.user ? (
-          <NavItemList />
-        ) : (
-          <NavItemList
-            authName={session.user.name}
-            authImage={session.user.image}
-          />
-        )}
+        {routes.map(route => (
+          <li key={route.href}>
+            <NavItem
+              routeTitle={route.title}
+              routeHref={route.href}
+              authName={data?.user?.name}
+              authImage={data?.user?.image}
+              shouldRenderAuthRoute={route.href === routes[2].href}
+            />
+          </li>
+        ))}
       </ul>
     </nav>
   );

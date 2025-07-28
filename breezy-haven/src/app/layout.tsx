@@ -10,6 +10,7 @@ import {
 } from '@/shared';
 import '@/styles/globals.css';
 import { Metadata } from 'next';
+import { SessionProvider } from 'next-auth/react';
 
 import { NextFont } from 'next/dist/compiled/@next/font';
 import { Josefin_Sans } from 'next/font/google';
@@ -38,30 +39,32 @@ export default function RootLayout({
     <html lang='en' suppressHydrationWarning>
       <body className={`${josefin.className} antialiased`}>
         <RootProvider>
-          <ThemeProvider
-            attribute='class'
-            defaultTheme='dark'
-            enableSystem
-            disableTransitionOnChange
-          >
-            <PageLayout>
-              <PageLayout.Header>
-                <div className='mx-auto flex items-center justify-between p-2 md:p-6 lg:p-8'>
-                  <Logo />
-                  <Navigation />
-                  <ThemeToggle />
-                </div>
-                <div className='px-4 md:px-8 lg:px-12'>
-                  <NavTrail />
-                </div>
-              </PageLayout.Header>
-              <PageLayout.Main>{children}</PageLayout.Main>
-              <PageLayout.Footer />
-            </PageLayout>
-            <div id='mini-sidebar' className='md:hidden'></div>
-            <div id='image-previewing'></div>
-            <PageProgressBar />
-          </ThemeProvider>
+          <SessionProvider>
+            <ThemeProvider
+              attribute='class'
+              defaultTheme='dark'
+              enableSystem
+              disableTransitionOnChange
+            >
+              <PageLayout>
+                <PageLayout.Header>
+                  <div className='mx-auto flex items-center justify-between p-2 md:p-6 lg:p-8'>
+                    <Logo />
+                    <Navigation />
+                    <ThemeToggle />
+                  </div>
+                  <div className='px-4 md:px-8 lg:px-12'>
+                    <NavTrail />
+                  </div>
+                </PageLayout.Header>
+                <PageLayout.Main>{children}</PageLayout.Main>
+                <PageLayout.Footer />
+              </PageLayout>
+              <div id='mini-sidebar' className='md:hidden'></div>
+              <div id='image-previewing'></div>
+              <PageProgressBar />
+            </ThemeProvider>
+          </SessionProvider>
         </RootProvider>
       </body>
     </html>
