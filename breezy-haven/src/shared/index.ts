@@ -1,4 +1,5 @@
 import Variants from './animations/Variants';
+import Badge from './components/Badge';
 import Counter from './components/Counter';
 import DateSelector from './components/DateSelector';
 import Logo from './components/Logo';
@@ -26,6 +27,7 @@ export * from './components/ui/textarea';
 export * from './store/uiSlice';
 export {
   authActions,
+  Badge,
   Counter,
   DateSelector,
   Logo,

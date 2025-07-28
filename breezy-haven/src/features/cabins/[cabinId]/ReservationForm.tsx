@@ -1,6 +1,7 @@
 'use client';
 import { Cabin } from '@/repositories';
 import {
+  Badge,
   PrimaryButton,
   Select,
   SelectContent,
@@ -9,27 +10,25 @@ import {
   SelectValue,
   Textarea,
 } from '@/shared';
+import { useSession } from 'next-auth/react';
 
 import { useState } from 'react';
 
 export default function ReservationForm({ cabin }: { cabin: Cabin }) {
   const [guestCount, setGuestCount] = useState<number>(0);
+  const { data } = useSession();
 
   return (
     <article className='h-fit shadow-lg md:order-2'>
-      <div className='bg-primary-800 text-primary-300 flex items-center justify-between rounded-t-lg px-8 py-4 md:px-16'>
-        <p>Logged in as</p>
-
-        {/* <div className='flex gap-4 items-center'>
-          <img
-            // Important to display google profile images
-            referrerPolicy='no-referrer'
-            className='h-8 rounded-full'
-            src={user.image}
-            alt={user.name}
-          />
-          <p>{user.name}</p>
-        </div> */}
+      <div className='bg-primary-800 text-primary-300 flex items-center justify-between rounded-t-lg px-8 py-4 lg:px-16'>
+        {data ? (
+          <>
+            <p>Logged in as</p>
+            <Badge avatarSrc={data.user?.image} name={data.user?.name} />
+          </>
+        ) : (
+          <p>You haven&apos;t logged in yet</p>
+        )}
       </div>
 
       <form className='bg-primary-900 flex flex-col gap-5 rounded-b-lg px-4 py-5 text-lg sm:px-8 md:py-10 xl:px-16'>
