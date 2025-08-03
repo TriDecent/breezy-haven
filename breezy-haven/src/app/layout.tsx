@@ -39,7 +39,7 @@ export default function RootLayout({
     <html lang='en' suppressHydrationWarning>
       <body className={`${josefin.className} antialiased`}>
         <RootProvider>
-          <SessionProvider>
+          <SessionProvider refetchOnWindowFocus={false}>
             <ThemeProvider
               attribute='class'
               defaultTheme='dark'

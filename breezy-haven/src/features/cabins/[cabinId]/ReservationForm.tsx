@@ -11,12 +11,13 @@ import {
   Textarea,
 } from '@/shared';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 
 import { useState } from 'react';
 
 export default function ReservationForm({ cabin }: { cabin: Cabin }) {
   const [guestCount, setGuestCount] = useState<number>(0);
-  const { data } = useSession();
+  const { data, status } = useSession();
 
   return (
     <article className='h-fit shadow-lg md:order-2'>
@@ -67,7 +68,16 @@ export default function ReservationForm({ cabin }: { cabin: Cabin }) {
 
         <div className='flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-end'>
           <div className='w-full lg:order-2'>
-            <PrimaryButton>Reserve now</PrimaryButton>
+            {status === 'authenticated' ? (
+              <PrimaryButton>Reserve now</PrimaryButton>
+            ) : (
+              <Link href='/signin' className='flex w-full justify-center'>
+                <p>
+                  <span className='text-accent-500 underline'>Sign in</span> to
+                  reserve the cabin
+                </p>
+              </Link>
+            )}
           </div>
           <p className='text-muted-foreground self-center text-base lg:order-1'>
             Start by selecting dates

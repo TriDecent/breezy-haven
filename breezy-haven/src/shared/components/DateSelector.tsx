@@ -66,7 +66,7 @@ export default function DateSelector({
       <CardContent>
         <Calendar
           {...props}
-          locale={locales[locale ?? 'en']}
+          locale={locale ? locales[locale] : undefined}
           className='w-full'
         />
       </CardContent>
@@ -76,4 +76,3 @@ export default function DateSelector({
     </Card>
   );
 }
-
