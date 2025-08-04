@@ -1,6 +1,5 @@
-import { Auth } from '@/lib';
+import { LoginButton } from '@/features/login';
 import { Metadata } from 'next';
-import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'Login',
@@ -14,26 +13,5 @@ export default function LoginPage() {
       </h2>
       <LoginButton />
     </section>
-  );
-}
-
-function LoginButton() {
-  return (
-    <form
-      action={async () => {
-        'use server';
-        await Auth.signIn('google', { redirectTo: '/account' });
-      }}
-    >
-      <button className='border-primary-300/30 flex items-center gap-6 rounded border border-solid px-10 py-4 text-lg font-medium hover:cursor-pointer'>
-        <Image
-          src='https://authjs.dev/img/providers/google.svg'
-          alt='Google logo'
-          height='24'
-          width='24'
-        />
-        <span>Continue with Google</span>
-      </button>
-    </form>
   );
 }
