@@ -18,7 +18,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Fragment } from 'react';
 
-const MAX_VISIBLE = 5;
+const MAX_VISIBLE = 4;
 
 export default function NavTrail() {
   const pathname = usePathname();
