@@ -71,7 +71,7 @@ export default function ReservationForm({ cabin }: { cabin: Cabin }) {
             {status === 'authenticated' ? (
               <PrimaryButton>Reserve now</PrimaryButton>
             ) : (
-              <Link href='/signin' className='flex w-full justify-center'>
+              <Link href='/login' className='flex w-full justify-center'>
                 <p>
                   <span className='text-accent-500 underline'>Sign in</span> to
                   reserve the cabin
