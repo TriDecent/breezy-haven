@@ -1,103 +1,85 @@
 import { supabase } from '@/lib/supabase';
 import { PostgrestError } from '@supabase/supabase-js';
-import { RawRow, TableName } from './types';
+import { DTORow, DTOToTableName } from './types';
 
-export default class Repository<T extends RawRow> {
-  protected readonly _tableName: TableName;
+export type RepositoryReturnType<Data, Error> = Promise<
+  Readonly<{
+    readonly data: Data | null;
+    readonly error: Error | null;
+  }>
+>;
 
-  constructor(tableName: TableName) {
+export interface IRepository<T> {
+  getAll(): RepositoryReturnType<T[], PostgrestError>;
+  getById(id: number): RepositoryReturnType<T, PostgrestError>;
+  create(item: Partial<T>): RepositoryReturnType<T, PostgrestError>;
+  update(
+    id: number,
+    updatedFields: Partial<T>
+  ): RepositoryReturnType<T, PostgrestError>;
+  delete(id: number): RepositoryReturnType<T, PostgrestError>;
+}
+
+export class Repository<T extends DTORow> implements IRepository<T> {
+  protected readonly _tableName: DTOToTableName<T>;
+
+  constructor(tableName: DTOToTableName<T>) {
     this._tableName = tableName;
   }
 
-  async getAll(): Promise<T[] | PostgrestError> {
-    const { data, error } = await supabase.from(this._tableName).select();
-
-    if (error) {
-      console.log(`Error fetching ${this._tableName}:`, error);
-      return error;
-    }
-
-    return (data as T[]) ?? [];
+  private get table() {
+    return supabase.from(this._tableName) as any;
   }
 
-  async getById(id: number): Promise<T | PostgrestError> {
-    const { data, error } = await supabase
-      .from(this._tableName)
-      .select()
-      .eq('id', id)
-      .single();
+  async getAll(): RepositoryReturnType<T[], PostgrestError> {
+    const { data, error } = await this.table.select();
 
-    if (error) {
-      console.log(`Error fetching ${this._tableName}:`, error);
-      return error;
-    }
-
-    return data as T;
+    return {
+      data: data,
+      error,
+    };
   }
 
-  async get<K extends keyof T>(
-    key: K,
-    id: number
-  ): Promise<T[K] | PostgrestError> {
-    const { data, error } = await supabase
-      .from(this._tableName)
-      .select(key as string)
-      .eq('id', id)
-      .single();
+  async getById(id: number): RepositoryReturnType<T, PostgrestError> {
+    const { data, error } = await this.table.select().eq('id', id).single();
 
-    if (error) {
-      console.log(`Error fetching ${this._tableName} property:`, error);
-      return error;
-    }
-
-    return (data as unknown as Record<K, T[K]>)[key];
+    return {
+      data: data,
+      error,
+    };
   }
 
-  async create(item: Partial<T>): Promise<T | PostgrestError> {
-    const { data, error } = await supabase
-      .from(this._tableName)
-      .insert(item)
-      .select()
-      .single();
+  async create(item: Partial<T>): RepositoryReturnType<T, PostgrestError> {
+    const { data, error } = await this.table.insert(item).select().single();
 
-    if (error) {
-      console.log(`Error creating ${this._tableName}:`, error);
-      return error;
-    }
-
-    return data as T;
+    return {
+      data: data,
+      error,
+    };
   }
 
   async update(
     id: number,
     updatedFields: Partial<T>
-  ): Promise<T | PostgrestError> {
-    const { data, error } = await supabase
-      .from(this._tableName)
+  ): RepositoryReturnType<T, PostgrestError> {
+    const { data, error } = await this.table
       .update(updatedFields)
       .eq('id', id)
       .select()
       .single();
 
-    if (error) {
-      console.log(`Error updating ${this._tableName}:`, error);
-      return error;
-    }
-
-    return data as T;
+    return {
+      data,
+      error,
+    };
   }
 
-  async delete(id: number): Promise<PostgrestError | null> {
-    const { error } = await supabase
-      .from(this._tableName)
-      .delete()
-      .eq('id', id);
+  async delete(id: number): RepositoryReturnType<T, PostgrestError> {
+    const { data, error } = await this.table.delete().eq('id', id);
 
-    if (error) {
-      console.log(`Error deleting ${this._tableName}:`, error);
-      return error;
-    }
-
-    return null;
+    return {
+      data,
+      error,
+    };
   }
 }

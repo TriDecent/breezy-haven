@@ -4,12 +4,19 @@ export interface Country {
   readonly independent: boolean;
 }
 
-export type RawCabin = Database['public']['Tables']['cabins']['Row'];
-export type RawBooking = Database['public']['Tables']['bookings']['Row'];
-export type RawGuest = Database['public']['Tables']['guests']['Row'];
-export type RawSetting = Database['public']['Tables']['settings']['Row'];
+export type DTOCabin = Database['public']['Tables']['cabins']['Row'];
+export type DTOBooking = Database['public']['Tables']['bookings']['Row'];
+export type DTOGuest = Database['public']['Tables']['guests']['Row'];
+export type DTOSetting = Database['public']['Tables']['settings']['Row'];
 export type TableName = keyof Database['public']['Tables'];
-export type RawRow = RawCabin | RawBooking | RawGuest | RawSetting;
+
+export type DTORow = DTOCabin | DTOBooking | DTOGuest | DTOSetting;
+export type DTOToTableName<T extends DTORow> = 
+  T extends DTOCabin ? 'cabins' :
+  T extends DTOBooking ? 'bookings' :
+  T extends DTOGuest ? 'guests' :
+  T extends DTOSetting ? 'settings' :
+  never;
 
 export type Json =
   | string
