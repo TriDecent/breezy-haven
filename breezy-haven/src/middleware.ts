@@ -2,7 +2,7 @@ import { MiddlewareConfig, NextRequest, NextResponse } from 'next/server';
 import { Auth } from './lib/auth';
 
 export const config: MiddlewareConfig = {
-  matcher: ['/account/:path*', '/login'],
+  matcher: ['/account/:path*', '/login', '/setup-new-guest'],
 };
 
 export async function middleware(request: NextRequest) {
@@ -11,6 +11,8 @@ export async function middleware(request: NextRequest) {
   if (pathname.startsWith('/login')) return handleLoginRouteAsync(request);
 
   if (pathname.startsWith('/account')) return handleAccountRouteAsync(request);
+
+  if (pathname === '/setup-new-guest') return handleSetupGuestAsync(request);
 
   return NextResponse.next();
 }
@@ -48,6 +50,14 @@ async function handleAccountRouteAsync(
     });
     return NextResponse.redirect(new URL(`/login?${params}`, request.nextUrl));
   }
+
+  return NextResponse.next();
+}
+
+async function handleSetupGuestAsync(request: NextRequest) {
+  const session = await Auth.getFullSessionAsync();
+  console.log(request.nextUrl);
+  if (session.main) return NextResponse.redirect(new URL('/', request.nextUrl));
 
   return NextResponse.next();
 }

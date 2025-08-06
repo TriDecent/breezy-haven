@@ -1,4 +1,4 @@
-import { cabinRepository } from '@/repositories';
+import { cabinService } from '@/services';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -96,7 +96,7 @@ export default async function Page() {
 }
 
 async function BreezyHavenIntroduction() {
-  const { count, error } = await cabinRepository.getCount();
+  const { count, error } = await cabinService.getCount();
 
   if (error) throw new Error(error.message);
 

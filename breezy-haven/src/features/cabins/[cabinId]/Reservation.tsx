@@ -1,11 +1,12 @@
-import { bookingRepository, Cabin, settingRepository } from '@/repositories';
+import { Cabin } from '@/repositories';
+import { bookingService, settingService } from '@/services';
 import ReservationDateRangeSelector from './ReservationDateRangeSelector';
 import ReservationForm from './ReservationForm';
 
 export default async function Reservation({ cabin }: { cabin: Cabin }) {
   const promises = [
-    bookingRepository.getBookedDatesByCabinId(cabin.id),
-    settingRepository.getDefaultSettings(),
+    bookingService.getBookedDatesByCabinId(cabin.id),
+    settingService.getDefaultSettings(),
   ] as const;
 
   const [bookingResult, settingResult] = await Promise.all(promises);

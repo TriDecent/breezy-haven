@@ -1,27 +1,21 @@
 export type {
   Country,
-  RawBooking,
-  RawCabin,
-  RawGuest,
-  RawSetting,
+  DTOBooking,
+  DTOCabin,
+  DTOGuest,
+  DTOSetting,
 } from './types';
-import type { RawBooking, RawCabin, RawGuest, RawSetting } from './types';
+
+import type { DTOBooking, DTOCabin, DTOGuest, DTOSetting } from './types';
+
+export { Repository } from './Repository';
+export type { IRepository } from './Repository';
 
 type NonNullableObject<T> = {
   [P in keyof T]: NonNullable<T[P]>;
 };
 
-export type Booking = NonNullableObject<RawBooking>;
-export type Cabin = NonNullableObject<RawCabin>;
-export type Guest = NonNullableObject<RawGuest>;
-export type Setting = NonNullableObject<RawSetting>;
-
-import BookingRepository from './BookingRepository';
-import CabinRepository from './CabinRepository';
-import GuestRepository from './GuestRepository';
-import SettingRepository from './SettingRepository';
-
-export const cabinRepository = new CabinRepository();
-export const bookingRepository = new BookingRepository();
-export const guestRepository = new GuestRepository();
-export const settingRepository = new SettingRepository();
+export type Booking = NonNullableObject<DTOBooking>;
+export type Cabin = NonNullableObject<DTOCabin>;
+export type Guest = NonNullableObject<DTOGuest>;
+export type Setting = NonNullableObject<DTOSetting>;

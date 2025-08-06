@@ -1,4 +1,4 @@
-import { guestRepository } from '@/repositories';
+import { guestService } from '@/services';
 import NextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
 
@@ -17,7 +17,7 @@ const getCurrentUser = cache(async () => {
 
   if (!session?.user?.email) return null;
 
-  const guest = await guestRepository.getByEmailAsync(session.user.email);
+  const guest = await guestService.getByEmailAsync(session.user.email);
 
   return guest;
 });
