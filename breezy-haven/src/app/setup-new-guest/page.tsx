@@ -18,7 +18,9 @@ export default async function SettingUpGuestPage({
 
   return (
     <section>
-      <h1>Signing in, please don&apos;t close the page</h1>
+      <h1 className='text-center text-2xl font-medium'>
+        Signing in, please don&apos;t close the page
+      </h1>
       <Suspense fallback={<Spinner />}>
         <SetupGuest callbackUrl={params.callbackUrl ?? '/account'} />
       </Suspense>

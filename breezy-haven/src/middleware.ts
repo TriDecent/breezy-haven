@@ -1,59 +1,52 @@
-import { User } from 'next-auth';
 import { MiddlewareConfig, NextRequest, NextResponse } from 'next/server';
-import { Auth } from './lib';
-import { guestService } from './services';
+import { Auth } from './lib/auth';
 
 export const config: MiddlewareConfig = {
   matcher: ['/account/:path*', '/login'],
 };
 
 export async function middleware(request: NextRequest) {
-  const session = await Auth.auth();
   const { pathname } = request.nextUrl;
 
-  if (pathname === '/login') {
-    return handleLoginRouteAsync(request, session?.user);
-  }
-  if (pathname.startsWith('/account')) {
-    return handleAccountRouteAsync(request, session?.user);
-  }
+  if (pathname.startsWith('/login')) return handleLoginRouteAsync(request);
+
+  if (pathname.startsWith('/account')) return handleAccountRouteAsync(request);
+
   return NextResponse.next();
 }
 
 async function handleLoginRouteAsync(
-  request: NextRequest,
-  user?: User
+  request: NextRequest
 ): Promise<NextResponse> {
-  const guests = await guestService.getAll();
-  const doesRequestEmailExist = guests.data.some(
-    guest => guest.email === user?.email
-  );
+  const session = await Auth.getFullSessionAsync();
 
-  if (doesRequestEmailExist && user)
+  if (session.main) {
     return NextResponse.redirect(new URL('/', request.nextUrl));
+  }
 
-  if (user) {
-    const { email, name } = user;
-    await guestService.create({ email, fullName: name });
-
-    return NextResponse.redirect(request.nextUrl);
+  if (session.thirdParty) {
+    console.log(request.nextUrl.searchParams.toString());
+    return NextResponse.redirect(
+      new URL(
+        `/setup-new-guest?${request.nextUrl.searchParams.toString()}`,
+        request.nextUrl
+      )
+    );
   }
 
   return NextResponse.next();
 }
 
 async function handleAccountRouteAsync(
-  request: NextRequest,
-  user?: User
+  request: NextRequest
 ): Promise<NextResponse> {
-  if (!user) {
-    const callbackUrlParam = new URLSearchParams({
+  const session = await Auth.getFullSessionAsync();
+
+  if (!session.thirdParty || !session.main) {
+    const params = new URLSearchParams({
       callbackUrl: request.nextUrl.pathname,
     });
-
-    return NextResponse.redirect(
-      new URL(`/login?${callbackUrlParam.toString()}`, request.nextUrl)
-    );
+    return NextResponse.redirect(new URL(`/login?${params}`, request.nextUrl));
   }
 
   return NextResponse.next();
