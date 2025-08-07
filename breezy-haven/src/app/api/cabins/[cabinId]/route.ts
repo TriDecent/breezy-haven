@@ -1,5 +1,4 @@
-import { bookingRepository } from '@/repositories';
-import { cabinService } from '@/services';
+import { bookingService, cabinService } from '@/services';
 import { NextRequest } from 'next/server';
 
 export async function GET(
@@ -14,7 +13,7 @@ export async function GET(
 
     const promises = [
       cabinService.getById(cabinIdNumber),
-      bookingRepository.getBookedDatesByCabinId(cabinIdNumber),
+      bookingService.getBookedDatesByCabinId(cabinIdNumber),
     ];
 
     const [cabinResult, bookingResult] = await Promise.all(promises);

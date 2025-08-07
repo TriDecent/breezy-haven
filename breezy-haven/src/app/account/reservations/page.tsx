@@ -1,4 +1,5 @@
-import { Booking, ReservationCard } from '@/features/account/reservations';
+import { ReservationCard } from '@/features/account/reservations';
+import { DTOBooking } from '@/repositories';
 import { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -8,7 +9,11 @@ export const metadata: Metadata = {
 
 export default function Page() {
   // CHANGE
-  const bookings: readonly Booking[] = [];
+  const bookings: readonly DTOBooking[] = [];
+  const cabin = {
+    name: 'name',
+    image: 'image',
+  };
 
   return (
     <div>
@@ -30,7 +35,7 @@ export default function Page() {
         <ul className='space-y-6'>
           {bookings.map(booking => (
             <li key={booking.id}>
-              <ReservationCard booking={booking} />
+              <ReservationCard booking={booking} cabin={cabin} />
             </li>
           ))}
         </ul>

@@ -1,11 +1,11 @@
+import about1Image from '@/../../public/about-1.jpg';
+import RootLoading from '@/app/loading';
 import { cabinService } from '@/services';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
-import about1Image from '../../../public/about-1.jpg';
-import RootLoading from '../loading';
 
 export const revalidate = 86400;
 

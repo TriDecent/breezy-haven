@@ -1,3 +1,1 @@
-import LoginButton from './LoginButton';
-
-export { LoginButton };
+export { default as LoginButton } from './LoginButton';

@@ -1,5 +1,5 @@
+import { Auth } from '@/lib';
 import { Metadata } from 'next';
-import { Auth } from '../../lib/auth';
 
 export const metadata: Metadata = {
   title: 'Guest area',

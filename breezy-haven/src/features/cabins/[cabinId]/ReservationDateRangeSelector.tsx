@@ -1,5 +1,5 @@
 'use client';
-import { Cabin, Setting } from '@/repositories';
+import { Cabin, DTOSetting } from '@/repositories';
 import {
   DateSelector,
   fromISOToDateRange,
@@ -17,7 +17,7 @@ export default function ReservationDateRangeSelector({
   bookedDates,
   cabin,
 }: {
-  setting: Setting;
+  setting: DTOSetting;
   bookedDates: readonly Date[];
   cabin: Cabin;
 }) {

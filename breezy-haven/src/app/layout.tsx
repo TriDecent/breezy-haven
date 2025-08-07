@@ -11,8 +11,8 @@ import {
 import '@/styles/globals.css';
 import { Metadata } from 'next';
 import { SessionProvider } from 'next-auth/react';
-
 import { NextFont } from 'next/dist/compiled/@next/font';
+
 import { Josefin_Sans } from 'next/font/google';
 
 const josefin: NextFont = Josefin_Sans({

@@ -28,7 +28,8 @@ export class Repository<T extends DTORow> implements IRepository<T> {
   }
 
   private get table() {
-    return supabase.from(this._tableName) as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return supabase.from(this._tableName) as unknown as any;
   }
 
   async getAll(): RepositoryReturnType<T[], PostgrestError> {

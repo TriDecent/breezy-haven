@@ -1,15 +1,25 @@
+import { DTOBooking } from '@/repositories';
 import { PencilSquareIcon } from '@heroicons/react/24/solid';
 import { format, formatDistance, isPast, isToday, parseISO } from 'date-fns';
-import DeleteReservation from './DeleteReservation';
-import { Booking } from './types';
 import Image from 'next/image';
+import DeleteReservation from './DeleteReservation';
 
 export const formatDistanceFromNow = (date: string) =>
   formatDistance(parseISO(date), new Date(), {
     addSuffix: true,
   }).replace('about ', '');
 
-export function ReservationCard({ booking }: { booking: Booking }) {
+export default function ReservationCard({
+  booking,
+  cabin,
+}: {
+  booking: DTOBooking;
+  cabin: {
+    name: string;
+    image: string;
+  };
+}) {
+  // TODO: validate from booking
   const {
     id,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -22,8 +32,8 @@ export function ReservationCard({ booking }: { booking: Booking }) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     status,
     created_at,
-    cabin: { name, image },
   } = booking;
+  const { name, image } = cabin;
 
   return (
     <div className='border-primary-800 flex border'>
@@ -40,7 +50,7 @@ export function ReservationCard({ booking }: { booking: Booking }) {
           <h3 className='text-xl font-semibold'>
             {numNights} nights in Cabin {name}
           </h3>
-          {isPast(new Date(startDate)) ? (
+          {isPast(new Date(startDate ?? '')) ? (
             <span className='flex h-7 items-center rounded-sm bg-yellow-800 px-3 text-xs font-bold text-yellow-200 uppercase'>
               past
             </span>
@@ -52,18 +62,18 @@ export function ReservationCard({ booking }: { booking: Booking }) {
         </div>
 
         <p className='text-primary-300 text-lg'>
-          {format(new Date(startDate), 'EEE, MMM dd yyyy')} (
-          {isToday(new Date(startDate))
+          {format(new Date(startDate ?? ''), 'EEE, MMM dd yyyy')} (
+          {isToday(new Date(startDate ?? ''))
             ? 'Today'
-            : formatDistanceFromNow(startDate)}
-          ) &mdash; {format(new Date(endDate), 'EEE, MMM dd yyyy')}
+            : formatDistanceFromNow(startDate ?? '')}
+          ) &mdash; {format(new Date(endDate ?? ''), 'EEE, MMM dd yyyy')}
         </p>
 
         <div className='mt-auto flex items-baseline gap-5'>
           <p className='text-accent-400 text-xl font-semibold'>${totalPrice}</p>
           <p className='text-primary-300'>&bull;</p>
           <p className='text-primary-300 text-lg'>
-            {numGuests} guest{numGuests > 1 && 's'}
+            {numGuests ?? 1} guest{(numGuests ?? 1) > 1 && 's'}
           </p>
           <p className='text-primary-400 ml-auto text-sm'>
             Booked {format(new Date(created_at), 'EEE, MMM dd yyyy, p')}
@@ -79,7 +89,7 @@ export function ReservationCard({ booking }: { booking: Booking }) {
           <PencilSquareIcon className='text-primary-600 group-hover:text-primary-800 h-5 w-5 transition-colors' />
           <span className='mt-1'>Edit</span>
         </a>
-        <DeleteReservation bookingId={id} />
+        <DeleteReservation bookingId={id ?? 1} />
       </div>
     </div>
   );

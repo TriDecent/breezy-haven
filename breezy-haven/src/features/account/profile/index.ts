@@ -1,4 +1,2 @@
-import SelectCountry from './SelectCountry';
-import UpdateProfileForm from './UpdateProfileForm';
-
-export { SelectCountry, UpdateProfileForm };
+export { default as SelectCountry } from './SelectCountry';
+export { default as UpdateProfileForm } from './UpdateProfileForm';
