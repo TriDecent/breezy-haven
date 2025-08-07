@@ -1,9 +1,13 @@
-import { Cabin } from '@/repositories';
+import type { DTOCabin, NonNullableObject } from '@/repositories';
 import { bookingService, settingService } from '@/services';
 import ReservationDateRangeSelector from './ReservationDateRangeSelector';
 import ReservationForm from './ReservationForm';
 
-export default async function Reservation({ cabin }: { cabin: Cabin }) {
+export default async function Reservation({
+  cabin,
+}: {
+  cabin: NonNullableObject<DTOCabin>;
+}) {
   const promises = [
     bookingService.getBookedDatesByCabinId(cabin.id),
     settingService.getDefaultSettings(),

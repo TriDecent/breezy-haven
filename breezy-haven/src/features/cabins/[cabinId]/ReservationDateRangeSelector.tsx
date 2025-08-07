@@ -1,5 +1,5 @@
 'use client';
-import { Cabin, DTOSetting } from '@/repositories';
+import type { DTOCabin, DTOSetting, NonNullableObject } from '@/repositories';
 import {
   DateSelector,
   fromISOToDateRange,
@@ -17,9 +17,9 @@ export default function ReservationDateRangeSelector({
   bookedDates,
   cabin,
 }: {
-  setting: DTOSetting;
+  setting: NonNullableObject<DTOSetting>;
   bookedDates: readonly Date[];
-  cabin: Cabin;
+  cabin: NonNullableObject<DTOCabin>;
 }) {
   // CHANGE
   const regularPrice = 23;

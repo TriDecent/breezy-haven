@@ -1,9 +1,13 @@
-import { Cabin } from '@/repositories';
+import type { DTOCabin, NonNullableObject } from '@/repositories';
 import { TextExpander } from '@/shared';
 import { EyeSlashIcon, MapPinIcon, UsersIcon } from '@heroicons/react/24/solid';
 import PreviewImage from '../PreviewImage';
 
-export default function CabinDetail({ cabin }: { cabin: Cabin }) {
+export default function CabinDetail({
+  cabin,
+}: {
+  cabin: NonNullableObject<DTOCabin>;
+}) {
   return (
     <article className='md:border-primary-800 mb-12 flex flex-col gap-4 rounded-md md:mb-24 md:flex-row md:gap-16 md:border md:px-8 md:py-6'>
       <div className='shadow-accent-500/65 relative h-64 overflow-hidden rounded-2xl md:h-180 md:flex-2/5 md:-translate-x-3 md:translate-y-4 md:scale-[1.2] md:shadow-[10px_15px_10px] lg:h-168 lg:-translate-x-4 lg:-translate-y-3.5 lg:scale-[1.15] xl:h-148 xl:scale-[1.2]'>
