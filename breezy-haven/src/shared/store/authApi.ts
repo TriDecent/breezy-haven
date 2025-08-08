@@ -1,0 +1,33 @@
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { z } from 'zod';
+
+const responseSchema = z.object({
+  isAuthenticated: z.boolean().readonly(),
+  user: z.object({
+    name: z.string().readonly(),
+    email: z.string().readonly(),
+    image: z.string().readonly(),
+  }),
+});
+
+type Response = z.infer<typeof responseSchema>;
+
+const authApi = createApi({
+  reducerPath: 'authApi',
+  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000' }),
+  tagTypes: ['Auth'],
+  refetchOnMountOrArgChange: true,
+  endpoints: builder => ({
+    getAuth: builder.query<Response, void>({
+      query: () => ({
+        url: '/api/session',
+        method: 'GET',
+      }),
+      transformResponse: response => responseSchema.parse(response),
+      providesTags: result => (result ? [{ type: 'Auth', id: 'CURRENT' }] : []),
+    }),
+  }),
+});
+
+export const { useGetAuthQuery } = authApi;
+export default authApi;

@@ -24,5 +24,5 @@ export { ROUTES as METADATA } from './constants/ROUTES';
 export { default as useScrollDirection } from './hooks/useScrollDirection';
 export { default as RootProvider } from './providers/RootProvider';
 export { default as ThemeProvider } from './providers/ThemeProvider';
-export { authActions } from './store/authSlice';
+export { useGetAuthQuery } from './store/authApi';
 export type { RootState } from './store/store';
