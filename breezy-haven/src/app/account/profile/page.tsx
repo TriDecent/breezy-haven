@@ -1,9 +1,8 @@
 import { SelectCountry, UpdateProfileForm } from '@/features/account/profile';
+import { METADATA } from '@/shared';
 import { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'My profile',
-};
+export const metadata: Metadata = METADATA.account.nested.profile.metadata;
 
 export default function Page() {
   // CHANGE

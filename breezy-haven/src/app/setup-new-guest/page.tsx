@@ -1,13 +1,11 @@
 import { Auth } from '@/lib';
 import { guestService } from '@/services';
-import { Spinner } from '@/shared';
+import { METADATA, Spinner } from '@/shared';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
-export const metadata: Metadata = {
-  title: 'Initializing your account',
-};
+export const metadata: Metadata = METADATA['setup-new-guest'].metadata;
 
 export default async function SettingUpGuestPage({
   searchParams,

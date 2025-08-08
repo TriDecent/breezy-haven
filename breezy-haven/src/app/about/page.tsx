@@ -1,6 +1,6 @@
 import about1Image from '@/../public/about-1.jpg';
 import { cabinService } from '@/services';
-import { Spinner } from '@/shared';
+import { METADATA, Spinner } from '@/shared';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -10,9 +10,7 @@ import { Suspense } from 'react';
 export const revalidate = 86400;
 
 export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: 'About',
-  };
+  return METADATA.about.metadata;
 }
 
 export default async function Page() {

@@ -1,9 +1,8 @@
 import { LoginButton } from '@/features/login';
+import { METADATA } from '@/shared';
 import { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'Login',
-};
+export const metadata: Metadata = METADATA.login.metadata;
 
 export default function LoginPage() {
   return (

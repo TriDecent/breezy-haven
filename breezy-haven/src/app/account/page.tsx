@@ -1,10 +1,9 @@
 import { Auth } from '@/lib';
+import { METADATA } from '@/shared';
 import { Metadata } from 'next';
 
 export function generateMetadata(): Metadata {
-  return {
-    title: 'Guest area',
-  };
+  return METADATA.account.metadata;
 }
 
 export default async function AccountPage() {

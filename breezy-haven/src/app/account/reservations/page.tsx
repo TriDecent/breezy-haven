@@ -1,11 +1,10 @@
 import { ReservationCard } from '@/features/account/reservations';
 import { DTOBooking } from '@/repositories';
+import { METADATA } from '@/shared';
 import { Metadata } from 'next';
 import Link from 'next/link';
 
-export const metadata: Metadata = {
-  title: 'My Reservations',
-};
+export const metadata: Metadata = METADATA.account.nested.reservations.metadata;
 
 export default function Page() {
   // CHANGE
