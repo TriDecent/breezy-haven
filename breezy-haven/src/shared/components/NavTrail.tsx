@@ -17,6 +17,7 @@ import {
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Fragment } from 'react';
+import { ROUTES } from '../constants/ROUTES';
 
 const MAX_VISIBLE = 4;
 
@@ -74,7 +75,7 @@ function NavTrailHome() {
     <>
       <BreadcrumbItem>
         <BreadcrumbLink asChild>
-          <Link href='/'>Home</Link>
+          <Link href={`${ROUTES.home.href}`}>Home</Link>
         </BreadcrumbLink>
       </BreadcrumbItem>
       <BreadcrumbSeparator />

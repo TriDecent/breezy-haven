@@ -1,18 +1,26 @@
 import { MiddlewareConfig, NextRequest, NextResponse } from 'next/server';
 import { Auth } from './lib/auth';
+import { METADATA } from './shared';
 
 export const config: MiddlewareConfig = {
-  matcher: ['/account/:path*', '/login', '/setup-new-guest'],
+  matcher: [
+    `${METADATA.account.href}/:path*`,
+    METADATA.login.href,
+    METADATA['setup-new-guest'].href,
+  ],
 };
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith('/login')) return handleLoginRouteAsync(request);
+  if (pathname.startsWith(METADATA.login.href))
+    return handleLoginRouteAsync(request);
 
-  if (pathname.startsWith('/account')) return handleAccountRouteAsync(request);
+  if (pathname.startsWith(METADATA.account.href))
+    return handleAccountRouteAsync(request);
 
-  if (pathname === '/setup-new-guest') return handleSetupGuestAsync(request);
+  if (pathname === METADATA['setup-new-guest'].href)
+    return handleSetupGuestAsync(request);
 
   return NextResponse.next();
 }
@@ -23,14 +31,14 @@ async function handleLoginRouteAsync(
   const session = await Auth.getFullSessionAsync();
 
   if (session.main) {
-    return NextResponse.redirect(new URL('/', request.nextUrl));
+    return NextResponse.redirect(new URL(METADATA.home.href, request.nextUrl));
   }
 
   if (session.thirdParty) {
     console.log(request.nextUrl.searchParams.toString());
     return NextResponse.redirect(
       new URL(
-        `/setup-new-guest?${request.nextUrl.searchParams.toString()}`,
+        `${METADATA['setup-new-guest'].href}?${request.nextUrl.searchParams.toString()}`,
         request.nextUrl
       )
     );
@@ -48,7 +56,9 @@ async function handleAccountRouteAsync(
     const params = new URLSearchParams({
       callbackUrl: request.nextUrl.pathname,
     });
-    return NextResponse.redirect(new URL(`/login?${params}`, request.nextUrl));
+    return NextResponse.redirect(
+      new URL(`${METADATA.login.href}?${params}`, request.nextUrl)
+    );
   }
 
   return NextResponse.next();
@@ -57,7 +67,8 @@ async function handleAccountRouteAsync(
 async function handleSetupGuestAsync(request: NextRequest) {
   const session = await Auth.getFullSessionAsync();
   console.log(request.nextUrl);
-  if (session.main) return NextResponse.redirect(new URL('/', request.nextUrl));
+  if (session.main)
+    return NextResponse.redirect(new URL(METADATA.home.href, request.nextUrl));
 
   return NextResponse.next();
 }

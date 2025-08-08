@@ -1,5 +1,6 @@
 'use client';
 
+import { METADATA } from '@/shared';
 import {
   CalendarDaysIcon,
   HomeIcon,
@@ -12,17 +13,17 @@ import SignOutButton from './SignOutButton';
 const navLinks = [
   {
     name: 'Home',
-    href: '/account',
+    href: METADATA.home.href,
     icon: <HomeIcon className='text-primary-600 h-5 w-5' />,
   },
   {
     name: 'Reservations',
-    href: '/account/reservations',
+    href: METADATA.account.nested.reservations.href,
     icon: <CalendarDaysIcon className='text-primary-600 h-5 w-5' />,
   },
   {
     name: 'Guest profile',
-    href: '/account/profile',
+    href: METADATA.account.nested.profile.href,
     icon: <UserIcon className='text-primary-600 h-5 w-5' />,
   },
 ] as const;

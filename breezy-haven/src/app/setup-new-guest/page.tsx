@@ -20,7 +20,7 @@ export default async function SettingUpGuestPage({
         Signing in, please don&apos;t close the page
       </h1>
       <Suspense fallback={<Spinner />}>
-        <SetupGuest callbackUrl={params.callbackUrl ?? '/account'} />
+        <SetupGuest callbackUrl={params.callbackUrl ?? METADATA.account.href} />
       </Suspense>
     </section>
   );
@@ -29,18 +29,18 @@ export default async function SettingUpGuestPage({
 async function SetupGuest({ callbackUrl }: { callbackUrl: string }) {
   const session = await Auth.getFullSessionAsync();
   if (session.main) redirect(callbackUrl);
-  if (!session.thirdParty?.user) redirect('/login');
+  if (!session.thirdParty?.user) redirect(METADATA.login.href);
 
   const user = session.thirdParty.user;
 
-  if (!user.email || !user.name) redirect('/login');
+  if (!user.email || !user.name) redirect(METADATA.login.href);
 
   const { email, name } = user;
 
   try {
     await guestService.create({ email, fullName: name });
   } catch {
-    redirect('/login');
+    redirect(METADATA.login.href);
   }
 
   redirect(callbackUrl);

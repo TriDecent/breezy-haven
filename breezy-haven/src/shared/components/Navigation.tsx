@@ -1,6 +1,7 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
+import { ROUTES } from '../constants/ROUTES';
 import NavItem from './NavItem';
 
 interface Route {
@@ -9,9 +10,9 @@ interface Route {
 }
 
 const routes: readonly Route[] = [
-  { title: 'Cabins', href: '/cabins' },
-  { title: 'About', href: '/about' },
-  { title: 'Guest area', href: '/account' },
+  { title: ROUTES.cabins.metadata.title, href: ROUTES.cabins.href },
+  { title: ROUTES.about.metadata.title, href: ROUTES.about.href },
+  { title: ROUTES.account.metadata.title, href: ROUTES.account.href },
 ];
 
 export default function Navigation() {

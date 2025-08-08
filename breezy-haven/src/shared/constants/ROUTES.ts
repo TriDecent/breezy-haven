@@ -6,7 +6,7 @@ type Route = {
   nested?: Record<string, Route>;
 };
 
-export const METADATA = {
+export const ROUTES = {
   home: defineRoute({
     href: '/',
     metadata: {
@@ -144,7 +144,7 @@ export const METADATA = {
     },
   }),
   'setup-new-guest': defineRoute({
-    href: 'setup-new-guest',
+    href: '/setup-new-guest',
     metadata: {
       title: 'Initializing your account',
       description: 'We are setting up your guest profile. Please wait...',

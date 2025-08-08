@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { TrashIcon } from '@heroicons/react/24/solid';
 
 export default function DeleteReservation({

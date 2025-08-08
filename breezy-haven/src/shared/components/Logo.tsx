@@ -1,10 +1,11 @@
 import breezyHavenLogo from '@/../public/logo.png';
 import Image from 'next/image';
 import Link from 'next/link';
+import { ROUTES } from '../constants/ROUTES';
 
 export default function Logo() {
   return (
-    <Link href='/' className='z-10 flex items-center gap-4'>
+    <Link href={`${ROUTES.home.href}`} className='z-10 flex items-center gap-4'>
       <Image
         src={breezyHavenLogo}
         width={50}

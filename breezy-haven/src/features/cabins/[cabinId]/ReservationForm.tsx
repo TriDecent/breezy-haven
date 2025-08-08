@@ -3,6 +3,7 @@
 import { DTOCabin, NonNullableObject } from '@/repositories';
 import {
   Badge,
+  METADATA,
   PrimaryButton,
   Select,
   SelectContent,
@@ -76,7 +77,7 @@ export default function ReservationForm({
             {status === 'authenticated' ? (
               <PrimaryButton>Reserve now</PrimaryButton>
             ) : (
-              <Link href='/login' className='flex w-full justify-center'>
+              <Link href={`${METADATA.login.href}`} className='flex w-full justify-center'>
                 <p>
                   <span className='text-accent-500 underline'>Sign in</span> to
                   reserve the cabin

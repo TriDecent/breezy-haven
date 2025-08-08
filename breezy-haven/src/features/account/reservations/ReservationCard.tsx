@@ -1,4 +1,5 @@
 import { DTOBooking } from '@/repositories';
+import { METADATA } from '@/shared';
 import { PencilSquareIcon } from '@heroicons/react/24/solid';
 import { format, formatDistance, isPast, isToday, parseISO } from 'date-fns';
 import Image from 'next/image';
@@ -83,7 +84,7 @@ export default function ReservationCard({
 
       <div className='border-primary-800 flex w-[100px] flex-col border-l'>
         <a
-          href={`/account/reservations/edit/${id}`}
+          href={`${METADATA.account.nested.reservations.href}/edit/${id}`}
           className='group text-primary-300 border-primary-800 hover:bg-accent-600 hover:text-primary-900 flex flex-grow items-center gap-2 border-b px-3 text-xs font-bold uppercase transition-colors'
         >
           <PencilSquareIcon className='text-primary-600 group-hover:text-primary-800 h-5 w-5 transition-colors' />
