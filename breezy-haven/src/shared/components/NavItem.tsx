@@ -10,12 +10,16 @@ export default function NavItem({
   authName,
   authImage,
   shouldRenderAuthRoute,
+  isAuthenticated = false, // Thêm prop này
+  isLoading = false, // Thêm prop này
 }: {
   routeTitle: string;
   routeHref: string;
   authName?: string | null;
   authImage?: string | null;
   shouldRenderAuthRoute: boolean;
+  isAuthenticated?: boolean;
+  isLoading?: boolean;
 }) {
   const pathname = usePathname();
   const pathSegments = pathname
@@ -24,14 +28,24 @@ export default function NavItem({
     .map(segment => `/${segment}`);
   const [firstSegment] = pathSegments;
 
+  const shouldShowBadge = shouldRenderAuthRoute && isAuthenticated && authName;
+  const shouldShowAccountText =
+    shouldRenderAuthRoute && !isAuthenticated && !isLoading;
+
   return (
     <>
       <Link
         href={routeHref}
-        className={`hover:text-accent-400 transition-colors ${firstSegment === routeHref ? 'text-accent-500' : ''} `}
+        className={`hover:text-accent-400 transition-colors ${
+          firstSegment === routeHref ? 'text-accent-500' : ''
+        }`}
       >
-        {shouldRenderAuthRoute && (authName || authImage) ? (
-          <Badge avatarSrc={authImage} name={getName(authName ?? '')} />
+        {shouldShowBadge ? (
+          <Badge avatarSrc={authImage} name={getName(authName)} />
+        ) : shouldShowAccountText ? (
+          routeTitle
+        ) : shouldRenderAuthRoute && isLoading ? (
+          <div className='h-8 w-8 animate-pulse rounded-full bg-gray-300' />
         ) : (
           routeTitle
         )}

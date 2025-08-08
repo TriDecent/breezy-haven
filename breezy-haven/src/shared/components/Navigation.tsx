@@ -1,7 +1,7 @@
 'use client';
 
-import { useSession } from 'next-auth/react';
 import { ROUTES } from '../constants/ROUTES';
+import { useGetAuthQuery } from '../store/authApi';
 import NavItem from './NavItem';
 
 interface Route {
@@ -16,9 +16,27 @@ const routes: readonly Route[] = [
 ];
 
 export default function Navigation() {
-  const { data } = useSession();
+  const { data, isError, isFetching, isLoading } = useGetAuthQuery();
 
-  return (
+  return isError ? (
+    <nav className='z-10 md:text-xl'>
+      <ul className='flex items-center gap-4 sm:gap-6 lg:gap-16'>
+        {routes.map(route => (
+          <li key={route.href}>
+            <NavItem
+              routeTitle={route.title}
+              routeHref={route.href}
+              authName={null}
+              authImage={null}
+              shouldRenderAuthRoute={route.href === routes[2].href}
+              isAuthenticated={false}
+              isLoading={false}
+            />
+          </li>
+        ))}
+      </ul>
+    </nav>
+  ) : (
     <nav className='z-10 md:text-xl'>
       <ul className='flex items-center gap-4 sm:gap-6 lg:gap-16'>
         {routes.map(route => (
@@ -29,6 +47,8 @@ export default function Navigation() {
               authName={data?.user?.name}
               authImage={data?.user?.image}
               shouldRenderAuthRoute={route.href === routes[2].href}
+              isAuthenticated={data?.isAuthenticated ?? false}
+              isLoading={isLoading || isFetching}
             />
           </li>
         ))}
