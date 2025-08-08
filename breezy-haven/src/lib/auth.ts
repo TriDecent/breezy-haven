@@ -1,7 +1,7 @@
-import { guestService } from '@/services';
 import NextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
 
+import { guestSetupService } from '@/services';
 import { cache } from 'react';
 
 const nextAuth = NextAuth({
@@ -17,7 +17,7 @@ const getCurrentUser = cache(async () => {
 
   if (!session?.user?.email) return null;
 
-  const guest = await guestService.getByEmailAsync(session.user.email);
+  const guest = await guestSetupService.getByEmailAsync(session.user.email);
 
   return guest;
 });

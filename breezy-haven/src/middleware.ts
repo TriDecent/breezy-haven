@@ -3,11 +3,7 @@ import { Auth } from './lib/auth';
 import { METADATA } from './shared';
 
 export const config: MiddlewareConfig = {
-  matcher: [
-    `${METADATA.account.href}/:path*`,
-    METADATA.login.href,
-    METADATA['setup-new-guest'].href,
-  ],
+  matcher: ['/account/:path*', '/login', '/setup-new-guest'],
 };
 
 export async function middleware(request: NextRequest) {
@@ -35,7 +31,6 @@ async function handleLoginRouteAsync(
   }
 
   if (session.thirdParty) {
-    console.log(request.nextUrl.searchParams.toString());
     return NextResponse.redirect(
       new URL(
         `${METADATA['setup-new-guest'].href}?${request.nextUrl.searchParams.toString()}`,

@@ -1,5 +1,5 @@
 import { Auth } from '@/lib';
-import { guestService } from '@/services';
+import { guestSetupService } from '@/services';
 import { METADATA, Spinner } from '@/shared';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
@@ -26,10 +26,20 @@ export default async function SettingUpGuestPage({
   );
 }
 
+// * This user creation logic works correctly only because we're relying solely on the email from Google's cookie.
+// * We can safely assume that our database contains only users authenticated via Google.
+// * However, if we introduce other login methods in the future, this approach will no longer be reliable.
+// * In such cases, we must check whether the user already exists before attempting to create one.
+// * Additionally, if any error occurs during this process, the app will redirect to the login page.
+// * Since a third-party session (e.g. Google) still exists, the login will immediately redirect back to this route,
+// * potentially causing a loop or repeated errors.
+
+// * Solution: Create a dedicated `setup-error` route to handle this edge case gracefully.
+
 async function SetupGuest({ callbackUrl }: { callbackUrl: string }) {
   const session = await Auth.getFullSessionAsync();
-  if (session.main) redirect(callbackUrl);
   if (!session.thirdParty?.user) redirect(METADATA.login.href);
+  if (session.main) redirect(callbackUrl);
 
   const user = session.thirdParty.user;
 
@@ -37,11 +47,9 @@ async function SetupGuest({ callbackUrl }: { callbackUrl: string }) {
 
   const { email, name } = user;
 
-  try {
-    await guestService.create({ email, fullName: name });
-  } catch {
-    redirect(METADATA.login.href);
-  }
+  const { error } = await guestSetupService.create({ email, fullName: name });
+
+  if (error) redirect(METADATA.login.href);
 
   redirect(callbackUrl);
 

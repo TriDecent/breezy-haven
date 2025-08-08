@@ -28,3 +28,7 @@ export const guestService = new GuestService(
 export const settingService = new SettingService(
   new BaseService(new Repository('settings'), () => Promise.resolve())
 );
+
+export const guestSetupService = new GuestService(
+  new BaseService(new Repository('guests'), () => Promise.resolve())
+);
