@@ -1,4 +1,6 @@
-import { getCountries } from '@/lib';
+'use client';
+import defaultFlagSrc from '@/../public/germany.webp';
+import { Country } from '@/repositories';
 import {
   Select,
   SelectContent,
@@ -6,26 +8,48 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared';
+import Image from 'next/image';
+import { useState } from 'react';
 
-export default async function SelectCountry({
-  defaultCountry,
+export default function SelectCountry({
+  defaultNationality,
   name,
   id,
+  countries,
 }: {
-  defaultCountry: string;
+  defaultNationality: {
+    country: string | null;
+    flagSrc: string | null;
+  };
   name: string;
   id: string;
+  countries: readonly Country[];
 }) {
-  const countries = await getCountries();
-  const flag =
-    countries.find(country => country.name === defaultCountry)?.flag ?? '';
+  const [nationality, setNationality] = useState(defaultNationality);
 
   return (
     <>
-      <Select name={name}>
+      <div className='flex items-center justify-between'>
+        <label htmlFor='nationality'>Where are you from?</label>
+        <Image
+          src={nationality.flagSrc ?? defaultFlagSrc}
+          referrerPolicy='no-referrer'
+          alt='Country flag'
+          width={128}
+          height={128}
+          className='h-16 w-16 rounded-full object-cover'
+        />
+      </div>
+      <Select
+        name={name}
+        onValueChange={value => {
+          const [country, flagSrc] = value.split('%');
+          setNationality({ country, flagSrc });
+        }}
+      >
         <SelectTrigger
           id={id}
-          defaultValue={`${defaultCountry}%${flag}`}
+          defaultValue={`${nationality.country ?? 'Germany'}%${nationality.flagSrc ?? defaultFlagSrc}`}
           className='w-full'
         >
           <SelectValue placeholder='Select country...' />

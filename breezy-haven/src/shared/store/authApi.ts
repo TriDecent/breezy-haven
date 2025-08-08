@@ -4,9 +4,9 @@ import { z } from 'zod';
 const responseSchema = z.object({
   isAuthenticated: z.boolean().readonly(),
   user: z.object({
-    name: z.string().readonly(),
-    email: z.string().readonly(),
-    image: z.string().readonly(),
+    name: z.string().min(1).readonly(),
+    email: z.email(),
+    image: z.url().readonly(),
   }),
 });
 
