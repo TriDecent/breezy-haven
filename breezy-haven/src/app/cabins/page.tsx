@@ -1,6 +1,5 @@
 import {
   CabinLoading,
-  CabinQuery,
   CabinsList,
   Filter,
   ReservationReminder,
@@ -9,23 +8,13 @@ import {
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 
-export const revalidate = 3600; // not effective anymore because of searchParams
+export const revalidate = 3600;
 
-export function generateMetadata(): Metadata {
-  return {
-    title: 'Cabins',
-  };
-}
+export const metadata: Metadata = {
+  title: 'Cabins',
+};
 
-type FilterType = Partial<CabinQuery>;
-
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: Promise<FilterType>;
-}) {
-  const capacityFilter = (await searchParams).capacity ?? 'all';
-
+export default function Page() {
   return (
     <>
       <h1 className='text-accent-400 mb-5 text-xl font-medium md:text-2xl lg:text-4xl'>
@@ -44,10 +33,10 @@ export default async function Page({
         <Filter />
       </div>
 
-      <Suspense fallback={<CabinLoading />} key={capacityFilter}>
-        <CabinsList capacity={capacityFilter} />
-        <ReservationReminder />
+      <Suspense fallback={<CabinLoading />}>
+        <CabinsList />
       </Suspense>
+      <ReservationReminder />
     </>
   );
 }

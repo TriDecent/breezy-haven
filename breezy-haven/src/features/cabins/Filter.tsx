@@ -1,21 +1,11 @@
 'use client';
 
-import {
-  notFound,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { HTMLAttributes, useCallback } from 'react';
-import {
-  cabinCapacities,
-  CabinQuery,
-  viewSizeClassifier,
-} from './sizeClassifier';
+import { CabinQuery, viewSizeClassifier } from './sizeClassifier';
 
 export default function Filter() {
   const pathname = usePathname();
-  const router = useRouter();
   const searchParams = useSearchParams();
   const capacityQuery = searchParams.get('capacity') ?? 'all';
 
@@ -24,14 +14,10 @@ export default function Filter() {
       const params = new URLSearchParams();
       params.set('capacity', filter);
 
-      router.push(`${pathname}?${params.toString()}`, { scroll: false });
+      window.history.pushState(null, '', `${pathname}?${params.toString()}`);
     },
-    [pathname, router]
+    [pathname]
   );
-
-  if (!cabinCapacities.includes(capacityQuery)) {
-    notFound();
-  }
 
   return (
     <nav className='border-primary-800 flex justify-between rounded border'>

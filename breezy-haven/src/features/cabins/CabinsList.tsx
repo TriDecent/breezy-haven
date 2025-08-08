@@ -1,12 +1,11 @@
 import { cabinService } from '@/services';
 // import { connection } from 'next/server';
 
-import { CabinQuery } from '.';
-import { DTOCabin, NonNullableObject } from '../../repositories/index';
-import CabinCard from './CabinCard';
-import { viewSizeClassifier } from './sizeClassifier';
+import { DTOCabin, NonNullableObject } from '@/repositories';
+import { notFound } from 'next/navigation';
+import FilteredCabins from './FilteredCabins';
 
-export default async function CabinsList({ capacity }: CabinQuery) {
+export default async function CabinsList() {
   // await connection();
   // Everything below will be excluded from prerendering
 
@@ -14,46 +13,7 @@ export default async function CabinsList({ capacity }: CabinQuery) {
 
   if (error) throw new Error(`${error.code}: ${error.message}`);
 
-  const filteredCabins = filterCabinsBasedOnCapacity(
-    capacity,
-    cabins as NonNullableObject<DTOCabin>[]
-  );
+  if (!cabins) notFound();
 
-  return filteredCabins.length > 0 ? (
-    <section>
-      <ul className='grid gap-8 md:grid-cols-2 lg:grid-cols-[repeat(auto-fit,_minmax(25rem,_1fr))] lg:gap-12 xl:gap-14'>
-        {filteredCabins.map((cabin, index) => (
-          <li key={cabin.id}>
-            <CabinCard cabin={cabin} isFirstCabin={index === 0} />
-          </li>
-        ))}
-      </ul>
-    </section>
-  ) : null;
-}
-
-function filterCabinsBasedOnCapacity(
-  capacity: CabinQuery['capacity'],
-  cabins: NonNullableObject<DTOCabin>[]
-): ReadonlyArray<NonNullableObject<DTOCabin>> {
-  switch (capacity) {
-    case 'all':
-      return cabins;
-    case 'large':
-      return cabins.filter(
-        cabin => cabin.maxCapacity >= viewSizeClassifier.large.startAt
-      );
-    case 'medium':
-      return cabins.filter(
-        cabin =>
-          cabin.maxCapacity >= viewSizeClassifier.medium.startAt &&
-          cabin.maxCapacity <= viewSizeClassifier.medium.endAt
-      );
-    case 'small':
-      return cabins.filter(
-        cabin =>
-          cabin.maxCapacity >= viewSizeClassifier.small.startAt &&
-          cabin.maxCapacity <= viewSizeClassifier.small.endAt
-      );
-  }
+  return <FilteredCabins cabins={cabins as NonNullableObject<DTOCabin>[]} />;
 }

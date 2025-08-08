@@ -19,11 +19,10 @@ export async function generateStaticParams(): Promise<
   }[]
 > {
   const { data: cabins } = await cabinService.getAll();
-  const ids = cabins.map(cabin => ({
+
+  return cabins.map(cabin => ({
     cabinId: cabin.id.toString(),
   }));
-
-  return ids;
 }
 
 export async function generateMetadata({
