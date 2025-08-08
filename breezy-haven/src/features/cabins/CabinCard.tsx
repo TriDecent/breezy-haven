@@ -1,4 +1,4 @@
-import { Cabin } from '@/repositories';
+import { DTOCabin, NonNullableObject } from '@/repositories';
 import { UsersIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import PreviewImage from './PreviewImage';
@@ -7,7 +7,7 @@ export default function CabinCard({
   cabin,
   isFirstCabin,
 }: {
-  cabin: Cabin;
+  cabin: NonNullableObject<DTOCabin>;
   isFirstCabin: boolean;
 }) {
   const { id, name, maxCapacity, regularPrice, discount, image } = cabin;

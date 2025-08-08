@@ -1,9 +1,11 @@
 import { Auth } from '@/lib';
 import { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'Guest area',
-};
+export function generateMetadata(): Metadata {
+  return {
+    title: 'Guest area',
+  };
+}
 
 export default async function AccountPage() {
   const session = await Auth.getFullSessionAsync();

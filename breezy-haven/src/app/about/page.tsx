@@ -1,6 +1,6 @@
-import about1Image from '@/../../public/about-1.jpg';
-import RootLoading from '@/app/loading';
+import about1Image from '@/../public/about-1.jpg';
 import { cabinService } from '@/services';
+import { Spinner } from '@/shared';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -35,7 +35,7 @@ export default async function Page() {
               the luxury cabins. It&apos;s about the experience of reconnecting
               with nature and enjoying simple pleasures with family.
             </p>
-            <Suspense fallback={<RootLoading />}>
+            <Suspense fallback={<Spinner />}>
               <BreezyHavenIntroduction />
             </Suspense>
             <p>

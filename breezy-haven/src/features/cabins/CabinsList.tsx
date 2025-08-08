@@ -1,7 +1,8 @@
 import { cabinService } from '@/services';
 // import { connection } from 'next/server';
-import { Cabin } from '@/repositories';
+
 import { CabinQuery } from '.';
+import { DTOCabin, NonNullableObject } from '../../repositories/index';
 import CabinCard from './CabinCard';
 import { viewSizeClassifier } from './sizeClassifier';
 
@@ -11,13 +12,14 @@ export default async function CabinsList({ capacity }: CabinQuery) {
 
   const { data: cabins, error } = await cabinService.getAll();
 
-  const filteredCabins = filterCabinsBasedOnCapacity(capacity, cabins);
+  if (error) throw new Error(`${error.code}: ${error.message}`);
 
-  return error ? (
-    <p>
-      {error.code}: {error.message}
-    </p>
-  ) : filteredCabins.length > 0 ? (
+  const filteredCabins = filterCabinsBasedOnCapacity(
+    capacity,
+    cabins as NonNullableObject<DTOCabin>[]
+  );
+
+  return filteredCabins.length > 0 ? (
     <section>
       <ul className='grid gap-8 md:grid-cols-2 lg:grid-cols-[repeat(auto-fit,_minmax(25rem,_1fr))] lg:gap-12 xl:gap-14'>
         {filteredCabins.map((cabin, index) => (
@@ -32,8 +34,8 @@ export default async function CabinsList({ capacity }: CabinQuery) {
 
 function filterCabinsBasedOnCapacity(
   capacity: CabinQuery['capacity'],
-  cabins: readonly Cabin[]
-): ReadonlyArray<Cabin> {
+  cabins: NonNullableObject<DTOCabin>[]
+): ReadonlyArray<NonNullableObject<DTOCabin>> {
   switch (capacity) {
     case 'all':
       return cabins;

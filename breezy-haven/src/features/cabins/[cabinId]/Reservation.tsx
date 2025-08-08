@@ -1,4 +1,4 @@
-import type { DTOCabin, NonNullableObject } from '@/repositories';
+import type { DTOCabin, DTOSetting, NonNullableObject } from '@/repositories';
 import { bookingService, settingService } from '@/services';
 import ReservationDateRangeSelector from './ReservationDateRangeSelector';
 import ReservationForm from './ReservationForm';
@@ -24,7 +24,7 @@ export default async function Reservation({
     <>
       <ReservationForm cabin={cabin} />
       <ReservationDateRangeSelector
-        setting={settingResult.data}
+        setting={settingResult.data as NonNullableObject<DTOSetting>}
         bookedDates={bookingResult.data}
         cabin={cabin}
       />

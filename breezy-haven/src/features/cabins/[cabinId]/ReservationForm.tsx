@@ -1,5 +1,6 @@
 'use client';
-import { Cabin } from '@/repositories';
+
+import { DTOCabin, NonNullableObject } from '@/repositories';
 import {
   Badge,
   PrimaryButton,
@@ -15,7 +16,11 @@ import Link from 'next/link';
 
 import { useState } from 'react';
 
-export default function ReservationForm({ cabin }: { cabin: Cabin }) {
+export default function ReservationForm({
+  cabin,
+}: {
+  cabin: NonNullableObject<DTOCabin>;
+}) {
   const [guestCount, setGuestCount] = useState<number>(0);
   const { data, status } = useSession();
 

@@ -9,11 +9,13 @@ import {
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 
-// export const revalidate = 3600; // not effective anymore because of searchParams
+export const revalidate = 3600; // not effective anymore because of searchParams
 
-export const metadata: Metadata = {
-  title: 'Cabins',
-};
+export function generateMetadata(): Metadata {
+  return {
+    title: 'Cabins',
+  };
+}
 
 type FilterType = Partial<CabinQuery>;
 
