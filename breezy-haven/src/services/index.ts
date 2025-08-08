@@ -17,6 +17,9 @@ export const bookingService = new BookingService(
     if (!main) redirect('/login');
   })
 );
+export const unauthBookingService = new BookingService(
+  new BaseService(new Repository('bookings'), () => Promise.resolve())
+);
 
 export const guestService = new GuestService(
   new BaseService(new Repository('guests'), async () => {
