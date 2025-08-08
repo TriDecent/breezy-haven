@@ -5,6 +5,11 @@ import { IService, ServiceReturnType } from './BaseService';
 
 export default class CabinService implements IService<DTOCabin> {
   constructor(private readonly _service: IService<DTOCabin>) {}
+
+  verifyPermission(): Promise<void> {
+    return this._service.verifyPermission();
+  }
+
   getAll(): ServiceReturnType<DTOCabin[], PostgrestError | null> {
     return this._service.getAll();
   }
@@ -34,6 +39,8 @@ export default class CabinService implements IService<DTOCabin> {
     count: number | null;
     error: PostgrestError | null;
   }> {
+    await this._service.verifyPermission();
+
     const { count, error } = await supabase
       .from('cabins')
       .select('*', { count: 'exact', head: true });

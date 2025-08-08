@@ -20,7 +20,7 @@ export { default as SpinnerMini } from './components/SpinnerMini';
 export { default as Textarea } from './components/Textarea';
 export { default as TextExpander } from './components/TextExpander';
 export { default as ThemeToggle } from './components/ThemeToggle';
-export { METADATA } from './constants/metadata';
+export { ROUTES as METADATA } from './constants/ROUTES';
 export { default as useScrollDirection } from './hooks/useScrollDirection';
 export { default as RootProvider } from './providers/RootProvider';
 export { default as ThemeProvider } from './providers/ThemeProvider';

@@ -5,6 +5,9 @@ import { IService, ServiceReturnType } from './BaseService';
 
 export default class SettingService implements IService<DTOSetting> {
   constructor(private readonly _service: IService<DTOSetting>) {}
+  verifyPermission(): Promise<void> {
+    return this._service.verifyPermission();
+  }
   getAll(): ServiceReturnType<DTOSetting[], PostgrestError | null> {
     return this._service.getAll();
   }
@@ -34,6 +37,8 @@ export default class SettingService implements IService<DTOSetting> {
     data: DTOSetting | null;
     error: PostgrestError | null;
   }> {
+    await this._service.verifyPermission();
+
     const { data, error } = await supabase.from('settings').select().single();
 
     return { data: data, error };

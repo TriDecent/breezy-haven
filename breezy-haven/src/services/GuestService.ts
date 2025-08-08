@@ -4,6 +4,11 @@ import { IService, ServiceReturnType } from './BaseService';
 
 export default class GuestService implements IService<DTOGuest> {
   constructor(private readonly _service: IService<DTOGuest>) {}
+
+  verifyPermission(): Promise<void> {
+    return this._service.verifyPermission();
+  }
+
   getAll(): ServiceReturnType<DTOGuest[], PostgrestError | null> {
     return this._service.getAll();
   }
@@ -30,6 +35,8 @@ export default class GuestService implements IService<DTOGuest> {
   }
 
   async getByEmailAsync(email: string): Promise<DTOGuest | null> {
+    await this._service.verifyPermission();
+
     const { data: guests, error } = await this.getAll();
     if (error || !guests) return null;
 

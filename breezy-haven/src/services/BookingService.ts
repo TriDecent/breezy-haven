@@ -6,9 +6,16 @@ import { IService, ServiceReturnType } from './BaseService';
 
 export default class BookingService implements IService<DTOBooking> {
   constructor(private readonly _service: IService<DTOBooking>) {}
+
+  verifyPermission(): Promise<void> {
+    return this._service.verifyPermission();
+  }
+
   async delete(
     id: number
   ): ServiceReturnType<DTOBooking | null, PostgrestError | null> {
+    await this._service.verifyPermission();
+
     const { data, error } = await this._service.delete(id);
 
     return { data, error };
@@ -30,6 +37,8 @@ export default class BookingService implements IService<DTOBooking> {
   async getByGuestId(
     guestId: number
   ): Promise<{ data: DTOBooking[]; error: PostgrestError | null }> {
+    await this._service.verifyPermission();
+
     const { data, error } = await supabase
       .from('bookings')
       .select()
@@ -45,6 +54,8 @@ export default class BookingService implements IService<DTOBooking> {
   async getByCabinId(
     cabinId: number
   ): Promise<{ data: DTOBooking[]; error: PostgrestError | null }> {
+    await this._service.verifyPermission();
+
     const { data, error } = await supabase
       .from('bookings')
       .select('*')
@@ -59,6 +70,8 @@ export default class BookingService implements IService<DTOBooking> {
   public async getBookedDatesByCabinId(
     cabinId: number
   ): Promise<{ data: readonly Date[]; error: PostgrestError | null }> {
+    await this._service.verifyPermission();
+
     const { data, error } = await this.getByCabinId(cabinId);
 
     return { data: this.getBookedDates(data), error: error };

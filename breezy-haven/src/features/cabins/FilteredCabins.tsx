@@ -37,7 +37,6 @@ function filterCabinsBasedOnCapacity(
   capacity: string,
   cabins: NonNullableObject<DTOCabin>[]
 ): ReadonlyArray<NonNullableObject<DTOCabin>> {
-  console.log(capacity);
   switch (capacity) {
     case 'all':
       return cabins;
