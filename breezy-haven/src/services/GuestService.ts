@@ -1,6 +1,6 @@
 import { DTOGuest } from '@/repositories';
 import { PostgrestError } from '@supabase/supabase-js';
-import { IService, ServiceReturnType } from './EntityService';
+import { IService, ServiceReturnType } from './BaseService';
 
 export default class GuestService implements IService<DTOGuest> {
   constructor(private readonly _service: IService<DTOGuest>) {}

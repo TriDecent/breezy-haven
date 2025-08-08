@@ -2,7 +2,7 @@ import { supabase } from '@/lib/supabase';
 import { DTOBooking } from '@/repositories';
 import { PostgrestError } from '@supabase/supabase-js';
 import { eachDayOfInterval } from 'date-fns';
-import { IService, ServiceReturnType } from './EntityService';
+import { IService, ServiceReturnType } from './BaseService';
 
 export default class BookingService implements IService<DTOBooking> {
   constructor(private readonly _service: IService<DTOBooking>) {}

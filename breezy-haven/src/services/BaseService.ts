@@ -18,12 +18,23 @@ export interface IService<T extends DTORow> {
     updatedFields: Partial<T>
   ): ServiceReturnType<T | null, PostgrestError | null>;
   delete(id: number): ServiceReturnType<T | null, PostgrestError | null>;
+
+  verifyPermission(): Promise<void>;
 }
 
 export class BaseService<T extends DTORow> implements IService<T> {
-  constructor(protected readonly _repository: IRepository<T>) {}
+  constructor(
+    private readonly _repository: IRepository<T>,
+    private readonly _verifyPermissionAsync: () => Promise<void>
+  ) {}
+
+  verifyPermission(): Promise<void> {
+    return this._verifyPermissionAsync();
+  }
 
   async getAll(): ServiceReturnType<T[], PostgrestError | null> {
+    await this._verifyPermissionAsync();
+
     const { data, error } = await this._repository.getAll();
     return {
       data: data ?? [],
@@ -34,11 +45,15 @@ export class BaseService<T extends DTORow> implements IService<T> {
   async getById(
     id: number
   ): ServiceReturnType<T | null, PostgrestError | null> {
+    await this._verifyPermissionAsync();
+
     const { data, error } = await this._repository.getById(id);
     return { data, error };
   }
 
   async delete(id: number): ServiceReturnType<T | null, PostgrestError | null> {
+    await this._verifyPermissionAsync();
+
     const { data, error } = await this._repository.delete(id);
     return { data, error };
   }
@@ -46,12 +61,16 @@ export class BaseService<T extends DTORow> implements IService<T> {
     id: number,
     updatedFields: Partial<T>
   ): ServiceReturnType<T | null, PostgrestError | null> {
+    await this._verifyPermissionAsync();
+
     const { data, error } = await this._repository.update(id, updatedFields);
     return { data, error };
   }
   async create(
     item: Partial<T>
   ): ServiceReturnType<T | null, PostgrestError | null> {
+    await this._verifyPermissionAsync();
+
     const { data, error } = await this._repository.create(item);
     return { data, error };
   }

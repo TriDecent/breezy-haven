@@ -1,7 +1,7 @@
 import { supabase } from '@/lib/supabase';
 import { DTOSetting } from '@/repositories';
 import { PostgrestError } from '@supabase/supabase-js';
-import { IService, ServiceReturnType } from './EntityService';
+import { IService, ServiceReturnType } from './BaseService';
 
 export default class SettingService implements IService<DTOSetting> {
   constructor(private readonly _service: IService<DTOSetting>) {}

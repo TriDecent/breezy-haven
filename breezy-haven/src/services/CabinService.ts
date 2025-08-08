@@ -1,7 +1,7 @@
 import { supabase } from '@/lib/supabase';
 import { DTOCabin } from '@/repositories';
 import { PostgrestError } from '@supabase/supabase-js';
-import { IService, ServiceReturnType } from './EntityService';
+import { IService, ServiceReturnType } from './BaseService';
 
 export default class CabinService implements IService<DTOCabin> {
   constructor(private readonly _service: IService<DTOCabin>) {}
