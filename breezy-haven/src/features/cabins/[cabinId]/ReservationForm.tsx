@@ -11,8 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
   Textarea,
+  useGetAuthQuery,
 } from '@/shared';
-import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 
 import { useState } from 'react';
@@ -23,12 +23,14 @@ export default function ReservationForm({
   cabin: NonNullableObject<DTOCabin>;
 }) {
   const [guestCount, setGuestCount] = useState<number>(0);
-  const { data, status } = useSession();
+  const { data, isFetching } = useGetAuthQuery();
 
   return (
     <article className='h-fit shadow-lg md:order-2'>
       <div className='bg-primary-800 text-primary-300 flex items-center justify-between rounded-t-lg px-8 py-4 lg:px-16'>
-        {data ? (
+        {isFetching ? (
+          <div className='h-8 w-8 animate-pulse rounded-full bg-gray-300' />
+        ) : data ? (
           <>
             <p>Logged in as</p>
             <Badge avatarSrc={data.user?.image} name={data.user?.name} />
@@ -77,7 +79,10 @@ export default function ReservationForm({
             {status === 'authenticated' ? (
               <PrimaryButton>Reserve now</PrimaryButton>
             ) : (
-              <Link href={`${METADATA.login.href}`} className='flex w-full justify-center'>
+              <Link
+                href={`${METADATA.login.href}`}
+                className='flex w-full justify-center'
+              >
                 <p>
                   <span className='text-accent-500 underline'>Sign in</span> to
                   reserve the cabin

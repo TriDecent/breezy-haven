@@ -1,22 +1,33 @@
 'use client';
 
-import countryFlag from '@/../public/germany.webp';
+import { updateProfile } from '@/lib/actions';
 import { Input, PrimaryButton } from '@/shared';
-import Image from 'next/image';
-import { InputHTMLAttributes } from 'react';
+import { cloneElement, InputHTMLAttributes, useActionState } from 'react';
+import { GuestForm } from './schema';
 
 export default function UpdateProfileForm({
+  guest,
   countrySelector,
 }: {
+  guest: GuestForm;
   countrySelector: React.ReactElement;
 }) {
+  const [state, dispatch, isPending] = useActionState(updateProfile, {
+    userEntered: null,
+    errors: null,
+  });
+
   return (
-    <form className='bg-primary-900 flex flex-col gap-6 rounded px-4 py-6 text-lg md:px-8 md:py-12 lg:gap-8'>
+    <form
+      action={dispatch}
+      className='bg-primary-900 flex flex-col gap-6 rounded px-4 py-6 text-lg md:px-8 md:py-12 lg:gap-8'
+    >
       <InputForm
         id='fullName'
         name='fullName'
         labelText='Full name'
         autoComplete='name'
+        value={guest.fullName}
         readOnly
       />
 
@@ -25,31 +36,45 @@ export default function UpdateProfileForm({
         name='email'
         labelText='Email address'
         autoComplete='email'
+        value={guest.email}
         readOnly
       />
 
       <div className='space-y-2'>
-        <div className='flex items-center justify-between'>
-          <label htmlFor='nationality'>Where are you from?</label>
-          <Image
-            src={countryFlag}
-            alt='Country flag'
-            className='h-16 w-16 rounded-full'
-          />
-        </div>
+        {cloneElement(countrySelector, {
+          key: state.userEntered ? 'editing' : `default-${Date.now()}`,
+        })}
+        {state.errors?.nationality?.errors?.[0] ? (
+          <div className='text-red-500'>{state.errors.nationality.errors}</div>
+        ) : null}
       </div>
 
-      {countrySelector}
-
-      <InputForm
-        id='nationalID'
-        labelText='National ID number'
-        name='nationalID'
-      />
+      <div>
+        <InputForm
+          id='nationalID'
+          labelText='National ID number'
+          defaultValue={
+            state.userEntered?.nationalID ?? guest.nationalID?.toString()
+          }
+          name='nationalID'
+        />
+        {state.errors?.nationalID?.errors?.[0] ? (
+          <div className='text-red-500'>{state.errors.nationalID.errors}</div>
+        ) : null}
+      </div>
 
       <div className='md:w-fit md:self-center'>
-        <PrimaryButton>Update profile</PrimaryButton>
+        <PrimaryButton disabled={isPending}>
+          {!isPending ? (
+            'Update profile'
+          ) : (
+            <div className='border-accent-500 mx-auto h-5 w-5 animate-spin rounded-full border-2 border-t-transparent'></div>
+          )}
+        </PrimaryButton>
       </div>
+      {state.errors?.authenticated ? (
+        <div className='text-red-500t-'>{state.errors.authenticated}</div>
+      ) : null}
     </form>
   );
 }

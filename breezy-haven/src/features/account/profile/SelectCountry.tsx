@@ -42,6 +42,7 @@ export default function SelectCountry({
       </div>
       <Select
         name={name}
+        value={`${nationality.country}%${nationality.flagSrc}`}
         onValueChange={value => {
           const [country, flagSrc] = value.split('%');
           setNationality({ country, flagSrc });
