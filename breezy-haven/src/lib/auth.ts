@@ -36,5 +36,6 @@ const getFullSessionAsync = cache(async () => {
 
 export const Auth = {
   nextAuth,
+  getThirdPartySessionAsync,
   getFullSessionAsync,
 } as const;

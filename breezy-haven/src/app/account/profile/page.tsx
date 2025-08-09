@@ -4,7 +4,6 @@ import {
   UpdateProfileForm,
 } from '@/features/account/profile';
 import { Auth, getCountries } from '@/lib';
-import { guestService } from '@/services';
 import { METADATA } from '@/shared';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
@@ -15,12 +14,9 @@ export default async function Page() {
   const session = await Auth.getFullSessionAsync();
   if (!session.main || !session.main.email) redirect(METADATA.login.href);
 
-  const [dtoGuest, countries] = await Promise.all([
-    guestService.getByEmailAsync(session.main.email),
-    getCountries(),
-  ]);
+  const countries = await getCountries();
 
-  const safeGuest = guestFormSchema.safeParse(dtoGuest);
+  const safeGuest = guestFormSchema.safeParse(session.main);
 
   if (!safeGuest.success) {
     return (
