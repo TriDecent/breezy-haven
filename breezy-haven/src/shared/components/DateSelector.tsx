@@ -35,7 +35,7 @@ export default function DateSelector({
   description,
   ...props
 }: { description: string } & DateSelector) {
-  const [locale, setLocale] = useState<CustomLocale | undefined>(undefined);
+  const [locale, setLocale] = useState<CustomLocale | ''>('');
 
   return (
     <Card className='shadow-lg'>

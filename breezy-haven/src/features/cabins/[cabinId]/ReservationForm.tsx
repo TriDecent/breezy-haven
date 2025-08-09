@@ -15,7 +15,7 @@ import {
 } from '@/shared';
 import Link from 'next/link';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function ReservationForm({
   cabin,
@@ -24,11 +24,16 @@ export default function ReservationForm({
 }) {
   const [guestCount, setGuestCount] = useState<number>(0);
   const { data, isFetching } = useGetAuthQuery();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => setIsMounted(true), []);
 
   return (
     <article className='h-fit shadow-lg md:order-2'>
       <div className='bg-primary-800 text-primary-300 flex items-center justify-between rounded-t-lg px-8 py-4 lg:px-16'>
-        {isFetching ? (
+        {!isMounted ? (
+          <div className='h-8 w-8 animate-pulse rounded-full bg-gray-300' />
+        ) : isFetching ? (
           <div className='h-8 w-8 animate-pulse rounded-full bg-gray-300' />
         ) : data ? (
           <>
@@ -76,7 +81,17 @@ export default function ReservationForm({
 
         <div className='flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-end'>
           <div className='w-full lg:order-2'>
-            {status === 'authenticated' ? (
+            {!isMounted ? (
+              <Link
+                href={`${METADATA.login.href}`}
+                className='flex w-full justify-center'
+              >
+                <p>
+                  <span className='text-accent-500 underline'>Sign in</span> to
+                  reserve the cabin
+                </p>
+              </Link>
+            ) : data?.isAuthenticated ? (
               <PrimaryButton>Reserve now</PrimaryButton>
             ) : (
               <Link

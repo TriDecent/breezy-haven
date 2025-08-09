@@ -2,7 +2,7 @@
 
 import { updateProfile } from '@/lib/actions';
 import { Input, PrimaryButton } from '@/shared';
-import { cloneElement, InputHTMLAttributes, useActionState } from 'react';
+import { InputHTMLAttributes, useActionState } from 'react';
 import { GuestForm } from './schema';
 
 export default function UpdateProfileForm({
@@ -41,9 +41,7 @@ export default function UpdateProfileForm({
       />
 
       <div className='space-y-2'>
-        {cloneElement(countrySelector, {
-          key: state.userEntered ? 'editing' : `default-${Date.now()}`,
-        })}
+        {countrySelector}
         {state.errors?.nationality?.errors?.[0] ? (
           <div className='text-red-500'>{state.errors.nationality.errors}</div>
         ) : null}

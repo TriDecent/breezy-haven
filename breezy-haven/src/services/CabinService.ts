@@ -1,10 +1,14 @@
 import { supabase } from '@/lib/supabase';
 import { DTOCabin } from '@/repositories';
 import { PostgrestError } from '@supabase/supabase-js';
+import { cache } from 'react';
 import { IService, ServiceReturnType } from './BaseService';
 
 export default class CabinService implements IService<DTOCabin> {
-  constructor(private readonly _service: IService<DTOCabin>) {}
+  constructor(private readonly _service: IService<DTOCabin>) {
+    this.getAll = cache(this.getAll.bind(this));
+    this.getById = cache(this.getById.bind(this));
+  }
 
   verifyPermission(): Promise<void> {
     return this._service.verifyPermission();
