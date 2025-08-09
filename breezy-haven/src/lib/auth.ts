@@ -17,9 +17,7 @@ const getCurrentUser = cache(async () => {
 
   if (!session?.user?.email) return null;
 
-  const guest = await guestSetupService.getByEmailAsync(session.user.email);
-
-  return guest;
+  return await guestSetupService.getByEmailAsync(session.user.email);
 });
 
 const getFullSessionAsync = cache(async () => {

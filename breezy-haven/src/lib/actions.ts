@@ -1,6 +1,8 @@
 'use server';
 
 import { guestService } from '@/services';
+import { ROUTES } from '@/shared/constants/ROUTES';
+import { revalidatePath } from 'next/cache';
 import z from 'zod';
 import { Auth } from './auth';
 import { getCountries } from './data-service';
@@ -14,7 +16,7 @@ export async function logoutAsync() {
 }
 
 export async function updateProfile(
-  currentState: UpdateProfileResponse,
+  _currentState: UpdateProfileResponse,
   formData: FormData
 ): Promise<UpdateProfileResponse> {
   const { main } = await Auth.getFullSessionAsync();
@@ -38,7 +40,7 @@ export async function updateProfile(
       errors: errors ?? null,
     };
   }
-  // Perform other validations and mutating data here
+
   const [inputCountry, inputFlag] = result.data.nationality.split('%');
   const countries = await getCountries();
   const doesCountryExist = countries.some(
@@ -58,6 +60,8 @@ export async function updateProfile(
     nationalID: result.data.nationalID.toString(),
     countryFlag: inputFlag,
   });
+
+  revalidatePath(ROUTES.account.nested.profile.href);
 
   return {
     userEntered: null,
