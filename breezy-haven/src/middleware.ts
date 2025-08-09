@@ -3,7 +3,7 @@ import { Auth } from './lib/auth';
 import { METADATA } from './shared';
 
 export const config: MiddlewareConfig = {
-  matcher: ['/account/:path*', '/login', '/setup-new-guest'],
+  matcher: ['/account/:path*', '/login'],
 };
 
 export async function middleware(request: NextRequest) {
@@ -15,22 +15,15 @@ export async function middleware(request: NextRequest) {
   if (pathname.startsWith(METADATA.account.href))
     return handleAccountRouteAsync(request);
 
-  if (pathname === METADATA['setup-new-guest'].href)
-    return handleSetupGuestAsync(request);
-
   return NextResponse.next();
 }
 
 async function handleLoginRouteAsync(
   request: NextRequest
 ): Promise<NextResponse> {
-  const session = await Auth.getFullSessionAsync();
+  const session = await Auth.getThirdPartySessionAsync();
 
-  if (session.main) {
-    return NextResponse.redirect(new URL(METADATA.home.href, request.nextUrl));
-  }
-
-  if (session.thirdParty) {
+  if (session) {
     return NextResponse.redirect(
       new URL(
         `${METADATA['setup-new-guest'].href}?${request.nextUrl.searchParams.toString()}`,
@@ -45,9 +38,9 @@ async function handleLoginRouteAsync(
 async function handleAccountRouteAsync(
   request: NextRequest
 ): Promise<NextResponse> {
-  const session = await Auth.getFullSessionAsync();
+  const session = await Auth.getThirdPartySessionAsync();
 
-  if (!session.thirdParty || !session.main) {
+  if (!session) {
     const params = new URLSearchParams({
       callbackUrl: request.nextUrl.pathname,
     });
@@ -55,15 +48,6 @@ async function handleAccountRouteAsync(
       new URL(`${METADATA.login.href}?${params}`, request.nextUrl)
     );
   }
-
-  return NextResponse.next();
-}
-
-async function handleSetupGuestAsync(request: NextRequest) {
-  const session = await Auth.getFullSessionAsync();
-  console.log(request.nextUrl);
-  if (session.main)
-    return NextResponse.redirect(new URL(METADATA.home.href, request.nextUrl));
 
   return NextResponse.next();
 }
