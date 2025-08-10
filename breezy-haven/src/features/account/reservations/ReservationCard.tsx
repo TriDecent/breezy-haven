@@ -1,6 +1,7 @@
 import { PreviewImage } from '@/features/cabins';
 import { DTOBooking, type NonNullableObject } from '@/repositories';
 import { METADATA } from '@/shared';
+
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid';
 import { format, formatDistance, isPast, isToday, parseISO } from 'date-fns';
 
@@ -67,20 +68,11 @@ function Information({
       </div>
 
       <div className='flex flex-grow flex-col justify-center-safe gap-y-4 p-6'>
-        <div className='flex items-center justify-between'>
-          <h3 className='text-xl font-semibold'>
-            {booking.numNights} nights in Cabin {cabin.name}
-          </h3>
-          {isPast(new Date(booking.startDate)) ? (
-            <span className='flex h-7 items-center rounded-sm bg-yellow-800 px-3 text-xs font-bold text-yellow-200 uppercase'>
-              past
-            </span>
-          ) : (
-            <span className='flex h-7 items-center rounded-sm bg-green-800 px-3 text-xs font-bold text-green-200 uppercase'>
-              upcoming
-            </span>
-          )}
-        </div>
+        <BookingHeader
+          numNights={booking.numNights}
+          cabinName={cabin.name}
+          shouldRenderPast={isPast(new Date(booking.startDate))}
+        />
 
         <p className='text-primary-300 text-lg'>
           {format(new Date(booking.startDate), 'EEE, MMM dd yyyy')} (
@@ -91,21 +83,67 @@ function Information({
         </p>
 
         <div className='flex flex-col items-center gap-5 md:flex-row'>
-          <p className='flex w-full max-w-38 justify-between'>
-            <span className='text-accent-400 text-xl font-semibold'>
-              ${booking.totalPrice}
-            </span>
-            <span className='text-primary-300'>&bull;</span>
-            <span className='text-primary-300 text-lg'>
-              {booking.numGuests} guest{booking.numGuests > 1 && 's'}
-            </span>
-          </p>
-
-          <p className='text-primary-400 ml-auto text-sm'>
-            Booked {format(new Date(booking.created_at), 'EEE, MMM dd yyyy, p')}
-          </p>
+          <BookingDetails
+            price={booking.totalPrice}
+            guestCount={booking.numGuests}
+            createdOn={format(
+              new Date(booking.created_at),
+              'EEE, MMM dd yyyy, p'
+            )}
+          />
         </div>
       </div>
+    </>
+  );
+}
+
+function BookingHeader({
+  numNights,
+  cabinName,
+  shouldRenderPast,
+}: {
+  numNights: number;
+  cabinName: string;
+  shouldRenderPast: boolean;
+}) {
+  return (
+    <div className='flex items-center justify-between'>
+      <h3 className='text-xl font-semibold'>
+        {numNights} nights in Cabin {cabinName}
+      </h3>
+      {shouldRenderPast ? (
+        <span className='flex h-7 items-center rounded-sm bg-yellow-800 px-3 text-xs font-bold text-yellow-200 uppercase'>
+          past
+        </span>
+      ) : (
+        <span className='flex h-7 items-center rounded-sm bg-green-800 px-3 text-xs font-bold text-green-200 uppercase'>
+          upcoming
+        </span>
+      )}
+    </div>
+  );
+}
+
+function BookingDetails({
+  price,
+  guestCount,
+  createdOn,
+}: {
+  price: number;
+  guestCount: number;
+  createdOn: string;
+}) {
+  return (
+    <>
+      <p className='flex w-full max-w-38 justify-between'>
+        <span className='text-accent-400 text-xl font-semibold'>${price}</span>
+        <span className='text-primary-300'>&bull;</span>
+        <span className='text-primary-300 text-lg'>
+          {guestCount} guest{guestCount > 1 && 's'}
+        </span>
+      </p>
+
+      <p className='text-primary-400 ml-auto text-sm'>Booked on {createdOn}</p>
     </>
   );
 }
