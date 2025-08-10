@@ -35,3 +35,5 @@ export const settingService = new SettingService(
 export const guestSetupService = new GuestService(
   new BaseService(new Repository('guests'), () => Promise.resolve())
 );
+
+export { bookingSchema } from './schemas';

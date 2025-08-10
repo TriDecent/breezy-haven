@@ -5,5 +5,6 @@ export { default as CabinCardSkeleton } from './CabinCardSkeleton';
 export { default as CabinLoading } from './CabinLoading';
 export { default as CabinsList } from './CabinsList';
 export { default as Filter } from './Filter';
+export { default as PreviewImage } from './PreviewImage';
 export { default as ReservationReminder } from './ReservationReminder';
 export type { CabinQuery } from './sizeClassifier';

@@ -1,12 +1,12 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Image from 'next/image';
+import Image, { type StaticImageData } from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 type PreviewImageProps = {
-  src: string;
+  src: string | StaticImageData;
   sizes?: string;
   alt: string;
   className?: string;

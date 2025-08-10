@@ -2,8 +2,8 @@
 
 import { guestService } from '@/services';
 import { ROUTES } from '@/shared/constants/ROUTES';
-import { revalidatePath } from 'next/cache';
 import z from 'zod';
+import { revalidatePath } from 'next/cache';
 import { Auth } from './auth';
 import { getCountries } from './data-service';
 

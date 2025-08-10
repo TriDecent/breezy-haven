@@ -15,7 +15,7 @@ export default function AccountLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className='grid flex-1 grid-cols-1 md:grid-cols-[16rem_1fr]'>
+    <div className='grid flex-1 grid-cols-1 md:grid-cols-[12rem_1fr] lg:grid-cols-[16rem_1fr]'>
       <section className='hidden md:block'>
         <SideNavigation />
       </section>

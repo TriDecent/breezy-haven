@@ -34,19 +34,27 @@ export default class BookingService implements IService<DTOBooking> {
     return this._service.update(id, updatedFields);
   }
 
-  async getByGuestId(
-    guestId: number
-  ): Promise<{ data: DTOBooking[]; error: PostgrestError | null }> {
+  async getByGuestId(guestId: number) {
     await this._service.verifyPermission();
 
     const { data, error } = await supabase
       .from('bookings')
-      .select()
+      .select(
+        `
+      *,
+      cabins(name, image)
+    `
+      )
       .eq('guestId', guestId)
       .order('startDate');
 
     return {
-      data: data ?? [],
+      data: data
+        ? data.map(({ cabins, ...booking }) => ({
+            ...booking,
+            cabin: cabins,
+          }))
+        : [],
       error: error,
     };
   }
