@@ -2,7 +2,7 @@
 
 import { updateProfile } from '@/lib/actions';
 import { Input, PrimaryButton } from '@/shared';
-import { InputHTMLAttributes, useActionState } from 'react';
+import { InputHTMLAttributes, useActionState, type ReactElement } from 'react';
 import { GuestForm } from './schema';
 
 export default function UpdateProfileForm({
@@ -10,7 +10,7 @@ export default function UpdateProfileForm({
   countrySelector,
 }: {
   guest: GuestForm;
-  countrySelector: React.ReactElement;
+  countrySelector: ReactElement;
 }) {
   const [state, dispatch, isPending] = useActionState(updateProfile, {
     userEntered: null,
