@@ -1,6 +1,7 @@
 export * from './animations/Variants';
 export * from './components/ui/input';
 export * from './components/ui/select';
+export * from './components/ui/sonner';
 export * from './components/ui/textarea';
 export * from './store/uiSlice';
 

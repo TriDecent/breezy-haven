@@ -1,6 +1,7 @@
 import { SideNavigation } from '@/features/account';
 import { MiniSidebar } from '@/shared';
 import { Metadata } from 'next';
+import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
   title: {
@@ -24,6 +25,8 @@ export default function AccountLayout({
       <MiniSidebar>
         <SideNavigation />
       </MiniSidebar>
+
+      <Toaster richColors position='top-center' />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { ROUTES } from '@/shared';
 
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid';
 import { useTransition } from 'react';
+import { toast } from 'sonner';
 import { deleteBooking } from './deleteBookingAction';
 
 const styles =
@@ -13,8 +14,22 @@ export default function Modification({ id }: { id: number }) {
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = () => {
-    if (confirm('Are you sure that you want to delete this reservation?'))
-      startTransition(() => deleteBooking(id));
+    toast('Are you sure that you want to delete this reservation?', {
+      action: {
+        label: 'Yes',
+        onClick: () => {
+          startTransition(async () =>
+            toast
+              .promise(deleteBooking(id), {
+                loading: 'Deleting...',
+                success: 'Deleted!',
+                error: 'Delete failed!',
+              })
+              .unwrap()
+          );
+        },
+      },
+    });
   };
 
   return (
