@@ -1,6 +1,6 @@
 import { MiddlewareConfig, NextRequest, NextResponse } from 'next/server';
 import { Auth } from './lib/auth';
-import { METADATA } from './shared';
+import { ROUTES } from './shared';
 
 export const config: MiddlewareConfig = {
   matcher: ['/account/:path*', '/login'],
@@ -9,10 +9,10 @@ export const config: MiddlewareConfig = {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith(METADATA.login.href))
+  if (pathname.startsWith(ROUTES.login.href))
     return handleLoginRouteAsync(request);
 
-  if (pathname.startsWith(METADATA.account.href))
+  if (pathname.startsWith(ROUTES.account.href))
     return handleAccountRouteAsync(request);
 
   return NextResponse.next();
@@ -26,7 +26,7 @@ async function handleLoginRouteAsync(
   if (session) {
     return NextResponse.redirect(
       new URL(
-        `${METADATA['setup-new-guest'].href}?${request.nextUrl.searchParams.toString()}`,
+        `${ROUTES['setup-new-guest'].href}?${request.nextUrl.searchParams.toString()}`,
         request.nextUrl
       )
     );
@@ -45,7 +45,7 @@ async function handleAccountRouteAsync(
       callbackUrl: request.nextUrl.pathname,
     });
     return NextResponse.redirect(
-      new URL(`${METADATA.login.href}?${params}`, request.nextUrl)
+      new URL(`${ROUTES.login.href}?${params}`, request.nextUrl)
     );
   }
 

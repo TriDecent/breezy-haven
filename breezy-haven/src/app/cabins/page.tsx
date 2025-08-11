@@ -4,14 +4,14 @@ import {
   Filter,
   ReservationReminder,
 } from '@/features/cabins';
-import { METADATA } from '@/shared';
+import { ROUTES } from '@/shared';
 
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 
 export const revalidate = 3600;
 
-export const metadata: Metadata = METADATA.cabins.metadata;
+export const metadata: Metadata = ROUTES.cabins.metadata;
 
 export default function Page() {
   return (

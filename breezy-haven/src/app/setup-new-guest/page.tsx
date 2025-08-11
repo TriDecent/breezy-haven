@@ -1,11 +1,11 @@
 import { Auth } from '@/lib';
 import { guestSetupService } from '@/services';
-import { METADATA, Spinner } from '@/shared';
+import { ROUTES, Spinner } from '@/shared';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
-export const metadata: Metadata = METADATA['setup-new-guest'].metadata;
+export const metadata: Metadata = ROUTES['setup-new-guest'].metadata;
 
 export default async function SettingUpGuestPage({
   searchParams,
@@ -20,7 +20,7 @@ export default async function SettingUpGuestPage({
         Signing in, please don&apos;t close the page
       </h1>
       <Suspense fallback={<Spinner />}>
-        <SetupGuest callbackUrl={params.callbackUrl ?? METADATA.account.href} />
+        <SetupGuest callbackUrl={params.callbackUrl ?? ROUTES.account.href} />
       </Suspense>
     </section>
   );
@@ -38,18 +38,18 @@ export default async function SettingUpGuestPage({
 
 async function SetupGuest({ callbackUrl }: { callbackUrl: string }) {
   const session = await Auth.getFullSessionAsync();
-  if (!session.thirdParty?.user) redirect(METADATA.login.href);
+  if (!session.thirdParty?.user) redirect(ROUTES.login.href);
   if (session.main) redirect(callbackUrl);
 
   const user = session.thirdParty.user;
 
-  if (!user.email || !user.name) redirect(METADATA.login.href);
+  if (!user.email || !user.name) redirect(ROUTES.login.href);
 
   const { email, name } = user;
 
   const { error } = await guestSetupService.create({ email, fullName: name });
 
-  if (error) redirect(METADATA.login.href);
+  if (error) redirect(ROUTES.login.href);
 
   redirect(callbackUrl);
 

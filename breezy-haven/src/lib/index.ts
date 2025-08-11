@@ -5,5 +5,3 @@ export { supabase } from './supabase';
 export { getCountries } from './data-service';
 
 export { Auth } from './auth';
-
-export { loginAsync, logoutAsync } from './actions';

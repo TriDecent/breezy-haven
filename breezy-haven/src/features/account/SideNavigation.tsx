@@ -1,6 +1,6 @@
 'use client';
 
-import { METADATA } from '@/shared';
+import { ROUTES } from '@/shared';
 import {
   CalendarDaysIcon,
   HomeIcon,
@@ -13,17 +13,17 @@ import SignOutButton from './SignOutButton';
 const navLinks = [
   {
     name: 'Home',
-    href: METADATA.home.href,
+    href: ROUTES.home.href,
     icon: <HomeIcon className='text-primary-600 h-5 w-5' />,
   },
   {
     name: 'Reservations',
-    href: METADATA.account.nested.reservations.href,
+    href: ROUTES.account.nested.reservations.href,
     icon: <CalendarDaysIcon className='text-primary-600 h-5 w-5' />,
   },
   {
     name: 'Guest profile',
-    href: METADATA.account.nested.profile.href,
+    href: ROUTES.account.nested.profile.href,
     icon: <UserIcon className='text-primary-600 h-5 w-5' />,
   },
 ] as const;

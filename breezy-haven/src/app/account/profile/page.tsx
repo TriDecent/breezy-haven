@@ -4,15 +4,15 @@ import {
   UpdateProfileForm,
 } from '@/features/account/profile';
 import { Auth, getCountries } from '@/lib';
-import { METADATA } from '@/shared';
+import { ROUTES } from '@/shared';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
-export const metadata: Metadata = METADATA.account.nested.profile.metadata;
+export const metadata: Metadata = ROUTES.account.nested.profile.metadata;
 
 export default async function Page() {
   const session = await Auth.getFullSessionAsync();
-  if (!session.main || !session.main.email) redirect(METADATA.login.href);
+  if (!session.main || !session.main.email) redirect(ROUTES.login.href);
 
   const countries = await getCountries();
 

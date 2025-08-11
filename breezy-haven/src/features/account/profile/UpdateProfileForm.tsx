@@ -1,9 +1,9 @@
 'use client';
 
-import { updateProfile } from '@/lib/actions';
 import { Input, PrimaryButton } from '@/shared';
 import { InputHTMLAttributes, useActionState, type ReactElement } from 'react';
 import { GuestForm } from './schema';
+import { updateProfile } from './updateProfileAction';
 
 export default function UpdateProfileForm({
   guest,

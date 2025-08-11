@@ -1,9 +1,9 @@
 import { Auth } from '@/lib';
-import { METADATA } from '@/shared';
+import { ROUTES } from '@/shared';
 import { Metadata } from 'next';
 
 export function generateMetadata(): Metadata {
-  return METADATA.account.metadata;
+  return ROUTES.account.metadata;
 }
 
 export default async function AccountPage() {

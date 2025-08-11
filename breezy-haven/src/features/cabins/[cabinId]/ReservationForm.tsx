@@ -3,7 +3,7 @@
 import { DTOCabin, NonNullableObject } from '@/repositories';
 import {
   Badge,
-  METADATA,
+  ROUTES,
   PrimaryButton,
   Select,
   SelectContent,
@@ -83,7 +83,7 @@ export default function ReservationForm({
           <div className='w-full lg:order-2'>
             {!isMounted ? (
               <Link
-                href={`${METADATA.login.href}`}
+                href={`${ROUTES.login.href}`}
                 className='flex w-full justify-center'
               >
                 <p>
@@ -95,7 +95,7 @@ export default function ReservationForm({
               <PrimaryButton>Reserve now</PrimaryButton>
             ) : (
               <Link
-                href={`${METADATA.login.href}`}
+                href={`${ROUTES.login.href}`}
                 className='flex w-full justify-center'
               >
                 <p>

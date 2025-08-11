@@ -1,14 +1,13 @@
 import { ReservationCard } from '@/features/account/reservations';
 import { Auth } from '@/lib';
 import { bookingSchema, bookingService } from '@/services';
-import { METADATA } from '@/shared';
-import { ROUTES } from '@/shared/constants/ROUTES';
+import { ROUTES } from '@/shared';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import type { $ZodIssue } from 'zod/v4/core';
 
-export const metadata: Metadata = METADATA.account.nested.reservations.metadata;
+export const metadata: Metadata = ROUTES.account.nested.reservations.metadata;
 
 export default async function ReservationsPage() {
   const session = await Auth.getFullSessionAsync();
