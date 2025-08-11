@@ -19,7 +19,7 @@ import { usePathname } from 'next/navigation';
 import { Fragment } from 'react';
 import { ROUTES } from '../constants/ROUTES';
 
-const MAX_VISIBLE = 4;
+const MAX_VISIBLE = 3;
 
 export default function NavTrail() {
   const pathname = usePathname();

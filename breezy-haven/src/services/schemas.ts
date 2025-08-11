@@ -3,6 +3,7 @@ import z from 'zod';
 const cabinSchema = z.object({
   name: z.string(),
   image: z.string(),
+  maxCapacity: z.coerce.number(),
 });
 
 export const bookingSchema = z.object({

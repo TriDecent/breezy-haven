@@ -42,7 +42,7 @@ export default class BookingService implements IService<DTOBooking> {
       .select(
         `
       *,
-      cabins(name, image)
+      cabins(name, image, maxCapacity)
     `
       )
       .eq('guestId', guestId)
