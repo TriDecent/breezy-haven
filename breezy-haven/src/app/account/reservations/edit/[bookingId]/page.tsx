@@ -1,8 +1,6 @@
 import { BookingEditForm } from '@/features/account/profile';
 import { Auth } from '@/lib';
 import { bookingSchema, bookingService } from '@/services';
-import { ROUTES } from '@/shared';
-import { redirect } from 'next/navigation';
 import z from 'zod';
 
 const paramsSchema = z.object({ bookingId: z.coerce.number() });
@@ -18,9 +16,7 @@ export default async function BookingEditPage({
   if (!paramsResult.success) throw new Error('Invalid booking id');
   const { bookingId } = paramsResult.data;
 
-  const session = await Auth.getFullSessionAsync();
-
-  if (!session.main) redirect(ROUTES.login.href);
+  const session = await Auth.verifySession();
 
   const { data: bookings, error: bookingsError } =
     await bookingService.getByGuestId(session.main.id);

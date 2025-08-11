@@ -4,15 +4,12 @@ import { bookingSchema, bookingService } from '@/services';
 import { ROUTES } from '@/shared';
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 import type { $ZodIssue } from 'zod/v4/core';
 
 export const metadata: Metadata = ROUTES.account.nested.reservations.metadata;
 
 export default async function ReservationsPage() {
-  const session = await Auth.getFullSessionAsync();
-
-  if (!session.main) redirect(ROUTES.login.href);
+  const session = await Auth.verifySession();
 
   const { data: bookings, error: bookingsError } =
     await bookingService.getByGuestId(session.main.id);

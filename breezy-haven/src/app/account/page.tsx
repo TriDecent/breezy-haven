@@ -7,9 +7,7 @@ export function generateMetadata(): Metadata {
 }
 
 export default async function AccountPage() {
-  const session = await Auth.getFullSessionAsync();
-
-  if (!session?.main) return <p>You are not authorized to visit this route.</p>;
+  const session = await Auth.verifySession();
 
   return (
     <>

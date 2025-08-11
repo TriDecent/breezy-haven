@@ -4,6 +4,10 @@ import Google from 'next-auth/providers/google';
 import { guestSetupService } from '@/services';
 import { cache } from 'react';
 
+import type { NonNullableObject } from '@/repositories';
+import { ROUTES } from '@/shared';
+import { redirect } from 'next/navigation';
+
 const nextAuth = NextAuth({
   providers: [Google],
 });
@@ -32,8 +36,17 @@ const getFullSessionAsync = cache(async () => {
   } as const;
 });
 
+const verifySession = cache(async () => {
+  const session = await getFullSessionAsync();
+
+  if (!session.main) redirect(ROUTES.login.href);
+
+  return session as NonNullableObject<typeof session>; // main exists means third also exists
+});
+
 export const Auth = {
   nextAuth,
   getThirdPartySessionAsync,
   getFullSessionAsync,
+  verifySession,
 } as const;

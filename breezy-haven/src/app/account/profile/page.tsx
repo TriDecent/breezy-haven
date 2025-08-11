@@ -6,13 +6,11 @@ import {
 import { Auth, getCountries } from '@/lib';
 import { ROUTES } from '@/shared';
 import { Metadata } from 'next';
-import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = ROUTES.account.nested.profile.metadata;
 
 export default async function Page() {
-  const session = await Auth.getFullSessionAsync();
-  if (!session.main || !session.main.email) redirect(ROUTES.login.href);
+  const session = await Auth.verifySession();
 
   const countries = await getCountries();
 

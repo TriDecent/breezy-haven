@@ -1,6 +1,5 @@
 import { Auth } from '@/lib';
 import { Repository } from '@/repositories';
-import { redirect } from 'next/navigation';
 import { BaseService } from './BaseService';
 import BookingService from './BookingService';
 import CabinService from './CabinService';
@@ -13,8 +12,7 @@ export const cabinService = new CabinService(
 
 export const bookingService = new BookingService(
   new BaseService(new Repository('bookings'), async () => {
-    const { main } = await Auth.getFullSessionAsync();
-    if (!main) redirect('/login');
+    await Auth.verifySession();
   })
 );
 export const unauthBookingService = new BookingService(
@@ -23,8 +21,7 @@ export const unauthBookingService = new BookingService(
 
 export const guestService = new GuestService(
   new BaseService(new Repository('guests'), async () => {
-    const { main } = await Auth.getFullSessionAsync();
-    if (!main) redirect('/login');
+    await Auth.verifySession();
   })
 );
 
