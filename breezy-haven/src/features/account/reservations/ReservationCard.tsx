@@ -1,9 +1,8 @@
 import { PreviewImage } from '@/features/cabins';
 import { DTOBooking, type NonNullableObject } from '@/repositories';
-import { METADATA } from '@/shared';
 
-import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid';
 import { format, formatDistance, isPast, isToday, parseISO } from 'date-fns';
+import Modification from './Modification';
 
 export default function ReservationCard({
   booking,
@@ -16,35 +15,11 @@ export default function ReservationCard({
   };
 }) {
   return (
-    <article className='border-primary-800 flex flex-col overflow-hidden rounded-md border md:flex-row'>
-      <div className='flex flex-grow flex-col lg:flex-row'>
-        <Information cabin={cabin} booking={booking} />
-      </div>
-      <div className='border-primary-800 flex border-t md:flex-col md:border-t md:border-l'>
-        <Modification id={booking.id} />
-      </div>
+    <article className='border-primary-800 flex flex-col overflow-hidden rounded-md border shadow-sm shadow-black md:flex-row'>
+      <Information cabin={cabin} booking={booking} />
+
+      {!isPast(booking.startDate) ? <Modification id={booking.id} /> : null}
     </article>
-  );
-}
-
-function Modification({ id }: { id: number }) {
-  const styles =
-    'group text-primary-300 border-primary-800 hover:bg-accent-600 hover:text-primary-900 flex flex-1 items-center justify-center gap-2 px-4 py-6 text-xs font-bold uppercase transition-colors ';
-
-  return (
-    <>
-      <a
-        href={`${METADATA.account.nested.reservations.href}/edit/${id}`}
-        className={`${styles} md:border-b`}
-      >
-        <PencilSquareIcon className='text-primary-600 group-hover:text-primary-800 h-5 w-5 transition-colors' />
-        <span className='mt-1'>Edit</span>
-      </a>
-      <button className={styles}>
-        <TrashIcon className='text-primary-600 group-hover:text-primary-800 h-5 w-5 transition-colors' />
-        <span className='mt-1'>Delete</span>
-      </button>
-    </>
   );
 }
 
@@ -56,14 +31,14 @@ function Information({
   booking: NonNullableObject<DTOBooking>;
 }) {
   return (
-    <>
-      <div className='relative aspect-square h-52 w-full lg:h-full lg:w-52 xl:w-64'>
+    <div className='flex flex-grow flex-col lg:flex-row'>
+      <div className='relative aspect-square h-52 w-full overflow-hidden lg:h-full lg:w-52'>
         <PreviewImage
           sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
           fill
           src={cabin.image}
           alt={`Cabin ${cabin.name}`}
-          className='object-cover'
+          className='object-cover transition-transform duration-300 hover:scale-150 active:scale-150'
         />
       </div>
 
@@ -71,29 +46,29 @@ function Information({
         <BookingHeader
           numNights={booking.numNights}
           cabinName={cabin.name}
-          shouldRenderPast={isPast(new Date(booking.startDate))}
+          shouldRenderPast={isPast(booking.startDate)}
         />
 
         <p className='text-primary-300 text-lg'>
-          {format(new Date(booking.startDate), 'EEE, MMM dd yyyy')} (
-          {isToday(new Date(booking.startDate))
+          {format(booking.startDate, 'EEE, MMM dd yyyy')} (
+          {isToday(booking.startDate)
             ? 'Today'
             : formatDistanceFromNow(booking.startDate)}
-          ) &mdash; {format(new Date(booking.endDate), 'EEE, MMM dd yyyy')}
+          ) &mdash; {format(booking.endDate, 'EEE, MMM dd yyyy')}
         </p>
 
-        <div className='flex flex-col items-center gap-5 md:flex-row'>
-          <BookingDetails
-            price={booking.totalPrice}
-            guestCount={booking.numGuests}
-            createdOn={format(
-              new Date(booking.created_at),
-              'EEE, MMM dd yyyy, p'
-            )}
-          />
-        </div>
+        <BookingDetails
+          price={booking.totalPrice}
+          guestCount={booking.numGuests}
+          createdOn={format(booking.created_at, 'EEE, MMM dd yyyy, p')}
+        />
+        {booking.observations ? (
+          <p className='text-primary-300'>
+            Note: <span className='text-sm italic'>{booking.observations}</span>
+          </p>
+        ) : null}
       </div>
-    </>
+    </div>
   );
 }
 
@@ -134,7 +109,7 @@ function BookingDetails({
   createdOn: string;
 }) {
   return (
-    <>
+    <div className='flex flex-col items-center gap-5 md:flex-row'>
       <p className='flex w-full max-w-38 justify-between'>
         <span className='text-accent-400 text-xl font-semibold'>${price}</span>
         <span className='text-primary-300'>&bull;</span>
@@ -144,12 +119,12 @@ function BookingDetails({
       </p>
 
       <p className='text-primary-400 ml-auto text-sm'>Booked on {createdOn}</p>
-    </>
+    </div>
   );
 }
 
 function formatDistanceFromNow(date: string) {
-  return formatDistance(parseISO(date), new Date(), {
+  return formatDistance(parseISO(date), Date.now(), {
     addSuffix: true,
   }).replace('about ', '');
 }

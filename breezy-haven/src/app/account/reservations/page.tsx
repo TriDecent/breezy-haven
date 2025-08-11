@@ -10,7 +10,7 @@ import type { $ZodIssue } from 'zod/v4/core';
 
 export const metadata: Metadata = METADATA.account.nested.reservations.metadata;
 
-export default async function Page() {
+export default async function ReservationsPage() {
   const session = await Auth.getFullSessionAsync();
 
   if (!session.main) redirect(ROUTES.login.href);
