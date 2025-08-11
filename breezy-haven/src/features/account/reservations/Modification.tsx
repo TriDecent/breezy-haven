@@ -3,15 +3,22 @@
 import { ROUTES } from '@/shared';
 
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid';
+import { useTransition } from 'react';
 import { deleteBooking } from './deleteBookingAction';
 
+const styles =
+  'group text-primary-300 border-primary-800 hover:bg-accent-600 hover:text-primary-900 flex flex-1 items-center justify-center gap-2 px-4 py-6 text-xs font-bold uppercase transition-colors ';
+
 export default function Modification({ id }: { id: number }) {
-  const styles =
-    'group text-primary-300 border-primary-800 hover:bg-accent-600 hover:text-primary-900 flex flex-1 items-center justify-center gap-2 px-4 py-6 text-xs font-bold uppercase transition-colors ';
+  const [isPending, startTransition] = useTransition();
+
+  const handleDelete = () => {
+    if (confirm('Are you sure that you want to delete this reservation?'))
+      startTransition(() => deleteBooking(id));
+  };
 
   return (
     <div className='border-primary-800 flex border-t md:flex-col md:border-t md:border-l'>
-      <input type='hidden' value={id} name='bookingId' />
       <a
         href={`${ROUTES.account.nested.reservations.href}/edit/${id}`}
         className={`${styles} md:border-b`}
@@ -19,15 +26,25 @@ export default function Modification({ id }: { id: number }) {
         <PencilSquareIcon className='text-primary-600 group-hover:text-primary-800 h-5 w-5 transition-colors' />
         <span className='mt-1'>Edit</span>
       </a>
-      <button
-        onClick={() => {
-          deleteBooking(id);
-        }}
-        className={styles}
-      >
-        <TrashIcon className='text-primary-600 group-hover:text-primary-800 h-5 w-5 transition-colors' />
-        <span className='mt-1'>Delete</span>
-      </button>
+      {!isPending ? (
+        <button onClick={handleDelete} disabled={isPending} className={styles}>
+          <TrashIcon className='text-primary-600 group-hover:text-primary-800 h-5 w-5 transition-colors' />
+          <span className='mt-1'>Delete</span>
+        </button>
+      ) : (
+        <div className={styles}>
+          <Spinner />
+        </div>
+      )}
     </div>
+  );
+}
+
+function Spinner() {
+  return (
+    <div
+      className='border-primary-300 border-t-accent-600 mx-auto h-8 w-8 animate-spin rounded-full border-2'
+      aria-label='Loading'
+    ></div>
   );
 }
