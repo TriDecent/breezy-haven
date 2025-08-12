@@ -30,7 +30,7 @@ export default class BookingService implements IService<DTOBooking> {
   create(item: DTOBooking) {
     return this._service.create(item);
   }
-  update(id: number, updatedFields: DTOBooking) {
+  update(id: number, updatedFields: Partial<DTOBooking>) {
     return this._service.update(id, updatedFields);
   }
 

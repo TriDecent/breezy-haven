@@ -92,6 +92,18 @@ export const ROUTES = {
           description: 'Track, view, and manage all your cabin bookings.',
           robots: 'noindex, follow',
         },
+        nested: {
+          edit: defineRoute({
+            href: '/account/reservations/edit',
+            metadata: {},
+            nested: {
+              bookingId: defineRoute({
+                href: 'unknown',
+                metadata: {},
+              }),
+            },
+          }),
+        },
       }),
     },
   }),

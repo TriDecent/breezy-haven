@@ -3,6 +3,7 @@
 import { ROUTES } from '@/shared';
 
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid';
+import Link from 'next/link';
 import { useTransition } from 'react';
 import { toast } from 'sonner';
 import { deleteBooking } from './deleteBookingAction';
@@ -34,13 +35,13 @@ export default function Modification({ id }: { id: number }) {
 
   return (
     <div className='border-primary-800 flex border-t md:flex-col md:border-t md:border-l'>
-      <a
+      <Link
         href={`${ROUTES.account.nested.reservations.href}/edit/${id}`}
         className={`${styles} md:border-b`}
       >
         <PencilSquareIcon className='text-primary-600 group-hover:text-primary-800 h-5 w-5 transition-colors' />
         <span className='mt-1'>Edit</span>
-      </a>
+      </Link>
       {!isPending ? (
         <button onClick={handleDelete} disabled={isPending} className={styles}>
           <TrashIcon className='text-primary-600 group-hover:text-primary-800 h-5 w-5 transition-colors' />
