@@ -28,7 +28,7 @@ const updateBookingSchema = z.object({
 });
 
 type SafeUpdateBooking = z.infer<typeof updateBookingSchema>;
-type UpdateBookingResponse = {
+export type UpdateBookingResponse = {
   errors: Partial<
     Omit<Record<keyof SafeUpdateBooking, string[]>, 'startDate' | 'endDate'> & {
       date: string;
@@ -52,8 +52,6 @@ export async function updateBookingAction(
 
   if (!parsedUpdateBookingInput.success) {
     const errors = z.flattenError(parsedUpdateBookingInput.error).fieldErrors;
-
-    console.log(input);
 
     return {
       userEntered: input,

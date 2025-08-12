@@ -24,47 +24,33 @@ import {
 } from 'react';
 import type { DateRange } from 'react-day-picker';
 import { toast } from 'sonner';
-import { updateBookingAction } from './updateBookingAction';
+import {
+  updateBookingAction,
+  type UpdateBookingResponse,
+} from './updateBookingAction';
 
-export default function BookingEditForm({
-  bookingId,
-  guestCount,
-  startDate,
-  endDate,
-  cabin,
-  observations,
-}: {
+export default function BookingEditForm(props: {
   bookingId: number;
   guestCount: number;
   startDate: Date;
   endDate: Date;
   observations: string | null;
-  cabin: {
-    maxCapacity: number;
-  };
+  cabin: { maxCapacity: number };
 }) {
-  const [formState, formAction, isPending] = useActionState(
-    updateBookingAction,
-    { errors: null, userEntered: null }
-  );
+  const { bookingId, guestCount, startDate, endDate, observations, cabin } =
+    props;
 
-  useEffect(() => {
-    if (formState.isActionSuccess)
-      toast.success('Your booking information has been updated!');
-  }, [formState.isActionSuccess]);
+  const [state, onSubmit, isPending] = useActionState(updateBookingAction, {
+    errors: null,
+    userEntered: null,
+  });
 
-  useEffect(() => {
-    if (formState.errors?.unexpected) toast.error(formState.errors.unexpected);
-  }, [formState.errors?.unexpected]);
-
-  useEffect(() => {
-    if (formState.errors) toast.error('Update failed due to an error');
-  }, [formState.errors]);
+  useBookingEditToasts(state);
 
   return (
     <article className='shadow md:order-2'>
       <form
-        action={formAction}
+        action={onSubmit}
         className='bg-primary-900 flex flex-col gap-5 rounded-lg px-4 py-5 text-lg sm:px-8 lg:py-10 xl:px-16'
       >
         <input type='hidden' name='bookingId' value={bookingId} />
@@ -75,25 +61,19 @@ export default function BookingEditForm({
               defaultValue={guestCount}
               max={cabin.maxCapacity}
             />
-            {formState.errors?.guestCount ? (
-              <p className='text-red-500'>{formState.errors.guestCount}</p>
-            ) : null}
+            {renderError(state.errors?.guestCount)}
           </div>
           <div className='flex-1'>
             <StayingInput defaultValue={{ from: startDate, to: endDate }} />
-            {formState.errors?.date ? (
-              <p className='text-red-500'>{formState.errors.date}</p>
-            ) : null}
+            {renderError(state.errors?.date)}
           </div>
         </div>
 
         <div>
           <NoteInput
-            defaultValue={observations ?? formState.userEntered?.observations}
+            defaultValue={observations ?? state.userEntered?.observations}
           />
-          {formState.errors?.observations ? (
-            <p className='text-red-500'>{formState.errors.observations}</p>
-          ) : null}
+          {renderError(state.errors?.observations)}
         </div>
 
         <PrimaryButton disabled={isPending} className='self-center md:w-fit'>
@@ -106,6 +86,25 @@ export default function BookingEditForm({
       </form>
     </article>
   );
+}
+
+function useBookingEditToasts(state: UpdateBookingResponse) {
+  useEffect(() => {
+    if (state.isActionSuccess)
+      toast.success('Your booking information has been updated!');
+  }, [state.isActionSuccess]);
+
+  useEffect(() => {
+    if (state.errors?.unexpected) toast.error(state.errors.unexpected);
+  }, [state.errors?.unexpected]);
+
+  useEffect(() => {
+    if (state.errors) toast.error('Update failed due to an error');
+  }, [state.errors]);
+}
+
+function renderError(error?: string | string[]) {
+  return error ? <p className='text-red-500'>{error}</p> : null;
 }
 
 function GuestCountInput({
