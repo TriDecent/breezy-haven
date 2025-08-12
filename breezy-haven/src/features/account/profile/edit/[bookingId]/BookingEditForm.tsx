@@ -16,36 +16,106 @@ import {
 } from '@/shared';
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
 
-import { useState } from 'react';
+import {
+  useActionState,
+  useEffect,
+  useState,
+  type TextareaHTMLAttributes,
+} from 'react';
 import type { DateRange } from 'react-day-picker';
+import { toast } from 'sonner';
+import { updateBookingAction } from './updateBookingAction';
 
 export default function BookingEditForm({
+  bookingId,
+  guestCount,
+  startDate,
+  endDate,
   cabin,
+  observations,
 }: {
+  bookingId: number;
+  guestCount: number;
+  startDate: Date;
+  endDate: Date;
+  observations: string | null;
   cabin: {
     maxCapacity: number;
   };
 }) {
+  const [formState, formAction, isPending] = useActionState(
+    updateBookingAction,
+    { errors: null, userEntered: null }
+  );
+
+  useEffect(() => {
+    if (formState.isActionSuccess)
+      toast.success('Your booking information has been updated!');
+  }, [formState.isActionSuccess]);
+
+  useEffect(() => {
+    if (formState.errors?.unexpected) toast.error(formState.errors.unexpected);
+  }, [formState.errors?.unexpected]);
+
+  useEffect(() => {
+    if (formState.errors) toast.error('Update failed due to an error');
+  }, [formState.errors]);
+
   return (
     <article className='shadow md:order-2'>
-      <form className='bg-primary-900 flex flex-col gap-5 rounded-lg px-4 py-5 text-lg sm:px-8 lg:py-10 xl:px-16'>
+      <form
+        action={formAction}
+        className='bg-primary-900 flex flex-col gap-5 rounded-lg px-4 py-5 text-lg sm:px-8 lg:py-10 xl:px-16'
+      >
+        <input type='hidden' name='bookingId' value={bookingId} />
+
         <div className='flex flex-col gap-4 md:flex-row'>
-          <GuestCountInput maxGuestCount={cabin.maxCapacity} />
-          <StayingInput />
+          <div className='flex-1'>
+            <GuestCountInput
+              defaultValue={guestCount}
+              max={cabin.maxCapacity}
+            />
+            {formState.errors?.guestCount ? (
+              <p className='text-red-500'>{formState.errors.guestCount}</p>
+            ) : null}
+          </div>
+          <div className='flex-1'>
+            <StayingInput defaultValue={{ from: startDate, to: endDate }} />
+            {formState.errors?.date ? (
+              <p className='text-red-500'>{formState.errors.date}</p>
+            ) : null}
+          </div>
         </div>
 
-        <NoteInput />
+        <div>
+          <NoteInput
+            defaultValue={observations ?? formState.userEntered?.observations}
+          />
+          {formState.errors?.observations ? (
+            <p className='text-red-500'>{formState.errors.observations}</p>
+          ) : null}
+        </div>
 
-        <PrimaryButton className='self-center md:w-fit'>
-          Reserve now
+        <PrimaryButton disabled={isPending} className='self-center md:w-fit'>
+          {!isPending ? (
+            'Reserve now'
+          ) : (
+            <div className='border-t-accent-500 border-accent-100 mx-auto h-8 w-8 animate-spin rounded-full border-2'></div>
+          )}
         </PrimaryButton>
       </form>
     </article>
   );
 }
 
-function GuestCountInput({ maxGuestCount }: { maxGuestCount: number }) {
-  const [guestCount, setGuestCount] = useState<number>(0);
+function GuestCountInput({
+  defaultValue,
+  max,
+}: {
+  defaultValue: number;
+  max: number;
+}) {
+  const [guestCount, setGuestCount] = useState<number>(defaultValue);
 
   return (
     <div className='flex-1 space-y-3'>
@@ -61,7 +131,7 @@ function GuestCountInput({ maxGuestCount }: { maxGuestCount: number }) {
           <SelectValue placeholder='Select number of guests' />
         </SelectTrigger>
         <SelectContent align='start'>
-          {Array.from({ length: maxGuestCount }, (_, i) => i + 1).map(x => (
+          {Array.from({ length: max }, (_, i) => i + 1).map(x => (
             <SelectItem key={x} value={`${x}`}>
               {x} {x === 1 ? 'guest' : 'guests'}
             </SelectItem>
@@ -72,8 +142,12 @@ function GuestCountInput({ maxGuestCount }: { maxGuestCount: number }) {
   );
 }
 
-function StayingInput() {
-  const [range, setRange] = useState<DateRange | undefined>(undefined);
+function StayingInput({
+  defaultValue,
+}: {
+  defaultValue: DateRange | undefined;
+}) {
+  const [range, setRange] = useState<DateRange | undefined>(defaultValue);
 
   return (
     <div className='flex-1 space-y-3'>
@@ -93,8 +167,13 @@ function StayingInput() {
             <ChevronDownIcon />
             <input
               type='hidden'
-              name='dateRange'
-              value={JSON.stringify(range)}
+              name='startDate'
+              value={range?.from?.toISOString() ?? ''}
+            />
+            <input
+              type='hidden'
+              name='endDate'
+              value={range?.to?.toISOString() ?? ''}
             />
           </Button>
         </PopoverTrigger>
@@ -107,13 +186,16 @@ function StayingInput() {
             max={20}
             onSelect={setRange}
           />
+          <p className='text-foreground p-1 text-xs'>
+            Your staying days must be between 2 and 20
+          </p>
         </PopoverContent>
       </Popover>
     </div>
   );
 }
 
-function NoteInput() {
+function NoteInput({ ...props }: TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <div className='space-y-3'>
       <label htmlFor='observations' className='block'>
@@ -123,6 +205,7 @@ function NoteInput() {
         name='observations'
         id='observations'
         placeholder='Any pets, allergies, special requirements, etc.?'
+        {...props}
       />
     </div>
   );

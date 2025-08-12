@@ -1,6 +1,7 @@
 import { BookingEditForm } from '@/features/account/profile';
 import { Auth } from '@/lib';
 import { bookingSchema, bookingService } from '@/services';
+import { parseISO } from 'date-fns';
 import z from 'zod';
 
 const paramsSchema = z.object({ bookingId: z.coerce.number() });
@@ -43,7 +44,14 @@ export default async function BookingEditPage({
       <h2 className='text-accent-400 mb-7 text-xl font-semibold tracking-wide'>
         Edit Reservation #{bookingId}
       </h2>
-      <BookingEditForm cabin={needsEditedBooking.cabin} />
+      <BookingEditForm
+        bookingId={needsEditedBooking.id}
+        cabin={needsEditedBooking.cabin}
+        guestCount={needsEditedBooking.numGuests}
+        startDate={parseISO(needsEditedBooking.startDate)}
+        endDate={parseISO(needsEditedBooking.endDate)}
+        observations={needsEditedBooking.observations}
+      />
     </div>
   );
 }
