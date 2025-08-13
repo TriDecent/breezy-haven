@@ -71,7 +71,9 @@ export default function BookingEditForm(props: {
 
         <div>
           <NoteInput
-            defaultValue={observations ?? state.userEntered?.observations}
+            defaultValue={
+              state.userEntered?.observations ?? observations ?? undefined
+            }
           />
           {renderError(state.errors?.observations)}
         </div>

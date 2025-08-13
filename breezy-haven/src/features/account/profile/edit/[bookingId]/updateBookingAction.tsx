@@ -24,7 +24,16 @@ const updateBookingSchema = z.object({
     .refine(isValid, {
       error: 'Invalid date format',
     }),
-  observations: z.string().optional(),
+  observations: z
+    .string()
+    .trim()
+    .refine(
+      value => value === '' || (value.length >= 10 && value.length <= 300),
+      {
+        message: 'Must be empty or between 10 and 300 characters',
+      }
+    )
+    .optional(),
 });
 
 type SafeUpdateBooking = z.infer<typeof updateBookingSchema>;
