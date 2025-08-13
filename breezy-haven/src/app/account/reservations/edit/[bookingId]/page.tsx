@@ -2,16 +2,29 @@ import { BookingEditForm } from '@/features/account/profile';
 import { Auth } from '@/lib';
 import { bookingSchema, bookingService } from '@/services';
 import { parseISO } from 'date-fns';
+import type { Metadata } from 'next';
 import z from 'zod';
 
 const paramsSchema = z.object({ bookingId: z.coerce.number() });
 const bookingArraySchema = z.array(bookingSchema);
 
-export default async function BookingEditPage({
-  params,
-}: {
+type PageParams = {
   params: Promise<{ bookingId?: string }>;
-}) {
+};
+
+export async function generateMetadata({
+  params,
+}: PageParams): Promise<Metadata> {
+  const paramsResult = paramsSchema.safeParse(await params);
+
+  if (!paramsResult.success) throw new Error('Invalid booking id');
+
+  return {
+    title: `Editing booking ${paramsResult.data.bookingId}`,
+  };
+}
+
+export default async function BookingEditPage({ params }: PageParams) {
   const paramsResult = paramsSchema.safeParse(await params);
 
   if (!paramsResult.success) throw new Error('Invalid booking id');

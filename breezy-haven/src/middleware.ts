@@ -49,5 +49,14 @@ async function handleAccountRouteAsync(
     );
   }
 
+  if (
+    request.nextUrl.pathname ===
+    ROUTES.account.nested.reservations.nested.edit.href
+  ) {
+    return NextResponse.rewrite(
+      new URL(`${ROUTES.account.nested.reservations.href}`, request.nextUrl)
+    );
+  }
+
   return NextResponse.next();
 }
