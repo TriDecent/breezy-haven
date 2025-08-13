@@ -24,6 +24,7 @@ import {
 } from 'react';
 import type { DateRange } from 'react-day-picker';
 import { toast } from 'sonner';
+import { dateHelper } from '../../../../../shared/utils/DateHelper';
 import {
   updateBookingAction,
   type UpdateBookingResponse,
@@ -57,7 +58,7 @@ export default function BookingEditForm(props: {
 
         <div className='flex flex-col gap-4 md:flex-row'>
           <div className='flex-1'>
-            <GuestCountInput
+            <GuestCountSelect
               defaultValue={guestCount}
               max={cabin.maxCapacity}
             />
@@ -109,7 +110,7 @@ function renderError(error?: string | string[]) {
   return error ? <p className='text-red-500'>{error}</p> : null;
 }
 
-function GuestCountInput({
+function GuestCountSelect({
   defaultValue,
   max,
 }: {
@@ -169,12 +170,12 @@ function StayingInput({
             <input
               type='hidden'
               name='startDate'
-              value={range?.from?.toISOString() ?? ''}
+              value={dateHelper.toISODateOnly(range?.from)}
             />
             <input
               type='hidden'
               name='endDate'
-              value={range?.to?.toISOString() ?? ''}
+              value={dateHelper.toISODateOnly(range?.to)}
             />
           </Button>
         </PopoverTrigger>

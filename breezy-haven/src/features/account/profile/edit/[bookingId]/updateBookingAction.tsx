@@ -82,6 +82,7 @@ export async function updateBookingAction(
   if (!needsEditedBooking) return failedAuthorization;
 
   const { error } = await bookingService.update(needsEditedBooking.id, {
+    numGuests: parsedUpdateBookingInput.guestCount,
     startDate: parsedUpdateBookingInput.startDate.toISOString(),
     endDate: parsedUpdateBookingInput.endDate.toISOString(),
     observations: parsedUpdateBookingInput.observations,
