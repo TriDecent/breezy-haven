@@ -1,6 +1,7 @@
 'use server';
 
 import { Auth } from '@/lib';
+import type { NonNullableObject } from '@/repositories';
 import { bookingSchema, bookingService } from '@/services';
 import { ROUTES } from '@/shared';
 import { isValid, parseISO } from 'date-fns';
@@ -36,19 +37,24 @@ const updateBookingSchema = z.object({
     .optional(),
 });
 
-type SafeUpdateBooking = z.infer<typeof updateBookingSchema>;
+type SafeUpdateBookingInput = z.infer<typeof updateBookingSchema>;
 export type UpdateBookingResponse = {
   errors: Partial<
-    Omit<Record<keyof SafeUpdateBooking, string[]>, 'startDate' | 'endDate'> & {
+    Omit<
+      Record<keyof SafeUpdateBookingInput, string[]>,
+      'startDate' | 'endDate'
+    > & {
       date: string;
       unexpected: string;
     }
   > | null;
-  userEntered: Partial<SafeUpdateBooking> | null;
+  userEntered: Partial<SafeUpdateBookingInput> | null;
   isActionSuccess?: boolean;
 };
 
 const bookingArraySchema = z.array(bookingSchema);
+type SafeBooking = z.infer<typeof bookingSchema>;
+type SafeBookingArray = z.infer<typeof bookingArraySchema>;
 
 export async function updateBookingAction(
   _currentState: UpdateBookingResponse,
@@ -57,58 +63,30 @@ export async function updateBookingAction(
   const session = await Auth.verifySession();
   const input = Object.fromEntries(formData.entries());
 
-  const parsedUpdateBookingInput = updateBookingSchema.safeParse(input);
+  const [parsedUpdateBookingInput, failedInput] = validateInput(input);
 
-  if (!parsedUpdateBookingInput.success) {
-    const errors = z.flattenError(parsedUpdateBookingInput.error).fieldErrors;
+  if (!parsedUpdateBookingInput) return failedInput;
 
-    return {
-      userEntered: input,
-      errors: {
-        ...errors,
-        date: errors?.startDate?.[0] ?? errors.endDate?.[0],
-      },
-    };
-  }
-
-  const { data: bookings, error: bookingsError } =
-    await bookingService.getByGuestId(session.main.id);
-
-  if (bookingsError)
-    return {
-      userEntered: input,
-      errors: {
-        unexpected: `${bookingsError.code}: ${bookingsError.message}`,
-      },
-    };
-
-  const parsedBookingsData = bookingArraySchema.safeParse(bookings);
-
-  if (!parsedBookingsData.success)
-    return {
-      userEntered: input,
-      errors: {
-        unexpected: `Something is wrong with your editing! ${parsedBookingsData.error.issues[0]}`,
-      },
-    };
-
-  const needsEditedBooking = parsedBookingsData.data.find(
-    booking => booking.id === parsedUpdateBookingInput.data.bookingId
+  const [parsedBookingsData, failedData] = await validateBookingsFromDB(
+    parsedUpdateBookingInput,
+    session
   );
 
-  if (!needsEditedBooking)
-    return {
-      userEntered: input,
-      errors: {
-        unexpected: 'You do not have permission to edit this booking!',
-      },
-    };
+  if (!parsedBookingsData) return failedData;
+
+  const [needsEditedBooking, failedAuthorization] = authorizePermission(
+    parsedUpdateBookingInput,
+    parsedBookingsData
+  );
+
+  if (!needsEditedBooking) return failedAuthorization;
 
   const { error } = await bookingService.update(needsEditedBooking.id, {
-    startDate: parsedUpdateBookingInput.data.startDate.toISOString(),
-    endDate: parsedUpdateBookingInput.data.endDate.toISOString(),
-    observations: parsedUpdateBookingInput.data.observations,
+    startDate: parsedUpdateBookingInput.startDate.toISOString(),
+    endDate: parsedUpdateBookingInput.endDate.toISOString(),
+    observations: parsedUpdateBookingInput.observations,
   });
+
   if (error)
     return {
       userEntered: input,
@@ -126,4 +104,92 @@ export async function updateBookingAction(
     userEntered: null,
     isActionSuccess: true,
   };
+}
+
+function validateInput(
+  input: Record<string, string | File>
+):
+  | [success: SafeUpdateBookingInput, failed: null]
+  | [success: null, failed: UpdateBookingResponse] {
+  const parsedUpdateBookingInput = updateBookingSchema.safeParse(input);
+
+  if (!parsedUpdateBookingInput.success) {
+    const errors = z.flattenError(parsedUpdateBookingInput.error).fieldErrors;
+
+    return [
+      null,
+      {
+        userEntered: input,
+        errors: {
+          ...errors,
+          date: errors?.startDate?.[0] ?? errors.endDate?.[0],
+        },
+      },
+    ];
+  }
+
+  return [parsedUpdateBookingInput.data, null];
+}
+
+async function validateBookingsFromDB(
+  input: SafeUpdateBookingInput,
+  session: NonNullableObject<
+    Awaited<ReturnType<typeof Auth.getFullSessionAsync>>
+  >
+): Promise<
+  | [success: SafeBookingArray, failed: null]
+  | [success: null, failed: UpdateBookingResponse]
+> {
+  const { data: bookings, error: bookingsError } =
+    await bookingService.getByGuestId(session.main.id);
+
+  if (bookingsError)
+    return [
+      null,
+      {
+        userEntered: input,
+        errors: {
+          unexpected: `${bookingsError.code}: ${bookingsError.message}`,
+        },
+      },
+    ];
+
+  const parsedBookingsData = bookingArraySchema.safeParse(bookings);
+
+  if (!parsedBookingsData.success)
+    return [
+      null,
+      {
+        userEntered: input,
+        errors: {
+          unexpected: `Something is wrong with your editing! ${parsedBookingsData.error.issues[0]}`,
+        },
+      },
+    ];
+
+  return [parsedBookingsData.data, null];
+}
+
+function authorizePermission(
+  input: SafeUpdateBookingInput,
+  bookings: SafeBookingArray
+):
+  | [success: SafeBooking, failed: null]
+  | [success: null, failed: UpdateBookingResponse] {
+  const needsEditedBooking = bookings.find(
+    booking => booking.id === input.bookingId
+  );
+
+  if (!needsEditedBooking)
+    return [
+      null,
+      {
+        userEntered: input,
+        errors: {
+          unexpected: 'You do not have permission to edit this booking!',
+        },
+      },
+    ];
+
+  return [needsEditedBooking, null];
 }
