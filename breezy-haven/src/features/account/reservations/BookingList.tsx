@@ -1,6 +1,11 @@
 'use client';
-import { bookingSchema } from '@/services/schemas';
-import { ROUTES, slideVariantKeys, Variants } from '@/shared';
+
+import {
+  GetByGuestIdBookingSchema,
+  ROUTES,
+  slideVariantKeys,
+  Variants,
+} from '@/shared';
 import { AnimatePresence, motion, stagger } from 'framer-motion';
 import Link from 'next/link';
 import { useOptimistic } from 'react';
@@ -105,7 +110,7 @@ function Booking({
   booking: Props['bookings'][number];
   onDelete: () => void;
 }) {
-  const result = bookingSchema.safeParse(booking);
+  const result = GetByGuestIdBookingSchema.safeParse(booking);
   if (result.success) {
     return (
       <ReservationCard

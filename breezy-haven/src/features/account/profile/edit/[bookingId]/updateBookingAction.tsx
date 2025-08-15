@@ -2,64 +2,23 @@
 
 import { Auth } from '@/lib';
 import type { NonNullableObject } from '@/repositories';
-import { bookingSchema, bookingService } from '@/services';
-import { ROUTES } from '@/shared';
-import { isValid, parseISO } from 'date-fns';
+import { bookingService } from '@/services';
+import {
+  bookingArraySchema,
+  BookingInputSchema,
+  ROUTES,
+  type BookingActionResponse,
+  type SafeBooking,
+  type SafeBookingArray,
+  type SafeBookingInput,
+} from '@/shared';
 import { revalidatePath } from 'next/cache';
 import z from 'zod';
 
-const updateBookingSchema = z.object({
-  bookingId: z.coerce.number({ error: 'Your booking id must be a number' }),
-  guestCount: z.coerce.number({
-    error: 'Number of guests staying must be a number',
-  }),
-  startDate: z
-    .string()
-    .transform(value => parseISO(value))
-    .refine(isValid, {
-      error: 'Invalid date format',
-    }),
-  endDate: z
-    .string()
-    .transform(value => parseISO(value))
-    .refine(isValid, {
-      error: 'Invalid date format',
-    }),
-  observations: z
-    .string()
-    .trim()
-    .refine(
-      value => value === '' || (value.length >= 10 && value.length <= 300),
-      {
-        message: 'Must be empty or between 10 and 300 characters',
-      }
-    )
-    .optional(),
-});
-
-type SafeUpdateBookingInput = z.infer<typeof updateBookingSchema>;
-export type UpdateBookingResponse = {
-  errors: Partial<
-    Omit<
-      Record<keyof SafeUpdateBookingInput, string[]>,
-      'startDate' | 'endDate'
-    > & {
-      date: string;
-      unexpected: string;
-    }
-  > | null;
-  userEntered: Partial<SafeUpdateBookingInput> | null;
-  isActionSuccess?: boolean;
-};
-
-const bookingArraySchema = z.array(bookingSchema);
-type SafeBooking = z.infer<typeof bookingSchema>;
-type SafeBookingArray = z.infer<typeof bookingArraySchema>;
-
 export async function updateBookingAction(
-  _currentState: UpdateBookingResponse,
+  _currentState: BookingActionResponse,
   formData: FormData
-): Promise<UpdateBookingResponse> {
+): Promise<BookingActionResponse> {
   const session = await Auth.verifySession();
   const input = Object.fromEntries(formData.entries());
 
@@ -110,9 +69,9 @@ export async function updateBookingAction(
 function validateInput(
   input: Record<string, string | File>
 ):
-  | [success: SafeUpdateBookingInput, failed: null]
-  | [success: null, failed: UpdateBookingResponse] {
-  const parsedUpdateBookingInput = updateBookingSchema.safeParse(input);
+  | [success: SafeBookingInput, failed: null]
+  | [success: null, failed: BookingActionResponse] {
+  const parsedUpdateBookingInput = BookingInputSchema.safeParse(input);
 
   if (!parsedUpdateBookingInput.success) {
     const errors = z.flattenError(parsedUpdateBookingInput.error).fieldErrors;
@@ -133,13 +92,13 @@ function validateInput(
 }
 
 async function validateBookingsFromDB(
-  input: SafeUpdateBookingInput,
+  input: SafeBookingInput,
   session: NonNullableObject<
     Awaited<ReturnType<typeof Auth.getFullSessionAsync>>
   >
 ): Promise<
   | [success: SafeBookingArray, failed: null]
-  | [success: null, failed: UpdateBookingResponse]
+  | [success: null, failed: BookingActionResponse]
 > {
   const { data: bookings, error: bookingsError } =
     await bookingService.getByGuestId(session.main.id);
@@ -172,11 +131,11 @@ async function validateBookingsFromDB(
 }
 
 function authorizePermission(
-  input: SafeUpdateBookingInput,
+  input: SafeBookingInput,
   bookings: SafeBookingArray
 ):
   | [success: SafeBooking, failed: null]
-  | [success: null, failed: UpdateBookingResponse] {
+  | [success: null, failed: BookingActionResponse] {
   const needsEditedBooking = bookings.find(
     booking => booking.id === input.bookingId
   );

@@ -27,7 +27,7 @@ import { toast } from 'sonner';
 import { dateHelper } from '../../../../../shared/utils/DateHelper';
 import {
   updateBookingAction,
-  type UpdateBookingResponse,
+  type BookingActionResponse,
 } from './updateBookingAction';
 
 export default function BookingEditForm(props: {
@@ -91,7 +91,7 @@ export default function BookingEditForm(props: {
   );
 }
 
-function useBookingEditToasts(state: UpdateBookingResponse) {
+function useBookingEditToasts(state: BookingActionResponse) {
   useEffect(() => {
     if (state.isActionSuccess)
       toast.success('Your booking information has been updated!');
