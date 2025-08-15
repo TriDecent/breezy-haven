@@ -71,49 +71,60 @@ export default function BookingList({ bookings }: Props) {
       }
     }
   );
-
-  if (optimisticBookings.length === 0)
-    return (
-      <p className='text-lg'>
-        You have no reservations yet. Check out our{' '}
-        <Link
-          href={ROUTES.cabins.href}
-          className='text-accent-500 animate-pulse underline'
-        >
-          luxury cabins &rarr;
-        </Link>
-      </p>
-    );
-
   return (
-    <AnimatePresence>
-      <motion.ul
-        variants={Variants.slideVariant(0, 30)}
-        initial={slideVariantKeys.hidden}
-        animate={slideVariantKeys.visible}
-        exit={slideVariantKeys.safelyHidden}
-        transition={{ delayChildren: stagger(0.5) }}
-        className='space-y-6'
-      >
-        {optimisticBookings.map(booking => (
-          <motion.li
-            layout
-            variants={Variants.slideVariant(0, 30)}
-            key={booking.id}
-          >
-            <Booking
-              booking={booking}
-              onDelete={() =>
-                updateOptimisticBookings({
-                  type: 'delete',
-                  payload: { bookingId: booking.id },
-                })
-              }
-            />
-          </motion.li>
-        ))}
-      </motion.ul>
+    <AnimatePresence mode='wait'>
+      {optimisticBookings.length === 0 ? (
+        <EmptyBooking />
+      ) : (
+        <motion.ul
+          variants={Variants.slideVariant(0, -30)}
+          initial={slideVariantKeys.hidden}
+          animate={slideVariantKeys.visible}
+          exit={slideVariantKeys.safelyHidden}
+          transition={{ delayChildren: stagger(0.5) }}
+          className='space-y-6'
+        >
+          {optimisticBookings.map(booking => (
+            <motion.li
+              layout
+              variants={Variants.slideVariant(0, -30)}
+              key={booking.id}
+            >
+              <Booking
+                booking={booking}
+                onDelete={() =>
+                  updateOptimisticBookings({
+                    type: 'delete',
+                    payload: { bookingId: booking.id },
+                  })
+                }
+              />
+            </motion.li>
+          ))}
+        </motion.ul>
+      )}
     </AnimatePresence>
+  );
+}
+
+function EmptyBooking() {
+  return (
+    <motion.p
+      variants={Variants.slideVariant(0, -30)}
+      initial={slideVariantKeys.hidden}
+      animate={slideVariantKeys.visible}
+      exit={slideVariantKeys.safelyHidden}
+      key='fallback'
+      className='text-lg'
+    >
+      You have no reservations yet. Check out our{' '}
+      <Link
+        href={ROUTES.cabins.href}
+        className='text-accent-500 animate-pulse underline'
+      >
+        luxury cabins &rarr;
+      </Link>
+    </motion.p>
   );
 }
 
