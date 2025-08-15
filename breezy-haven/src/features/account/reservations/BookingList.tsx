@@ -76,48 +76,52 @@ export default function BookingList({ bookings }: Props) {
         transition={{ delayChildren: stagger(0.5) }}
         className='space-y-6'
       >
-        {optimisticBookings.map(booking => {
-          const result = bookingSchema.safeParse(booking);
-          if (result.success) {
-            return (
-              <motion.li
-                layout
-                variants={Variants.slideVariant(0, 30)}
-                key={booking.id}
-              >
-                <ReservationCard
-                  booking={result.data}
-                  cabin={result.data.cabin}
-                  onDelete={() =>
-                    updateOptimisticBookings({
-                      type: 'delete',
-                      payload: { bookingId: booking.id },
-                    })
-                  }
-                />
-              </motion.li>
-            );
-          }
-
-          return (
-            <motion.li
-              layout
-              variants={Variants.slideVariant(0, 30)}
-              key={booking.id}
-              className='rounded bg-red-100 p-4 text-red-700'
-            >
-              <Fallback issues={result.error.issues} />
-            </motion.li>
-          );
-        })}
+        {optimisticBookings.map(booking => (
+          <motion.li
+            layout
+            variants={Variants.slideVariant(0, 30)}
+            key={booking.id}
+          >
+            <Booking
+              booking={booking}
+              onDelete={() =>
+                updateOptimisticBookings({
+                  type: 'delete',
+                  payload: { bookingId: booking.id },
+                })
+              }
+            />
+          </motion.li>
+        ))}
       </motion.ul>
     </AnimatePresence>
   );
 }
 
+function Booking({
+  booking,
+  onDelete,
+}: {
+  booking: Props['bookings'][number];
+  onDelete: () => void;
+}) {
+  const result = bookingSchema.safeParse(booking);
+  if (result.success) {
+    return (
+      <ReservationCard
+        booking={result.data}
+        cabin={result.data.cabin}
+        onDelete={onDelete}
+      />
+    );
+  }
+
+  return <Fallback issues={result.error.issues} />;
+}
+
 function Fallback({ issues }: { issues: $ZodIssue[] }) {
   return (
-    <>
+    <article className='rounded bg-red-100 p-4 text-red-700'>
       <div className='font-bold'>Invalid booking data</div>
       <div className='mt-1 text-xs'>
         {issues.map((err, idx) => (
@@ -127,6 +131,6 @@ function Fallback({ issues }: { issues: $ZodIssue[] }) {
           </div>
         ))}
       </div>
-    </>
+    </article>
   );
 }
