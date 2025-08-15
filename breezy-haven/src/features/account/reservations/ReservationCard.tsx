@@ -1,24 +1,28 @@
-import { PreviewImage } from '@/features/cabins';
+'use client';
+import { default as PreviewImage } from '@/features/cabins/PreviewImage';
 import { DTOBooking, type NonNullableObject } from '@/repositories';
-
 import { format, formatDistance, isPast, isToday, parseISO } from 'date-fns';
 import Modification from './Modification';
 
 export default function ReservationCard({
   booking,
   cabin,
+  onDelete,
 }: {
   booking: NonNullableObject<DTOBooking>;
   cabin: {
     name: string;
     image: string;
   };
+  onDelete: () => void;
 }) {
   return (
     <article className='border-primary-800 flex flex-col overflow-hidden rounded-md border shadow-sm shadow-black md:flex-row'>
       <Information cabin={cabin} booking={booking} />
 
-      {!isPast(booking.startDate) ? <Modification id={booking.id} /> : null}
+      {!isPast(booking.startDate) ? (
+        <Modification id={booking.id} onDelete={onDelete} />
+      ) : null}
     </article>
   );
 }

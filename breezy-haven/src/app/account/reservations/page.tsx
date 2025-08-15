@@ -1,10 +1,8 @@
-import { ReservationCard } from '@/features/account/reservations';
+import { BookingList } from '@/features/account/reservations';
 import { Auth } from '@/lib';
-import { bookingSchema, bookingService } from '@/services';
+import { bookingService } from '@/services';
 import { ROUTES } from '@/shared';
 import { Metadata } from 'next';
-import Link from 'next/link';
-import type { $ZodIssue } from 'zod/v4/core';
 
 export const metadata: Metadata = ROUTES.account.nested.reservations.metadata;
 
@@ -23,59 +21,8 @@ export default async function ReservationsPage() {
         Your reservations
       </h1>
 
-      {bookings.length === 0 ? (
-        <p className='text-lg'>
-          You have no reservations yet. Check out our{' '}
-          <Link
-            href='/cabins'
-            className='text-accent-500 animate-pulse underline'
-          >
-            luxury cabins &rarr;
-          </Link>
-        </p>
-      ) : (
-        <ul className='space-y-6'>
-          {bookings.map(booking => {
-            const result = bookingSchema.safeParse(booking);
-            if (result.success) {
-              return (
-                <li key={booking.id}>
-                  <ReservationCard
-                    booking={result.data}
-                    cabin={result.data.cabin}
-                  />
-                </li>
-              );
-            }
-
-            return (
-              <li
-                key={booking.id}
-                className='rounded bg-red-100 p-4 text-red-700'
-              >
-                <Fallback issues={result.error.issues} />
-              </li>
-            );
-          })}
-        </ul>
-      )}
+      <BookingList bookings={bookings} />
     </div>
-  );
-}
-
-function Fallback({ issues }: { issues: $ZodIssue[] }) {
-  return (
-    <>
-      <div className='font-bold'>Invalid booking data</div>
-      <div className='mt-1 text-xs'>
-        {issues.map((err, idx) => (
-          <div key={idx}>
-            <span className='font-mono'>{err.path.join('.')}</span>:{' '}
-            {err.message}
-          </div>
-        ))}
-      </div>
-    </>
   );
 }
 
