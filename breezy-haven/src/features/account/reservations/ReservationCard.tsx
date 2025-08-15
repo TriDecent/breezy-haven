@@ -36,7 +36,7 @@ function Information({
 }) {
   return (
     <div className='flex flex-grow flex-col lg:flex-row'>
-      <div className='relative aspect-square h-52 w-full overflow-hidden lg:h-full lg:w-52'>
+      <div className='aspect-square h-52 w-full flex-none overflow-hidden lg:h-full lg:w-52'>
         <PreviewImage
           sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
           fill

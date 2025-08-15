@@ -6,6 +6,7 @@ import {
   slideVariantKeys,
   Variants,
 } from '@/shared';
+import { differenceInDays, parseISO } from 'date-fns';
 import { AnimatePresence, motion, stagger } from 'framer-motion';
 import Link from 'next/link';
 import { useOptimistic } from 'react';
@@ -47,16 +48,29 @@ export default function BookingList({ bookings }: Props) {
   const [optimisticBookings, updateOptimisticBookings] = useOptimistic<
     OptimisticState,
     OptimisticAction
-  >(bookings, (currentBookings, action) => {
-    switch (action.type) {
-      case 'delete':
-        return currentBookings.filter(
-          booking => booking.id !== action.payload.bookingId
-        );
-      default:
-        return currentBookings;
+  >(
+    bookings.slice().sort((a, b) => {
+      const today = new Date();
+      const dateA = a?.startDate ? parseISO(a.startDate) : today;
+      const dateB = b?.startDate ? parseISO(b.startDate) : today;
+
+      return (
+        Math.abs(differenceInDays(dateA, today)) -
+        Math.abs(differenceInDays(dateB, today))
+      );
+    }),
+
+    (currentBookings, action) => {
+      switch (action.type) {
+        case 'delete':
+          return currentBookings.filter(
+            booking => booking.id !== action.payload.bookingId
+          );
+        default:
+          return currentBookings;
+      }
     }
-  });
+  );
 
   if (optimisticBookings.length === 0)
     return (

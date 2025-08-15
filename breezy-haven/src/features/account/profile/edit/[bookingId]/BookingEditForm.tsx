@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
   Textarea,
+  type BookingActionResponse,
 } from '@/shared';
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
 
@@ -25,10 +26,7 @@ import {
 import type { DateRange } from 'react-day-picker';
 import { toast } from 'sonner';
 import { dateHelper } from '../../../../../shared/utils/DateHelper';
-import {
-  updateBookingAction,
-  type BookingActionResponse,
-} from './updateBookingAction';
+import { updateBookingAction } from './updateBookingAction';
 
 export default function BookingEditForm(props: {
   bookingId: number;
