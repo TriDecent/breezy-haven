@@ -8,7 +8,9 @@ export * from './components/ui/sonner';
 export * from './components/ui/textarea';
 export * from './schemas/Booking';
 export * from './schemas/Cabin';
+export * from './schemas/Guest';
 export * from './schemas/Setting';
+export * from './schemas/types';
 export * from './store/uiSlice';
 
 export { default as Variants } from './animations/Variants';
@@ -34,3 +36,4 @@ export { default as ThemeProvider } from './providers/ThemeProvider';
 export { useGetAuthQuery } from './store/authApi';
 export type { RootState } from './store/store';
 export { dateHelper } from './utils/DateHelper';
+export { errorHelper } from './utils/ErrorHelper';

@@ -2,7 +2,7 @@ import { bookingService, cabinService } from '@/services';
 import { NextRequest } from 'next/server';
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ cabinId: string }> }
 ): Promise<Response> {
   const { cabinId } = await params;
@@ -18,7 +18,7 @@ export async function GET(
 
     const [cabinResult, bookingResult] = await Promise.all(promises);
 
-    return cabinResult.error || bookingResult.error
+    return cabinResult.errors || bookingResult.errors
       ? Response.json({ cabinResult, bookingResult }, { status: 404 })
       : Response.json({ cabinResult, bookingResult });
   } catch (e) {

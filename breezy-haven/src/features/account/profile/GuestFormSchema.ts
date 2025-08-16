@@ -1,6 +1,6 @@
 import z from 'zod';
 
-export const guestFormSchema = z.object({
+export const GuestFormSchema = z.object({
   email: z.email(),
   fullName: z.string(),
   nationality: z.string().nullable(),
@@ -8,4 +8,4 @@ export const guestFormSchema = z.object({
   countryFlag: z.string().nullable(),
 });
 
-export type GuestForm = z.infer<typeof guestFormSchema>;
+export type GuestForm = z.infer<typeof GuestFormSchema>;
