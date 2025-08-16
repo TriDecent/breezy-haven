@@ -7,6 +7,8 @@ export * from './components/ui/select';
 export * from './components/ui/sonner';
 export * from './components/ui/textarea';
 export * from './schemas/Booking';
+export * from './schemas/Cabin';
+export * from './schemas/Setting';
 export * from './store/uiSlice';
 
 export { default as Variants } from './animations/Variants';
