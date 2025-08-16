@@ -1,7 +1,7 @@
 import { CabinDetail, Reservation } from '@/features/cabins';
 import { cabinService } from '@/services';
 
-import { DTOCabin, NonNullableObject } from '@/repositories';
+import { CabinSchema } from '@/shared';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
@@ -61,12 +61,14 @@ export default async function Page({ params }: PageParams) {
 
   if (!cabinResult.data) notFound();
 
-  const cabin = cabinResult.data as NonNullableObject<DTOCabin>;
+  const parsedCabin = CabinSchema.safeParse(cabinResult.data);
+  if (!parsedCabin.success)
+    throw new Error('Something is wrong with this cabin');
 
   return (
     <>
       <section>
-        <CabinDetail cabin={cabin} />
+        <CabinDetail cabin={parsedCabin.data} />
       </section>
 
       <section>
@@ -76,7 +78,7 @@ export default async function Page({ params }: PageParams) {
 
         <div className='flex flex-col gap-4 md:flex-row'>
           <Suspense fallback={<Loading />}>
-            <Reservation cabin={cabin} />
+            <Reservation cabin={parsedCabin.data} />
           </Suspense>
         </div>
       </section>
