@@ -16,25 +16,25 @@ import ReservationCard from './ReservationCard';
 type Props = {
   bookings: {
     cabin: {
-      name: string | null;
-      image: string | null;
-      maxCapacity: number | null;
-    } | null;
-    cabinId: number | null;
-    cabinPrice: number | null;
+      name: string;
+      image: string;
+      maxCapacity: number;
+    };
+    cabinId: number;
+    cabinPrice: number;
     created_at: string;
-    endDate: string | null;
-    extrasPrice: number | null;
-    guestId: number | null;
-    hasBreakfast: boolean | null;
+    endDate: string;
+    extrasPrice: number;
+    guestId: number;
+    hasBreakfast: boolean;
     id: number;
-    isPaid: boolean | null;
-    numGuests: number | null;
-    numNights: number | null;
-    observations: string | null;
-    startDate: string | null;
-    status: string | null;
-    totalPrice: number | null;
+    isPaid: boolean;
+    numGuests: number;
+    numNights: number;
+    observations: string;
+    startDate: string;
+    status: string;
+    totalPrice: number;
   }[];
 };
 
@@ -51,8 +51,8 @@ export default function BookingList({ bookings }: Props) {
   >(
     bookings.slice().sort((a, b) => {
       const today = new Date();
-      const dateA = a?.startDate ? parseISO(a.startDate) : today;
-      const dateB = b?.startDate ? parseISO(b.startDate) : today;
+      const dateA = parseISO(a.startDate);
+      const dateB = parseISO(b.startDate);
 
       return (
         Math.abs(differenceInDays(dateA, today)) -

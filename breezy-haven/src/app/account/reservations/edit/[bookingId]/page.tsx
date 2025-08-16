@@ -1,12 +1,12 @@
 import { BookingEditForm } from '@/features/account/profile';
 import { Auth } from '@/lib';
-import { bookingSchema, bookingService } from '@/services';
+import { bookingService } from '@/services';
+import { errorHelper } from '@/shared';
 import { parseISO } from 'date-fns';
 import type { Metadata } from 'next';
 import z from 'zod';
 
 const paramsSchema = z.object({ bookingId: z.coerce.number() });
-const bookingArraySchema = z.array(bookingSchema);
 
 type PageParams = {
   params: Promise<{ bookingId?: string }>;
@@ -32,20 +32,12 @@ export default async function BookingEditPage({ params }: PageParams) {
 
   const session = await Auth.verifySession();
 
-  const { data: bookings, error: bookingsError } =
+  const { data: bookings, errors: bookingsErrors } =
     await bookingService.getByGuestId(session.main.id);
 
-  if (bookingsError)
-    throw new Error(`${bookingsError.code}: ${bookingsError.message}`);
+  if (bookingsErrors) throw errorHelper.handleError(bookingsErrors);
 
-  const bookingResult = bookingArraySchema.safeParse(bookings);
-
-  if (!bookingResult.success)
-    throw new Error(
-      `Something is wrong with your editing! ${bookingResult.error.issues[0]}`
-    );
-
-  const needsEditedBooking = bookingResult.data.find(
+  const needsEditedBooking = bookings.find(
     booking => booking.id === paramsResult.data.bookingId
   );
 

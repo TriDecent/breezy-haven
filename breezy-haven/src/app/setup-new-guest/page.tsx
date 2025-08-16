@@ -47,9 +47,9 @@ async function SetupGuest({ callbackUrl }: { callbackUrl: string }) {
 
   const { email, name } = user;
 
-  const { error } = await guestSetupService.create({ email, fullName: name });
+  const { errors } = await guestSetupService.create({ email, fullName: name });
 
-  if (error) redirect(ROUTES.login.href);
+  if (errors) redirect(ROUTES.login.href);
 
   redirect(callbackUrl);
 

@@ -40,20 +40,31 @@ export async function updateBookingAction(
 
   if (!needsEditedBooking) return failedAuthorization;
 
-  const { error } = await bookingService.update(needsEditedBooking.id, {
+  const { errors } = await bookingService.update(needsEditedBooking.id, {
     numGuests: parsedUpdateBookingInput.guestCount,
     startDate: parsedUpdateBookingInput.startDate.toISOString(),
     endDate: parsedUpdateBookingInput.endDate.toISOString(),
     observations: parsedUpdateBookingInput.observations,
   });
 
-  if (error)
+  if (errors?.type === 'database') {
     return {
       userEntered: input,
       errors: {
-        unexpected: error.message,
+        unexpected: errors.db.message,
       },
     };
+  }
+  if (errors?.type === 'validation') {
+    const fieldErrors = errors.fields;
+    return {
+      userEntered: input,
+      errors: {
+        ...fieldErrors,
+        date: fieldErrors.startDate?.[0] ?? fieldErrors.endDate?.[0],
+      },
+    };
+  }
 
   revalidatePath(
     `${ROUTES.account.nested.reservations.nested.edit.href}/${needsEditedBooking.id}`
@@ -100,7 +111,7 @@ async function validateBookingsFromDB(
   | [success: SafeBookingArray, failed: null]
   | [success: null, failed: BookingActionResponse]
 > {
-  const { data: bookings, error: bookingsError } =
+  const { data: bookings, errors: bookingsError } =
     await bookingService.getByGuestId(session.main.id);
 
   if (bookingsError)
@@ -109,7 +120,10 @@ async function validateBookingsFromDB(
       {
         userEntered: input,
         errors: {
-          unexpected: `${bookingsError.code}: ${bookingsError.message}`,
+          unexpected:
+            bookingsError.type === 'database'
+              ? `${bookingsError.db.code}: ${bookingsError.db.message}`
+              : bookingsError.message,
         },
       },
     ];

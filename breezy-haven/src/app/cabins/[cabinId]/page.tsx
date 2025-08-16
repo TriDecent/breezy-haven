@@ -1,7 +1,7 @@
 import { CabinDetail, Reservation } from '@/features/cabins';
 import { cabinService } from '@/services';
 
-import { CabinSchema } from '@/shared';
+import { CabinSchema, errorHelper } from '@/shared';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
@@ -20,25 +20,28 @@ export async function generateStaticParams(): Promise<
 > {
   const { data: cabins } = await cabinService.getAll();
 
-  return cabins.map(cabin => ({
-    cabinId: cabin.id.toString(),
-  }));
+  return cabins
+    ? cabins.map(cabin => ({
+        cabinId: cabin.id.toString(),
+      }))
+    : [];
 }
 
 export async function generateMetadata({
   params,
 }: PageParams): Promise<Metadata> {
   const { cabinId } = await params;
-  const { data: cabin, error: cabinError } = await cabinService.getById(
+  const { data: cabin, errors: cabinError } = await cabinService.getById(
     Number(cabinId)
   );
 
-  if (cabinError) {
-    if (cabinError.code !== 'PGRST116')
-      return { title: `Error: ${cabinError.message}` };
-
-    return { title: 'Cabin not found' };
-  }
+  if (cabinError && cabinError.type === 'database')
+    return {
+      title:
+        cabinError.db.code !== 'PGRST116'
+          ? `Error: ${cabinError.db.message}`
+          : 'Cabin not found',
+    };
 
   if (!cabin) return { title: 'Cabin not found' };
 
@@ -52,14 +55,15 @@ export default async function Page({ params }: PageParams) {
 
   const cabinResult = await cabinService.getById(Number(cabinId));
 
-  if (cabinResult.error) {
-    if (cabinResult.error.code !== 'PGRST116')
-      throw new Error(cabinResult.error.message);
-
-    notFound();
+  if (cabinResult.errors) {
+    if (
+      cabinResult.errors.type === 'database' &&
+      cabinResult.errors.db.code === 'PGRST116'
+    ) {
+      notFound();
+    }
+    throw errorHelper.handleError(cabinResult.errors);
   }
-
-  if (!cabinResult.data) notFound();
 
   const parsedCabin = CabinSchema.safeParse(cabinResult.data);
   if (!parsedCabin.success)

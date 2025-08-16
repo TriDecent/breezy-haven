@@ -1,14 +1,9 @@
-import type { DTOCabin, NonNullableObject } from '@/repositories';
 import { settingService, unauthBookingService } from '@/services';
-import { DefaultSettingSchema } from '@/shared';
+import { errorHelper, type Cabin } from '@/shared';
 import ReservationDateRangeSelector from './ReservationDateRangeSelector';
 import ReservationForm from './ReservationForm';
 
-export default async function Reservation({
-  cabin,
-}: {
-  cabin: NonNullableObject<DTOCabin>;
-}) {
+export default async function Reservation({ cabin }: { cabin: Cabin }) {
   const promises = [
     unauthBookingService.getBookedDatesByCabinId(cabin.id),
     settingService.getDefaultSettings(),
@@ -16,21 +11,15 @@ export default async function Reservation({
 
   const [bookedDates, settingResult] = await Promise.all(promises);
 
-  if (bookedDates.error || settingResult.error)
-    throw new Error(
-      `Something wrong happened: Booking: ${bookedDates.error?.message} - Setting: ${settingResult.error?.message}`
-    );
+  if (bookedDates.errors) throw errorHelper.handleError(bookedDates.errors);
 
-  const parsedSettings = DefaultSettingSchema.safeParse(settingResult.data);
-
-  if (!parsedSettings.success)
-    throw new Error('Something is wrong with booked dates');
+  if (settingResult.errors) throw errorHelper.handleError(settingResult.errors);
 
   return (
     <>
       <ReservationForm cabin={cabin} />
       <ReservationDateRangeSelector
-        setting={parsedSettings.data}
+        setting={settingResult.data}
         alreadyBookedDates={bookedDates.data}
         cabin={cabin}
       />

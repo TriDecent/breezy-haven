@@ -1,6 +1,5 @@
 'use client';
 
-import { DTOCabin, NonNullableObject } from '@/repositories';
 import {
   Badge,
   PrimaryButton,
@@ -12,16 +11,13 @@ import {
   SelectValue,
   Textarea,
   useGetAuthQuery,
+  type Cabin,
 } from '@/shared';
 import Link from 'next/link';
 
 import { useEffect, useState } from 'react';
 
-export default function ReservationForm({
-  cabin,
-}: {
-  cabin: NonNullableObject<DTOCabin>;
-}) {
+export default function ReservationForm({ cabin }: { cabin: Cabin }) {
   const [guestCount, setGuestCount] = useState<number>(0);
   const { data, isFetching } = useGetAuthQuery();
   const [isMounted, setIsMounted] = useState(false);

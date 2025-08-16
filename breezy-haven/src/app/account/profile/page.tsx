@@ -1,5 +1,5 @@
 import {
-  guestFormSchema,
+  GuestFormSchema,
   SelectCountry,
   UpdateProfileForm,
 } from '@/features/account/profile';
@@ -14,9 +14,9 @@ export default async function Page() {
 
   const countries = await getCountries();
 
-  const safeGuest = guestFormSchema.safeParse(session.main);
+  const parsedGuest = GuestFormSchema.safeParse(session.main);
 
-  if (!safeGuest.success) {
+  if (!parsedGuest.success) {
     return (
       <div>
         <h2 className='text-center text-2xl font-bold text-red-500'>
@@ -39,14 +39,14 @@ export default async function Page() {
       </p>
 
       <UpdateProfileForm
-        guest={safeGuest.data}
+        guest={parsedGuest.data}
         countrySelector={
           <SelectCountry
             name='nationality'
             id='nationality'
             defaultNationality={{
-              country: safeGuest.data.nationality,
-              flagSrc: safeGuest.data.countryFlag,
+              country: parsedGuest.data.nationality,
+              flagSrc: parsedGuest.data.countryFlag,
             }}
             countries={countries}
           />

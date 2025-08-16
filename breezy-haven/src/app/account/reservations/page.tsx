@@ -1,7 +1,7 @@
 import { BookingList } from '@/features/account/reservations';
 import { Auth } from '@/lib';
 import { bookingService } from '@/services';
-import { ROUTES } from '@/shared';
+import { errorHelper, ROUTES } from '@/shared';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = ROUTES.account.nested.reservations.metadata;
@@ -9,11 +9,10 @@ export const metadata: Metadata = ROUTES.account.nested.reservations.metadata;
 export default async function ReservationsPage() {
   const session = await Auth.verifySession();
 
-  const { data: bookings, error: bookingsError } =
+  const { data: bookings, errors: bookingsError } =
     await bookingService.getByGuestId(session.main.id);
 
-  if (bookingsError)
-    throw new Error(`${bookingsError.code}: ${bookingsError.message}`);
+  if (bookingsError) throw errorHelper.handleError(bookingsError);
 
   return (
     <div>

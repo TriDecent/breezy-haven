@@ -6,13 +6,10 @@ import { notFound, useSearchParams } from 'next/navigation';
 import CabinCard from './CabinCard';
 import { cabinCapacities, viewSizeClassifier } from './sizeClassifier';
 
+import type { Cabin } from '@/shared';
 import { useEffect, useState } from 'react';
 
-export default function FilteredCabins({
-  cabins,
-}: {
-  cabins: NonNullableObject<DTOCabin>[];
-}) {
+export default function FilteredCabins({ cabins }: { cabins: Cabin[] }) {
   const breakpoint = useBreakpoint();
 
   const params = useSearchParams();
