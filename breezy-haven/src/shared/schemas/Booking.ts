@@ -1,6 +1,55 @@
 import { isValid, parseISO } from 'date-fns';
 import z from 'zod';
 
+export const BookingSchema = z.object({
+  cabinId: z.coerce.number({ error: 'cabinId must be a number' }),
+  cabinPrice: z.coerce.number({ error: 'cabinPrice must be a number' }),
+  created_at: z.string({ error: 'created_at must be a string' }),
+  endDate: z.string({ error: 'endDate must be a string' }),
+  extrasPrice: z.coerce.number({ error: 'extrasPrice must be a number' }),
+  guestId: z.coerce.number({ error: 'guestId must be a number' }),
+  hasBreakfast: z.boolean({ error: 'hasBreakfast must be a boolean' }),
+  id: z.coerce.number({ error: 'id must be a number' }),
+  isPaid: z.boolean({ error: 'isPaid must be a boolean' }),
+  numGuests: z.coerce.number({ error: 'numGuests must be a number' }),
+  numNights: z.coerce.number({ error: 'numNights must be a number' }),
+  observations: z.string({ error: 'observations must be a string' }),
+  startDate: z.string({ error: 'startDate must be a string' }),
+  status: z.string({ error: 'status must be a string' }),
+  totalPrice: z.coerce.number({ error: 'totalPrice must be a number' }),
+});
+export const NullableBookingSchema = z.object({
+  cabinId: z.coerce.number({ error: 'cabinId must be a number' }).nullable(),
+  cabinPrice: z.coerce
+    .number({ error: 'cabinPrice must be a number' })
+    .nullable(),
+  created_at: z.string({ error: 'created_at must be a string' }),
+  endDate: z.string({ error: 'endDate must be a string' }).nullable(),
+  extrasPrice: z.coerce
+    .number({ error: 'extrasPrice must be a number' })
+    .nullable(),
+  guestId: z.coerce.number({ error: 'guestId must be a number' }).nullable(),
+  hasBreakfast: z
+    .boolean({ error: 'hasBreakfast must be a boolean' })
+    .nullable(),
+  id: z.coerce.number({ error: 'id must be a number' }),
+  isPaid: z.boolean({ error: 'isPaid must be a boolean' }).nullable(),
+  numGuests: z.coerce
+    .number({ error: 'numGuests must be a number' })
+    .nullable(),
+  numNights: z.coerce
+    .number({ error: 'numNights must be a number' })
+    .nullable(),
+  observations: z.string({ error: 'observations must be a string' }).nullable(),
+  startDate: z.string({ error: 'startDate must be a string' }).nullable(),
+  status: z.string({ error: 'status must be a string' }).nullable(),
+  totalPrice: z.coerce
+    .number({ error: 'totalPrice must be a number' })
+    .nullable(),
+});
+export type Booking = z.infer<typeof BookingSchema>;
+export type NullableBooking = z.infer<typeof NullableBookingSchema>;
+
 const cabinSchema = z.object({
   name: z.string(),
   image: z.string(),
