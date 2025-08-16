@@ -1,41 +1,43 @@
 import { supabase } from '@/lib/supabase';
 import { DTOCabin } from '@/repositories';
+import type { Cabin, NullableCabin } from '@/shared';
 import { PostgrestError } from '@supabase/supabase-js';
 import { cache } from 'react';
-import { IService, ServiceReturnType } from './BaseService';
+import { IService } from './BaseService';
 
-export default class CabinService implements IService<DTOCabin> {
-  constructor(private readonly _service: IService<DTOCabin>) {
+export default class CabinService<T extends Cabin | NullableCabin>
+  implements IService<DTOCabin, T>
+{
+  constructor(private readonly _service: IService<DTOCabin, T>) {
     this.getAll = cache(this.getAll.bind(this));
     this.getById = cache(this.getById.bind(this));
   }
-
+  handleRepositoryResultArray(
+    action: () => Promise<{ data: unknown; error: PostgrestError | null }>
+  ) {
+    return this._service.handleRepositoryResultArray(action);
+  }
+  handleRepositoryResult(
+    action: () => Promise<{ data: unknown; error: PostgrestError | null }>
+  ) {
+    return this._service.handleRepositoryResult(action);
+  }
   verifyPermission(): Promise<void> {
     return this._service.verifyPermission();
   }
-
-  getAll(): ServiceReturnType<DTOCabin[], PostgrestError | null> {
+  getAll() {
     return this._service.getAll();
   }
-  getById(
-    id: number
-  ): ServiceReturnType<DTOCabin | null, PostgrestError | null> {
+  getById(id: number) {
     return this._service.getById(id);
   }
-  create(
-    item: Partial<DTOCabin>
-  ): ServiceReturnType<DTOCabin | null, PostgrestError | null> {
+  create(item: Partial<DTOCabin>) {
     return this._service.create(item);
   }
-  update(
-    id: number,
-    updatedFields: Partial<DTOCabin>
-  ): ServiceReturnType<DTOCabin | null, PostgrestError | null> {
+  update(id: number, updatedFields: Partial<DTOCabin>) {
     return this._service.update(id, updatedFields);
   }
-  delete(
-    id: number
-  ): ServiceReturnType<DTOCabin | null, PostgrestError | null> {
+  delete(id: number) {
     return this._service.delete(id);
   }
 

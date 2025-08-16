@@ -1,43 +1,59 @@
 import { supabase } from '@/lib/supabase';
 import { DTOBooking } from '@/repositories';
+import { BookingSchema, type Booking, type NullableBooking } from '@/shared';
 import { PostgrestError } from '@supabase/supabase-js';
 import { eachDayOfInterval } from 'date-fns';
-import { IService, ServiceReturnType } from './BaseService';
+import z from 'zod';
+import { IService } from './BaseService';
+import type { DatabaseError } from './types';
 
-export default class BookingService implements IService<DTOBooking> {
-  constructor(private readonly _service: IService<DTOBooking>) {}
+const CabinInfoSchema = z.object({
+  name: z.string(),
+  image: z.string(),
+  maxCapacity: z.number(),
+});
 
+const BookingWithCabinSchema = BookingSchema.extend({
+  cabins: CabinInfoSchema,
+});
+
+export default class BookingService<T extends Booking | NullableBooking>
+  implements IService<DTOBooking, T>
+{
+  constructor(private readonly _service: IService<DTOBooking, T>) {}
+  handleRepositoryResultArray(
+    action: () => Promise<{ data: unknown; error: PostgrestError | null }>
+  ) {
+    return this._service.handleRepositoryResultArray(action);
+  }
+  handleRepositoryResult(
+    action: () => Promise<{ data: unknown; error: PostgrestError | null }>
+  ) {
+    return this._service.handleRepositoryResult(action);
+  }
   verifyPermission(): Promise<void> {
     return this._service.verifyPermission();
   }
-
-  async delete(
-    id: number
-  ): ServiceReturnType<DTOBooking | null, PostgrestError | null> {
-    await this._service.verifyPermission();
-
-    const { data, error } = await this._service.delete(id);
-
-    return { data, error };
-  }
-
   getAll() {
     return this._service.getAll();
   }
   getById(id: number) {
     return this._service.getById(id);
   }
-  create(item: DTOBooking) {
+  create(item: Partial<DTOBooking>) {
     return this._service.create(item);
   }
   update(id: number, updatedFields: Partial<DTOBooking>) {
     return this._service.update(id, updatedFields);
   }
+  delete(id: number) {
+    return this._service.delete(id);
+  }
 
   async getByGuestId(guestId: number) {
     await this._service.verifyPermission();
 
-    const { data, error } = await supabase
+    const query = supabase
       .from('bookings')
       .select(
         `
@@ -48,14 +64,40 @@ export default class BookingService implements IService<DTOBooking> {
       .eq('guestId', guestId)
       .order('startDate');
 
+    const { data, error } = await query;
+
+    if (error)
+      return { data: null, errors: { type: 'database' as const, db: error } };
+    if (!Array.isArray(data))
+      return {
+        data: null,
+        errors: { type: 'unexpected' as const, message: 'Data is not array' },
+      };
+
+    const validItems = [];
+    let corruptedCount = 0;
+    for (const item of data) {
+      const result = BookingWithCabinSchema.safeParse(item);
+      if (result.success) validItems.push(result.data);
+      else corruptedCount++;
+    }
+
+    if (data.length !== 0 && validItems.length === 0)
+      return {
+        data: null,
+        errors: { type: 'unexpected' as const, message: 'All data corrupted' },
+      };
+
     return {
-      data: data
-        ? data.map(({ cabins, ...booking }) => ({
-            ...booking,
-            cabin: cabins,
-          }))
-        : [],
-      error: error,
+      data: validItems.map(({ cabins, ...booking }) => ({
+        ...booking,
+        cabin: cabins,
+      })),
+      errors: null,
+      warnings:
+        corruptedCount > 0
+          ? { corrupted: corruptedCount, total: data.length }
+          : undefined,
     };
   }
 
@@ -77,12 +119,19 @@ export default class BookingService implements IService<DTOBooking> {
 
   public async getBookedDatesByCabinId(
     cabinId: number
-  ): Promise<{ data: readonly Date[]; error: PostgrestError | null }> {
+  ): Promise<
+    | { data: readonly Date[]; errors: null }
+    | { data: null; errors: DatabaseError }
+  > {
     await this._service.verifyPermission();
 
     const { data, error } = await this.getByCabinId(cabinId);
 
-    return { data: this.getBookedDates(data), error: error };
+    if (error) {
+      return { data: null, errors: { type: 'database' as const, db: error } };
+    }
+
+    return { data: this.getBookedDates(data), errors: null };
   }
 
   private getBookedDates(bookings: DTOBooking[]): readonly Date[] {

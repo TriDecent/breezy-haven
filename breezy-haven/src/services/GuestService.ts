@@ -1,44 +1,46 @@
 import { DTOGuest } from '@/repositories';
-import { PostgrestError } from '@supabase/supabase-js';
-import { IService, ServiceReturnType } from './BaseService';
+import type { Guest, NullableGuest } from '@/shared';
+import type { PostgrestError } from '@supabase/supabase-js';
+import { IService } from './BaseService';
 
-export default class GuestService implements IService<DTOGuest> {
-  constructor(private readonly _service: IService<DTOGuest>) {}
-
+export default class GuestService<T extends Guest | NullableGuest>
+  implements IService<DTOGuest, T>
+{
+  constructor(private readonly _service: IService<DTOGuest, T>) {}
+  handleRepositoryResultArray(
+    action: () => Promise<{ data: unknown; error: PostgrestError | null }>
+  ) {
+    return this._service.handleRepositoryResultArray(action);
+  }
+  handleRepositoryResult(
+    action: () => Promise<{ data: unknown; error: PostgrestError | null }>
+  ) {
+    return this._service.handleRepositoryResult(action);
+  }
   verifyPermission(): Promise<void> {
     return this._service.verifyPermission();
   }
-
-  getAll(): ServiceReturnType<DTOGuest[], PostgrestError | null> {
+  getAll() {
     return this._service.getAll();
   }
-  getById(
-    id: number
-  ): ServiceReturnType<DTOGuest | null, PostgrestError | null> {
+  getById(id: number) {
     return this._service.getById(id);
   }
-  create(
-    item: Partial<DTOGuest>
-  ): ServiceReturnType<DTOGuest | null, PostgrestError | null> {
+  create(item: Partial<DTOGuest>) {
     return this._service.create(item);
   }
-  update(
-    id: number,
-    updatedFields: Partial<DTOGuest>
-  ): ServiceReturnType<DTOGuest | null, PostgrestError | null> {
+  update(id: number, updatedFields: Partial<DTOGuest>) {
     return this._service.update(id, updatedFields);
   }
-  delete(
-    id: number
-  ): ServiceReturnType<DTOGuest | null, PostgrestError | null> {
+  delete(id: number) {
     return this._service.delete(id);
   }
 
-  async getByEmailAsync(email: string): Promise<DTOGuest | null> {
+  async getByEmailAsync(email: string): Promise<T | null> {
     await this._service.verifyPermission();
 
-    const { data: guests, error } = await this.getAll();
-    if (error || !guests) return null;
+    const { data: guests, errors } = await this.getAll();
+    if (errors || !guests) return null;
 
     return guests.find(guest => guest.email === email) ?? null;
   }
