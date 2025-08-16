@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Badge from './Badge';
+import MiniSpinner from './MiniSpinner';
 
 export default function NavItem({
   routeTitle,
@@ -10,8 +11,8 @@ export default function NavItem({
   authName,
   authImage,
   shouldRenderAuthRoute,
-  isAuthenticated = false, // Thêm prop này
-  isLoading = false, // Thêm prop này
+  isAuthenticated = false,
+  isLoading = false,
 }: {
   routeTitle: string;
   routeHref: string;
@@ -45,7 +46,7 @@ export default function NavItem({
         ) : shouldShowAccountText ? (
           routeTitle
         ) : shouldRenderAuthRoute && isLoading ? (
-          <div className='h-8 w-8 animate-pulse rounded-full bg-gray-300' />
+          <MiniSpinner />
         ) : (
           routeTitle
         )}

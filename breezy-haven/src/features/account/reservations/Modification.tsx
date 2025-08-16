@@ -1,6 +1,6 @@
 'use client';
 
-import { ROUTES } from '@/shared';
+import { MiniSpinner, ROUTES } from '@/shared';
 
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
@@ -56,18 +56,9 @@ export default function Modification({
         </button>
       ) : (
         <div className={styles}>
-          <Spinner />
+          <MiniSpinner />
         </div>
       )}
     </div>
-  );
-}
-
-function Spinner() {
-  return (
-    <div
-      className='border-primary-300 border-t-accent-600 mx-auto h-8 w-8 animate-spin rounded-full border-2'
-      aria-label='Loading'
-    ></div>
   );
 }
