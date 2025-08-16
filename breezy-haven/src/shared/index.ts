@@ -33,3 +33,4 @@ export { default as RootProvider } from './providers/RootProvider';
 export { default as ThemeProvider } from './providers/ThemeProvider';
 export { useGetAuthQuery } from './store/authApi';
 export type { RootState } from './store/store';
+export { dateHelper } from './utils/DateHelper';
