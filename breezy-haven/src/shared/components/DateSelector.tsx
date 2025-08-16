@@ -67,7 +67,7 @@ export default function DateSelector({
         <Calendar
           {...props}
           locale={locale ? locales[locale] : undefined}
-          className='w-full'
+          className='mx-auto w-fit'
         />
       </CardContent>
       <CardFooter className='text-muted-foreground justify-center text-sm'>

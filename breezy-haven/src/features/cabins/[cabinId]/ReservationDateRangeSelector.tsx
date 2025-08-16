@@ -1,6 +1,7 @@
 'use client';
 import type { DTOCabin, DTOSetting, NonNullableObject } from '@/repositories';
 import {
+  dateHelper,
   DateSelector,
   fromDateRangeToISO,
   fromISOToDateRange,
@@ -9,7 +10,6 @@ import {
 } from '@/shared';
 
 import { differenceInDays, parseISO } from 'date-fns';
-import type { DateRange } from 'react-day-picker';
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function ReservationDateRangeSelector({
@@ -34,7 +34,7 @@ export default function ReservationDateRangeSelector({
 
   return (
     <div className='flex flex-col justify-between space-y-4 sm:w-full lg:flex-1/2'>
-      <div className='bg-accent-500 text-primary-800 flex items-baseline justify-evenly gap-2 rounded shadow-sm shadow-black md:gap-6 md:px-4 lg:px-8'>
+      <div className='bg-accent-500 text-primary-800 flex min-h-11 items-center justify-evenly gap-2 rounded shadow-sm shadow-black md:gap-6 md:px-4 lg:px-8'>
         <p className='flex items-center gap-2'>
           {cabin.discount > 0 ? (
             <>
@@ -71,7 +71,7 @@ export default function ReservationDateRangeSelector({
         onSelect={updatedDateRange => {
           if (
             updatedDateRange &&
-            isDateRangeValid(updatedDateRange, alreadyBookedDates)
+            dateHelper.isDateRangeValid(updatedDateRange, alreadyBookedDates)
           ) {
             dispatch(
               uiActions.updateDateRange(fromDateRangeToISO(updatedDateRange))
@@ -89,21 +89,3 @@ export default function ReservationDateRangeSelector({
     </div>
   );
 }
-
-const isDateRangeValid = (
-  range: DateRange,
-  alreadyBookedDates: readonly Date[]
-) => {
-  if (!range.from || !range.to) return true;
-  const days = [];
-  const current = new Date(range.from);
-  while (current <= range.to) {
-    days.push(new Date(current));
-    current.setDate(current.getDate() + 1);
-  }
-  return days.every(
-    day =>
-      !alreadyBookedDates.some(d => d.getTime() === day.getTime()) &&
-      day >= new Date()
-  );
-};

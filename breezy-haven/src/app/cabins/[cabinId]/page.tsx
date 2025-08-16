@@ -76,7 +76,7 @@ export default async function Page({ params }: PageParams) {
           Reserve {cabinResult.data.name} today. Pay on arrival.
         </h2>
 
-        <div className='flex flex-col gap-4 md:flex-row'>
+        <div className='flex flex-col gap-4 lg:flex-row'>
           <Suspense fallback={<Loading />}>
             <Reservation cabin={parsedCabin.data} />
           </Suspense>

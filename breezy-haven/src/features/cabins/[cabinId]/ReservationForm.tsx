@@ -29,7 +29,7 @@ export default function ReservationForm({
   useEffect(() => setIsMounted(true), []);
 
   return (
-    <article className='h-fit shadow-lg md:order-2'>
+    <article className='h-fit shadow-lg lg:order-2'>
       <div className='bg-primary-800 text-primary-300 flex items-center justify-between rounded-t-lg px-8 py-4 lg:px-16'>
         {!isMounted ? (
           <div className='h-8 w-8 animate-pulse rounded-full bg-gray-300' />

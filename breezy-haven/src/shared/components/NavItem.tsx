@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Badge from './Badge';
-import MiniSpinner from './MiniSpinner';
 
 export default function NavItem({
   routeTitle,
@@ -46,7 +45,7 @@ export default function NavItem({
         ) : shouldShowAccountText ? (
           routeTitle
         ) : shouldRenderAuthRoute && isLoading ? (
-          <MiniSpinner />
+          <div className='h-8 w-8 animate-pulse rounded-full bg-gray-300' />
         ) : (
           routeTitle
         )}
