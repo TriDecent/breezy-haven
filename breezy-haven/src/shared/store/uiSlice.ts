@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { parseISO } from 'date-fns';
 import { DateRange } from 'react-day-picker';
 
 type ISODateRange = Record<keyof DateRange, string | undefined>;
@@ -32,8 +33,8 @@ export const uiActions = uiSlice.actions;
 
 export function fromISOToDateRange(iso: ISODateRange): DateRange {
   return {
-    from: iso.from ? new Date(iso.from) : undefined,
-    to: iso.to ? new Date(iso.to) : undefined,
+    from: parseISO(iso.from ?? ''),
+    to: parseISO(iso.to ?? ''),
   };
 }
 export function fromDateRangeToISO(dateRange: DateRange): ISODateRange {
