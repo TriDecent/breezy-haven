@@ -2,7 +2,7 @@ export interface CabinQuery {
   readonly capacity: 'all' | 'small' | 'medium' | 'large';
 }
 
-export const cabinCapacities: ReadonlyArray<string> = [
+export const CabinCapacities: ReadonlyArray<string> = [
   'all',
   'small',
   'medium',
