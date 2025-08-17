@@ -1,6 +1,6 @@
 import { settingService, unauthBookingService } from '@/services';
 import { errorHelper, type Cabin } from '@/shared';
-import ReservationDateRangeSelector from './ReservationDateRangeSelector';
+import ReservationSummary from './ReservationSummary';
 import ReservationForm from './ReservationForm';
 
 export default async function Reservation({ cabin }: { cabin: Cabin }) {
@@ -18,7 +18,7 @@ export default async function Reservation({ cabin }: { cabin: Cabin }) {
   return (
     <>
       <ReservationForm cabin={cabin} />
-      <ReservationDateRangeSelector
+      <ReservationSummary
         setting={settingResult.data}
         alreadyBookedDates={bookedDates.data}
         cabin={cabin}

@@ -13,7 +13,7 @@ import { differenceInDays, parseISO } from 'date-fns';
 import type { DateRange } from 'react-day-picker';
 import { useDispatch, useSelector } from 'react-redux';
 
-export default function ReservationDateRangeSelector({
+export default function ReservationSummary({
   setting,
   alreadyBookedDates,
   cabin,
@@ -37,8 +37,10 @@ export default function ReservationDateRangeSelector({
     if (
       !updatedDateRange ||
       !dateHelper.isDateRangeValid(updatedDateRange, alreadyBookedDates)
-    )
+    ) {
+      dispatch(uiActions.updateDateRange(undefined));
       return;
+    }
 
     dispatch(uiActions.updateDateRange(fromDateRangeToISO(updatedDateRange)));
   };

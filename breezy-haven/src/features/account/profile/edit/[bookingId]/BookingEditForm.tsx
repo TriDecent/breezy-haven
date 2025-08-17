@@ -28,17 +28,35 @@ import { toast } from 'sonner';
 import { dateHelper } from '../../../../../shared/utils/DateHelper';
 import { updateBookingAction } from './updateBookingAction';
 
-export default function BookingEditForm(props: {
+type BookingInfo = {
   bookingId: number;
   guestCount: number;
   startDate: Date;
   endDate: Date;
   observations: string | null;
-  cabin: { maxCapacity: number };
-}) {
-  const { bookingId, guestCount, startDate, endDate, observations, cabin } =
-    props;
+};
 
+type CabinInfo = {
+  maxCapacity: number;
+  alreadyBookedDates: readonly Date[];
+};
+
+type BookingRules = {
+  minBookingDaysCount: number;
+  maxBookingDaysCount: number;
+};
+
+type BookingEditFormProps = {
+  booking: BookingInfo;
+  cabin: CabinInfo;
+  rules: BookingRules;
+};
+
+export default function BookingEditForm({
+  booking,
+  cabin,
+  rules,
+}: BookingEditFormProps) {
   const [state, onSubmit, isPending] = useActionState(updateBookingAction, {
     errors: null,
     userEntered: null,
@@ -52,18 +70,23 @@ export default function BookingEditForm(props: {
         action={onSubmit}
         className='bg-primary-900 flex flex-col gap-5 rounded-lg px-4 py-5 text-lg sm:px-8 lg:py-10 xl:px-16'
       >
-        <input type='hidden' name='bookingId' value={bookingId} />
+        <input type='hidden' name='bookingId' value={booking.bookingId} />
 
         <div className='flex flex-col gap-4 md:flex-row'>
           <div className='flex-1'>
             <GuestCountSelect
-              defaultValue={guestCount}
+              defaultValue={booking.guestCount}
               max={cabin.maxCapacity}
             />
             {renderError(state.errors?.guestCount)}
           </div>
           <div className='flex-1'>
-            <StayingInput defaultValue={{ from: startDate, to: endDate }} />
+            <StayingInput
+              defaultValue={{ from: booking.startDate, to: booking.endDate }}
+              minBookingDaysCount={rules.minBookingDaysCount}
+              maxBookingDaysCount={rules.maxBookingDaysCount}
+              alreadyBookedDates={cabin.alreadyBookedDates}
+            />
             {renderError(state.errors?.date)}
           </div>
         </div>
@@ -71,7 +94,9 @@ export default function BookingEditForm(props: {
         <div>
           <NoteInput
             defaultValue={
-              state.userEntered?.observations ?? observations ?? undefined
+              state.userEntered?.observations ??
+              booking.observations ??
+              undefined
             }
           />
           {renderError(state.errors?.observations)}
@@ -144,10 +169,27 @@ function GuestCountSelect({
 
 function StayingInput({
   defaultValue,
+  minBookingDaysCount,
+  maxBookingDaysCount,
+  alreadyBookedDates,
 }: {
   defaultValue: DateRange | undefined;
+  minBookingDaysCount: number;
+  maxBookingDaysCount: number;
+  alreadyBookedDates: readonly Date[];
 }) {
   const [range, setRange] = useState<DateRange | undefined>(defaultValue);
+
+  const handleSelectDate = (updatedDateRange: DateRange) => {
+    if (
+      !updatedDateRange ||
+      !dateHelper.isDateRangeValid(updatedDateRange, alreadyBookedDates)
+    ) {
+      setRange(undefined);
+      return;
+    }
+    setRange(updatedDateRange);
+  };
 
   return (
     <div className='flex-1 space-y-3'>
@@ -181,13 +223,15 @@ function StayingInput({
           <Calendar
             mode='range'
             selected={range}
-            disabled={{ before: new Date() }}
-            min={2}
-            max={20}
-            onSelect={setRange}
+            disabled={[{ before: new Date() }, ...alreadyBookedDates]}
+            min={minBookingDaysCount}
+            max={maxBookingDaysCount}
+            onSelect={handleSelectDate}
+            required
           />
           <p className='text-foreground p-1 text-xs'>
-            Your staying days must be between 2 and 20
+            Your staying days must be between ${minBookingDaysCount} and $
+            {maxBookingDaysCount}
           </p>
         </PopoverContent>
       </Popover>
