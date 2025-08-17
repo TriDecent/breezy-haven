@@ -66,7 +66,7 @@ function Information({
           guestCount={booking.numGuests}
           createdOn={format(booking.created_at, 'EEE, MMM dd yyyy, p')}
         />
-        {booking.observations ? (
+        {booking.observations && booking.observations.length > 0 ? (
           <p className='text-primary-300'>
             Note: <span className='text-sm italic'>{booking.observations}</span>
           </p>
