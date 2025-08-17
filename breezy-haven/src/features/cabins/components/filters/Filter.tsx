@@ -2,7 +2,8 @@
 
 import { usePathname, useSearchParams } from 'next/navigation';
 import { HTMLAttributes, useCallback } from 'react';
-import { CabinQuery, viewSizeClassifier } from './sizeClassifier';
+import { ViewSizeClassifier, type CabinQuery } from '../constants/SizeClassifier';
+
 
 export default function Filter() {
   const pathname = usePathname();
@@ -32,7 +33,7 @@ export default function Filter() {
         isActive={capacityQuery === 'small'}
         onClick={() => handleFilter('small')}
       >
-        {`${viewSizeClassifier.small.startAt} - ${viewSizeClassifier.small.endAt}`}{' '}
+        {`${ViewSizeClassifier.small.startAt} - ${ViewSizeClassifier.small.endAt}`}{' '}
         guests
       </Button>
       <Button
@@ -40,7 +41,7 @@ export default function Filter() {
         onClick={() => handleFilter('medium')}
       >
         {' '}
-        {`${viewSizeClassifier.medium.startAt} - ${viewSizeClassifier.medium.endAt}`}{' '}
+        {`${ViewSizeClassifier.medium.startAt} - ${ViewSizeClassifier.medium.endAt}`}{' '}
         guests
       </Button>
       <Button
@@ -48,7 +49,7 @@ export default function Filter() {
         onClick={() => handleFilter('large')}
       >
         {' '}
-        {`${viewSizeClassifier.large.startAt} - ${viewSizeClassifier.large.endAt ?? '12'}`}{' '}
+        {`${ViewSizeClassifier.large.startAt} - ${ViewSizeClassifier.large.endAt ?? '12'}`}{' '}
         guests
       </Button>
     </nav>

@@ -2,7 +2,10 @@
 
 import { DTOCabin, NonNullableObject } from '@/repositories';
 import { notFound, useSearchParams } from 'next/navigation';
-import { CabinCapacities, viewSizeClassifier } from './sizeClassifier';
+import {
+  CabinCapacities,
+  ViewSizeClassifier,
+} from '../constants/SizeClassifier';
 
 import type { Cabin, RootState } from '@/shared';
 import { useEffect, useState, useTransition } from 'react';
@@ -17,7 +20,6 @@ export default function QueryCabins({ cabins }: { cabins: Cabin[] }) {
   const capacity = params.get('capacity') ?? 'all';
   const [isPending, startTransition] = useTransition();
   const [displayedCabins, setDisplayedCabins] = useState(cabins);
-  const [hasInitialized, setHasInitialized] = useState(false);
 
   if (!CabinCapacities.includes(capacity)) notFound();
 
@@ -31,15 +33,13 @@ export default function QueryCabins({ cabins }: { cabins: Cabin[] }) {
       const filteredCabins = filterCabinsBasedOnCapacity(capacity, queryCabins);
 
       setDisplayedCabins(filteredCabins);
-      await new Promise(resolve => setTimeout(resolve, 1000));
     });
   }, [cabins, capacity, query, queryFromStore]);
 
-  useEffect(() => {
-    setHasInitialized(true);
-  }, []);
+  const hasActiveQuery = queryFromStore || query;
+  const shouldShowLoading = isPending && hasActiveQuery;
 
-  return isPending && hasInitialized ? (
+  return shouldShowLoading ? (
     <CabinLoading />
   ) : (
     <CabinsDisplay cabins={displayedCabins} />
@@ -55,19 +55,19 @@ function filterCabinsBasedOnCapacity(
       return cabins;
     case 'large':
       return cabins.filter(
-        cabin => cabin.maxCapacity >= viewSizeClassifier.large.startAt
+        cabin => cabin.maxCapacity >= ViewSizeClassifier.large.startAt
       );
     case 'medium':
       return cabins.filter(
         cabin =>
-          cabin.maxCapacity >= viewSizeClassifier.medium.startAt &&
-          cabin.maxCapacity <= viewSizeClassifier.medium.endAt
+          cabin.maxCapacity >= ViewSizeClassifier.medium.startAt &&
+          cabin.maxCapacity <= ViewSizeClassifier.medium.endAt
       );
     case 'small':
       return cabins.filter(
         cabin =>
-          cabin.maxCapacity >= viewSizeClassifier.small.startAt &&
-          cabin.maxCapacity <= viewSizeClassifier.small.endAt
+          cabin.maxCapacity >= ViewSizeClassifier.small.startAt &&
+          cabin.maxCapacity <= ViewSizeClassifier.small.endAt
       );
 
     default:

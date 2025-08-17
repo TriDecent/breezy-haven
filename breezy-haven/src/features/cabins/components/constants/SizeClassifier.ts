@@ -17,7 +17,7 @@ type ViewCabinSizeClassifier = {
       : { startAt: number; endAt: number };
 };
 
-export const viewSizeClassifier: ViewCabinSizeClassifier = {
+export const ViewSizeClassifier: ViewCabinSizeClassifier = {
   all: 'all',
   small: { startAt: 1, endAt: 3 },
   medium: { startAt: 4, endAt: 7 },

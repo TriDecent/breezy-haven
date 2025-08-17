@@ -66,7 +66,7 @@ export default function SearchBar() {
         >
           <Button
             onClick={() => setShouldDisplaySearch(state => !state)}
-            className='h-16 w-16 rounded-full'
+            className='h-16 w-16 rounded-full p-0 shadow-sm shadow-black'
           >
             <Search size={36} />
           </Button>

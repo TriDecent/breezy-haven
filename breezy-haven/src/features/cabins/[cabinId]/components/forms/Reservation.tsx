@@ -1,7 +1,7 @@
 import { settingService, unauthBookingService } from '@/services';
 import { errorHelper, type Cabin } from '@/shared';
-import ReservationSummary from './ReservationSummary';
 import ReservationForm from './ReservationForm';
+import ReservationSummary from './ReservationSummary';
 
 export default async function Reservation({ cabin }: { cabin: Cabin }) {
   const promises = [

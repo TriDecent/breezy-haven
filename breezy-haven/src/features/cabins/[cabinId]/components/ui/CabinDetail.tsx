@@ -1,7 +1,7 @@
+import { PreviewImage } from '@/features/cabins';
 import type { DTOCabin, NonNullableObject } from '@/repositories';
 import { TextExpander } from '@/shared';
 import { EyeSlashIcon, MapPinIcon, UsersIcon } from '@heroicons/react/24/solid';
-import PreviewImage from '../PreviewImage';
 
 export default function CabinDetail({
   cabin,

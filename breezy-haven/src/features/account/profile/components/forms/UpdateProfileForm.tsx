@@ -2,8 +2,8 @@
 
 import { Input, PrimaryButton } from '@/shared';
 import { InputHTMLAttributes, useActionState, type ReactElement } from 'react';
-import { GuestForm } from './GuestFormSchema';
 import { updateProfile } from './updateProfileAction';
+import type { GuestForm } from './GuestFormSchema';
 
 export default function UpdateProfileForm({
   guest,

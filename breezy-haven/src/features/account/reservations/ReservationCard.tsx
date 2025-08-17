@@ -1,5 +1,5 @@
 'use client';
-import { default as PreviewImage } from '@/features/cabins/PreviewImage';
+import { default as PreviewImage } from '@/features/cabins/components/ui/PreviewImage';
 import { DTOBooking, type NonNullableObject } from '@/repositories';
 import { format, formatDistance, isPast, isToday, parseISO } from 'date-fns';
 import Modification from './Modification';
