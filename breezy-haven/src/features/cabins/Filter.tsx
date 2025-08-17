@@ -11,12 +11,13 @@ export default function Filter() {
 
   const handleFilter = useCallback(
     (filter: CabinQuery['capacity']): void => {
-      const params = new URLSearchParams();
+      const otherParams = Object.fromEntries(searchParams.entries());
+      const params = new URLSearchParams({ ...otherParams });
       params.set('capacity', filter);
 
       window.history.pushState(null, '', `${pathname}?${params.toString()}`);
     },
-    [pathname]
+    [pathname, searchParams]
   );
 
   return (

@@ -7,4 +7,5 @@ export { default as CabinsList } from './CabinsList';
 export { default as Filter } from './Filter';
 export { default as PreviewImage } from './PreviewImage';
 export { default as ReservationReminder } from './ReservationReminder';
+export { default as SearchBar } from './SearchBar';
 export type { CabinQuery } from './sizeClassifier';

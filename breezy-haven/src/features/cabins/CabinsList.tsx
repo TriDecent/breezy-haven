@@ -2,7 +2,7 @@ import { cabinService } from '@/services';
 // import { connection } from 'next/server';
 
 import { errorHelper } from '@/shared';
-import FilteredCabins from './FilteredCabins';
+import QueryCabins from './QueryCabins';
 
 export default async function CabinsList() {
   // await connection();
@@ -12,5 +12,5 @@ export default async function CabinsList() {
 
   if (errors) throw errorHelper.handleError(errors);
 
-  return <FilteredCabins cabins={cabins} />;
+  return <QueryCabins cabins={cabins} />;
 }
