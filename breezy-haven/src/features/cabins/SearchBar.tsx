@@ -5,49 +5,28 @@ import {
   Input,
   ROUTES,
   slideVariantKeys,
+  uiActions,
   useScrollDirection,
   Variants,
 } from '@/shared';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Search } from 'lucide-react';
 import Form from 'next/form';
-import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState, type ChangeEvent } from 'react';
+import { useDispatch } from 'react-redux';
 
 export default function SearchBar() {
   const [shouldDisplaySearch, setShouldDisplaySearch] =
     useState<boolean>(false);
   const direction = useScrollDirection();
-  const [debounceTimeout, setDebounceTimeout] = useState<NodeJS.Timeout | null>(
-    null
-  );
-  const searchParams = useSearchParams();
+  const dispatch = useDispatch();
 
   const handleSearchChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      if (debounceTimeout) clearTimeout(debounceTimeout);
-      const keyword = event.target.value.toLowerCase();
-
-      const timeout = setTimeout(() => {
-        const otherParams = Object.fromEntries(searchParams.entries());
-        const aggregatedParams = new URLSearchParams({
-          query: keyword,
-          ...otherParams,
-        });
-
-        window.history.pushState(
-          null,
-          '',
-          new URL(
-            `${ROUTES.cabins.href}?${aggregatedParams.toString()}`,
-            window.location.origin
-          )
-        );
-      }, 300);
-
-      setDebounceTimeout(timeout);
+      const keyword = event.target.value.toLowerCase().trim();
+      dispatch(uiActions.setQuery(keyword));
     },
-    [debounceTimeout, searchParams]
+    [dispatch]
   );
 
   useEffect(() => {
@@ -76,7 +55,7 @@ export default function SearchBar() {
         </motion.div>
       ) : null}
 
-      {!shouldDisplaySearch && direction === 'down' ? (
+      {!shouldDisplaySearch ? (
         <motion.aside
           key='fallback'
           variants={Variants.slideVariant(0, 30)}

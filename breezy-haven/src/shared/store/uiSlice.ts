@@ -4,10 +4,12 @@ import { DateRange } from 'react-day-picker';
 type ISODateRange = Record<keyof DateRange, string | undefined>;
 interface UIState {
   readonly isoDateRange: ISODateRange | undefined;
+  readonly query: string | null;
 }
 
 const initialState: UIState = {
   isoDateRange: undefined,
+  query: null,
 };
 
 export const uiSlice = createSlice({
@@ -19,6 +21,9 @@ export const uiSlice = createSlice({
       action: PayloadAction<UIState['isoDateRange']>
     ) => {
       state.isoDateRange = action.payload;
+    },
+    setQuery: (state, action: PayloadAction<UIState['query']>) => {
+      state.query = action.payload;
     },
   },
 });

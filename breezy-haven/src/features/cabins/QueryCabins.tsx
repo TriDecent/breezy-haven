@@ -4,33 +4,43 @@ import { DTOCabin, NonNullableObject } from '@/repositories';
 import { notFound, useSearchParams } from 'next/navigation';
 import { CabinCapacities, viewSizeClassifier } from './sizeClassifier';
 
-import type { Cabin } from '@/shared';
+import type { Cabin, RootState } from '@/shared';
 import { useEffect, useState, useTransition } from 'react';
-import CabinCardSkeleton from './CabinCardSkeleton';
+import { useSelector } from 'react-redux';
+import CabinLoading from './CabinLoading';
 import CabinsDisplay from './CabinsDisplay';
 
 export default function QueryCabins({ cabins }: { cabins: Cabin[] }) {
   const params = useSearchParams();
   const query = params.get('query')?.trim();
+  const queryFromStore = useSelector((state: RootState) => state.ui.query);
   const capacity = params.get('capacity') ?? 'all';
   const [isPending, startTransition] = useTransition();
   const [displayedCabins, setDisplayedCabins] = useState(cabins);
+  const [hasInitialized, setHasInitialized] = useState(false);
 
   if (!CabinCapacities.includes(capacity)) notFound();
 
   useEffect(() => {
-    startTransition(() => {
+    startTransition(async () => {
       const queryCabins = cabins.filter(cabin =>
-        `cabin ${cabin.name}`.toLowerCase().includes(query ?? '')
+        `cabin ${cabin.name}`
+          .toLowerCase()
+          .includes(queryFromStore ?? query ?? '')
       );
       const filteredCabins = filterCabinsBasedOnCapacity(capacity, queryCabins);
 
       setDisplayedCabins(filteredCabins);
+      await new Promise(resolve => setTimeout(resolve, 1000));
     });
-  }, [cabins, capacity, query]);
+  }, [cabins, capacity, query, queryFromStore]);
 
-  return isPending ? (
-    <CabinCardSkeleton />
+  useEffect(() => {
+    setHasInitialized(true);
+  }, []);
+
+  return isPending && hasInitialized ? (
+    <CabinLoading />
   ) : (
     <CabinsDisplay cabins={displayedCabins} />
   );

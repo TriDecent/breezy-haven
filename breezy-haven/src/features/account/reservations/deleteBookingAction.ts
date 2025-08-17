@@ -1,7 +1,7 @@
 'use server';
 import { Auth } from '@/lib';
 import { bookingService } from '@/services';
-import { ROUTES } from '@/shared';
+import { errorHelper, ROUTES } from '@/shared';
 import { revalidatePath } from 'next/cache';
 
 export async function deleteBooking(bookingId: number) {
@@ -9,7 +9,9 @@ export async function deleteBooking(bookingId: number) {
   if (!session.main)
     throw new Error('You are not authorized to perform this action');
 
-  const { data } = await bookingService.getByGuestId(session.main.id);
+  const { data, errors } = await bookingService.getByGuestId(session.main.id);
+
+  if (errors) throw errorHelper.handleError(errors);
 
   const requesterBookingIds = data.map(booking => booking.id);
   if (!requesterBookingIds.includes(bookingId))
