@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
   Textarea,
+  uiActions,
   useGetAuthQuery,
   type Cabin,
   type RootState,
@@ -18,8 +19,9 @@ import {
 import Form from 'next/form';
 import Link from 'next/link';
 
+import { useRouter } from 'next/navigation';
 import { useActionState, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'sonner';
 import { addBookingAction, AddBookingResponse } from './addBookingAction';
 
@@ -32,14 +34,19 @@ export default function ReservationForm({ cabin }: { cabin: Cabin }) {
     errors: null,
   });
   const dateRange = useSelector((state: RootState) => state.ui.isoDateRange);
+  const dispatch = useDispatch();
+  const router = useRouter();
 
   useEffect(() => {
     if (formState.errors) toast.error('Added booking failed!');
   }, [formState.errors]);
 
   useEffect(() => {
-    if (formState.isSuccess) toast.success('Added booking successfully!');
-  }, [formState.isSuccess]);
+    if (!formState.isSuccess) return;
+    toast.success('Added booking successfully!');
+    dispatch(uiActions.updateDateRange(undefined));
+    router.refresh();
+  }, [dispatch, formState.isSuccess, router]);
 
   return (
     <article className='h-fit shadow-lg lg:order-2'>

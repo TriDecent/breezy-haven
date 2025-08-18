@@ -2,6 +2,7 @@
 
 import { Auth } from '@/lib';
 import { bookingService, cabinService } from '@/services';
+import { dateHelper } from '@/shared';
 import { differenceInDays, isValid, parseISO } from 'date-fns';
 import z from 'zod';
 
@@ -105,6 +106,40 @@ export async function addBookingAction(
       },
     };
   }
+
+  const { data: alreadyBookedDates, errors } =
+    await bookingService.getBookedDatesByCabinId(cabin.id);
+
+  if (errors) {
+    if (errors.type === 'database') {
+      return {
+        userEntered: input,
+        errors: {
+          unexpected: errors.db.message,
+        },
+      };
+    }
+
+    return {
+      userEntered: input,
+      errors: {
+        unexpected: 'Unknown error',
+      },
+    };
+  }
+
+  if (
+    !dateHelper.isDateRangeValid(
+      { from: parsedInput.data.startDate, to: parsedInput.data.endDate },
+      alreadyBookedDates
+    )
+  )
+    return {
+      userEntered: input,
+      errors: {
+        unexpected: 'These dates are unavailable as they are already booked.',
+      },
+    };
 
   const nightsCount = Math.abs(
     differenceInDays(parsedInput.data.startDate, parsedInput.data.endDate)

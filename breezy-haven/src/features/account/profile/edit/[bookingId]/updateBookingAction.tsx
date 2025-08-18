@@ -6,6 +6,7 @@ import { bookingService } from '@/services';
 import {
   bookingArraySchema,
   BookingInputSchema,
+  dateHelper,
   ROUTES,
   type BookingActionResponse,
   type SafeBooking,
@@ -39,6 +40,13 @@ export async function updateBookingAction(
   );
 
   if (!needsEditedBooking) return failedAuthorization;
+
+  const [failed] = await validateSelectedDates(
+    parsedUpdateBookingInput,
+    needsEditedBooking.cabinId
+  );
+
+  if (failed) return failed;
 
   const { errors } = await bookingService.update(needsEditedBooking.id, {
     numGuests: parsedUpdateBookingInput.guestCount,
@@ -167,3 +175,51 @@ function authorizePermission(
 
   return [needsEditedBooking, null];
 }
+
+async function validateSelectedDates(
+  input: SafeBookingInput,
+  cabinId: number
+): Promise<[failed: BookingActionResponse] | [failed: null]> {
+  const { data: alreadyBookedDates, errors } =
+    await bookingService.getBookedDatesByCabinId(cabinId);
+
+  if (errors) {
+    if (errors.type === 'database') {
+      return [
+        {
+          userEntered: input,
+          errors: {
+            unexpected: errors.db.message,
+          },
+        },
+      ];
+    }
+
+    return [
+      {
+        userEntered: input,
+        errors: {
+          unexpected: 'Unknown error',
+        },
+      },
+    ];
+  }
+
+  if (
+    !dateHelper.isDateRangeValid(
+      { from: input.startDate, to: input.endDate },
+      alreadyBookedDates
+    )
+  )
+    return [
+      {
+        userEntered: input,
+        errors: {
+          unexpected: 'These dates are unavailable as they are already booked.',
+        },
+      },
+    ];
+
+  return [null];
+}
+
