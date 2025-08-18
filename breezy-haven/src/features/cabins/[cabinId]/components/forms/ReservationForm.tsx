@@ -19,7 +19,6 @@ import {
 import Form from 'next/form';
 import Link from 'next/link';
 
-import { useRouter } from 'next/navigation';
 import { useActionState, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'sonner';
@@ -35,7 +34,6 @@ export default function ReservationForm({ cabin }: { cabin: Cabin }) {
   });
   const dateRange = useSelector((state: RootState) => state.ui.isoDateRange);
   const dispatch = useDispatch();
-  const router = useRouter();
 
   useEffect(() => {
     if (formState.errors) toast.error('Added booking failed!');
@@ -45,8 +43,7 @@ export default function ReservationForm({ cabin }: { cabin: Cabin }) {
     if (!formState.isSuccess) return;
     toast.success('Added booking successfully!');
     dispatch(uiActions.updateDateRange(undefined));
-    router.refresh();
-  }, [dispatch, formState.isSuccess, router]);
+  }, [dispatch, formState.isSuccess]);
 
   return (
     <article className='h-fit shadow-lg lg:order-2'>

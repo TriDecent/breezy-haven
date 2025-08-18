@@ -2,8 +2,9 @@
 
 import { Auth } from '@/lib';
 import { bookingService, cabinService } from '@/services';
-import { dateHelper } from '@/shared';
+import { dateHelper, ROUTES } from '@/shared';
 import { differenceInDays, isValid, parseISO } from 'date-fns';
+import { revalidatePath } from 'next/cache';
 import z from 'zod';
 
 const SafeInputSchema = z.object({
@@ -172,6 +173,8 @@ export async function addBookingAction(
       },
     };
   }
+
+  revalidatePath(`${ROUTES.cabins.href}/${cabin.id}`); // ISR Route, must call this instead of using router.refresh
 
   return {
     isSuccess: true,
