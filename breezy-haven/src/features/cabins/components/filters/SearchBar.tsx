@@ -8,18 +8,20 @@ import {
   uiActions,
   useScrollDirection,
   Variants,
+  type RootState,
 } from '@/shared';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Search } from 'lucide-react';
 import Form from 'next/form';
 import { useCallback, useEffect, useState, type ChangeEvent } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function SearchBar() {
   const [shouldDisplaySearch, setShouldDisplaySearch] =
     useState<boolean>(false);
   const direction = useScrollDirection();
   const dispatch = useDispatch();
+  const query = useSelector((state: RootState) => state.ui.query);
 
   const handleSearchChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -47,6 +49,7 @@ export default function SearchBar() {
           <Form action={ROUTES.cabins.href} className='flex'>
             <Input
               onChange={handleSearchChange}
+              defaultValue={query ?? ''}
               name='query'
               placeholder='Enter your keywords here...'
               className='text-accent-300 w-full'

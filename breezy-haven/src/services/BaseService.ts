@@ -156,7 +156,7 @@ export class BaseService<DTOType extends DTORow, SchemaType extends Schemas>
       else corruptedCount++;
     }
 
-    if (validItems.length === 0)
+    if (validItems.length === 0 && data.length > 0)
       return {
         data: null,
         errors: { type: 'unexpected', message: 'All data corrupted' },

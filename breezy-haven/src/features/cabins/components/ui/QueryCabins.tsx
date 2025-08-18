@@ -8,7 +8,7 @@ import {
 } from '../constants/SizeClassifier';
 
 import type { Cabin, RootState } from '@/shared';
-import { useEffect, useState, useTransition } from 'react';
+import { useCallback, useEffect, useState, useTransition } from 'react';
 import { useSelector } from 'react-redux';
 import CabinLoading from './CabinLoading';
 import CabinsDisplay from './CabinsDisplay';
@@ -18,26 +18,33 @@ export default function QueryCabins({ cabins }: { cabins: Cabin[] }) {
   const query = params.get('query')?.trim();
   const queryFromStore = useSelector((state: RootState) => state.ui.query);
   const capacity = params.get('capacity') ?? 'all';
-  const [isPending, startTransition] = useTransition();
   const [displayedCabins, setDisplayedCabins] = useState(cabins);
+  const [isPending, startTransition] = useTransition();
 
   if (!CabinCapacities.includes(capacity)) notFound();
 
+  const currentQuery = queryFromStore ?? query ?? '';
+
+  const updateCabinsAction = useCallback(
+    async (query: string, capacity: string) => {
+      const queryCabins = cabins.filter(cabin =>
+        `cabin ${cabin.name}`.toLowerCase().includes(query)
+      );
+
+      await new Promise(resolve => setTimeout(resolve, 300)); // debounce for loading to show while user typing
+      return filterCabinsBasedOnCapacity(capacity, queryCabins);
+    },
+    [cabins]
+  );
+
   useEffect(() => {
     startTransition(async () => {
-      const queryCabins = cabins.filter(cabin =>
-        `cabin ${cabin.name}`
-          .toLowerCase()
-          .includes(queryFromStore ?? query ?? '')
-      );
-      const filteredCabins = filterCabinsBasedOnCapacity(capacity, queryCabins);
-
-      setDisplayedCabins(filteredCabins);
+      const result = await updateCabinsAction(currentQuery, capacity);
+      startTransition(() => setDisplayedCabins(result));
     });
-  }, [cabins, capacity, query, queryFromStore]);
+  }, [currentQuery, capacity, cabins, updateCabinsAction]);
 
-  const hasActiveQuery = queryFromStore || query;
-  const shouldShowLoading = isPending && hasActiveQuery;
+  const shouldShowLoading = isPending && currentQuery;
 
   return shouldShowLoading ? (
     <CabinLoading />

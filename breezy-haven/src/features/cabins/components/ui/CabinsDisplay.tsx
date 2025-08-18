@@ -33,11 +33,15 @@ const myVariants = {
 };
 
 function useBreakpoint() {
-  const [breakpoint, setBreakpoint] = useState<'sm' | 'md' | 'lg'>('sm');
+  const [breakpoint, setBreakpoint] = useState<
+    'sm' | 'md' | 'lg' | 'xl' | '2xl'
+  >('sm');
 
   useEffect(() => {
     const getBreakpoint = () => {
       const w = window.innerWidth;
+      if (w >= 1536) return '2xl';
+      if (w >= 1280) return 'xl';
       if (w >= 1024) return 'lg';
       if (w >= 768) return 'md';
       return 'sm';
@@ -45,9 +49,8 @@ function useBreakpoint() {
 
     setBreakpoint(getBreakpoint());
 
-    const handleResize = () => {
-      setBreakpoint(getBreakpoint());
-    };
+    const handleResize = () => setBreakpoint(getBreakpoint());
+
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
