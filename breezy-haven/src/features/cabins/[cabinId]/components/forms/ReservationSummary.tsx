@@ -57,7 +57,9 @@ export default function ReservationSummary({
       <DateSelector
         mode='range'
         selected={
-          isoDateRange ? fromISOToDateRange(isoDateRange) : isoDateRange
+          isoDateRange
+            ? fromISOToDateRange(isoDateRange)
+            : { from: undefined, to: undefined }
         }
         onSelect={handleSelectDate}
         numberOfMonths={2}
@@ -65,7 +67,7 @@ export default function ReservationSummary({
         max={setting.maxBookingLength}
         disabled={[{ before: new Date() }, ...alreadyBookedDates]}
         description={`Your stay must be between ${setting.minBookingLength} and ${setting.maxBookingLength} nights. Grayed-out dates are either already booked or in the past.`}
-        required={true}
+        required
       />
     </div>
   );

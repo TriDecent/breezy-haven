@@ -49,8 +49,8 @@ export default function ReservationForm({ cabin }: { cabin: Cabin }) {
         className='bg-primary-900 flex flex-col gap-5 rounded-b-lg px-4 py-5 text-lg sm:px-8 md:py-10 xl:px-16'
       >
         <input type='hidden' name='cabinId' value={cabin.id} />
-        <input type='hidden' name='startDate' value={dateRange?.from} />
-        <input type='hidden' name='endDate' value={dateRange?.to} />
+        <input type='hidden' name='startDate' value={dateRange?.from ?? ''} />
+        <input type='hidden' name='endDate' value={dateRange?.to ?? ''} />
 
         <div>
           <GuestCountSelect
