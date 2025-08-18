@@ -8,6 +8,7 @@ import {
   BookingInputSchema,
   dateHelper,
   ROUTES,
+  type Booking,
   type BookingActionResponse,
   type SafeBooking,
   type SafeBookingArray,
@@ -41,38 +42,25 @@ export async function updateBookingAction(
 
   if (!needsEditedBooking) return failedAuthorization;
 
-  const [failed] = await validateSelectedDates(
+  const [validateDatesFailed] = await validateSelectedDates(
     parsedUpdateBookingInput,
     needsEditedBooking.cabinId
   );
 
-  if (failed) return failed;
+  if (validateDatesFailed) return validateDatesFailed;
 
-  const { errors } = await bookingService.update(needsEditedBooking.id, {
-    numGuests: parsedUpdateBookingInput.guestCount,
-    startDate: parsedUpdateBookingInput.startDate.toISOString(),
-    endDate: parsedUpdateBookingInput.endDate.toISOString(),
-    observations: parsedUpdateBookingInput.observations,
-  });
+  const [updateBookingFailed] = await updateBooking(
+    parsedUpdateBookingInput,
+    needsEditedBooking.id,
+    {
+      numGuests: parsedUpdateBookingInput.guestCount,
+      startDate: parsedUpdateBookingInput.startDate.toISOString(),
+      endDate: parsedUpdateBookingInput.endDate.toISOString(),
+      observations: parsedUpdateBookingInput.observations,
+    }
+  );
 
-  if (errors?.type === 'database') {
-    return {
-      userEntered: input,
-      errors: {
-        unexpected: errors.db.message,
-      },
-    };
-  }
-  if (errors?.type === 'validation') {
-    const fieldErrors = errors.fields;
-    return {
-      userEntered: input,
-      errors: {
-        ...fieldErrors,
-        date: fieldErrors.startDate?.[0] ?? fieldErrors.endDate?.[0],
-      },
-    };
-  }
+  if (updateBookingFailed) return updateBookingFailed;
 
   revalidatePath(
     `${ROUTES.account.nested.reservations.nested.edit.href}/${needsEditedBooking.id}`
@@ -223,3 +211,38 @@ async function validateSelectedDates(
   return [null];
 }
 
+async function updateBooking(
+  input: SafeBookingInput,
+  needsUpdatedBookingId: number,
+  updatedFields: Partial<Booking>
+): Promise<[failed: BookingActionResponse] | [failed: null]> {
+  const { errors } = await bookingService.update(
+    needsUpdatedBookingId,
+    updatedFields
+  );
+
+  if (errors?.type === 'database')
+    return [
+      {
+        userEntered: input,
+        errors: {
+          unexpected: errors.db.message,
+        },
+      },
+    ];
+
+  if (errors?.type === 'validation') {
+    const fieldErrors = errors.fields;
+    return [
+      {
+        userEntered: input,
+        errors: {
+          ...fieldErrors,
+          date: fieldErrors.startDate?.[0] ?? fieldErrors.endDate?.[0],
+        },
+      },
+    ];
+  }
+
+  return [null];
+}
