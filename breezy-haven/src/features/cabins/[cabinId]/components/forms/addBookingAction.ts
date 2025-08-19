@@ -142,9 +142,11 @@ export async function addBookingAction(
       },
     };
 
-  const nightsCount = Math.abs(
-    differenceInDays(parsedInput.data.startDate, parsedInput.data.endDate)
+  const nightsCount = differenceInDays(
+    parsedInput.data.startDate,
+    parsedInput.data.endDate
   );
+
   const totalPrice = nightsCount * (cabin.regularPrice - cabin.discount);
 
   const { errors: bookingErrors } = await bookingService.create({

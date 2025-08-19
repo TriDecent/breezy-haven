@@ -49,7 +49,7 @@ export default function QueryCabins({ cabins }: { cabins: Cabin[] }) {
   return shouldShowLoading ? (
     <CabinLoading />
   ) : (
-    <CabinsDisplay cabins={displayedCabins} />
+    <CabinsDisplay identifier={capacity} cabins={displayedCabins} />
   );
 }
 
