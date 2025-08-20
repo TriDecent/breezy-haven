@@ -2,6 +2,7 @@
 
 import {
   Badge,
+  dateHelper,
   MiniSpinner,
   PrimaryButton,
   ROUTES,
@@ -19,6 +20,7 @@ import {
 import Form from 'next/form';
 import Link from 'next/link';
 
+import { parseISO } from 'date-fns';
 import { useActionState, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'sonner';
@@ -53,8 +55,24 @@ export default function ReservationForm({ cabin }: { cabin: Cabin }) {
         className='bg-primary-900 flex flex-col gap-5 rounded-b-lg px-4 py-5 text-lg sm:px-8 md:py-10 xl:px-16'
       >
         <input type='hidden' name='cabinId' value={cabin.id} />
-        <input type='hidden' name='startDate' value={dateRange?.from ?? ''} />
-        <input type='hidden' name='endDate' value={dateRange?.to ?? ''} />
+        <input
+          type='hidden'
+          name='startDate'
+          value={
+            dateRange?.from
+              ? dateHelper.toISODateOnly(parseISO(dateRange.from))
+              : ''
+          }
+        />
+        <input
+          type='hidden'
+          name='endDate'
+          value={
+            dateRange?.to
+              ? dateHelper.toISODateOnly(parseISO(dateRange.to))
+              : ''
+          }
+        />
 
         <div>
           <GuestCountSelect
