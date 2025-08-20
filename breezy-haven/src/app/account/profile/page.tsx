@@ -3,7 +3,8 @@ import {
   SelectCountry,
   UpdateProfileForm,
 } from '@/features/account/profile';
-import { Auth, getCountries } from '@/lib';
+import { Auth } from '@/lib';
+import { getCountries } from '@/services';
 import { ROUTES } from '@/shared';
 import { Metadata } from 'next';
 
@@ -12,7 +13,9 @@ export const metadata: Metadata = ROUTES.account.nested.profile.metadata;
 export default async function Page() {
   const session = await Auth.verifySession();
 
-  const countries = await getCountries();
+  const { data: countries, error } = await getCountries();
+
+  if (error) throw new Error(`${error}: Please try again!.`);
 
   const parsedGuest = GuestFormSchema.safeParse(session.main);
 

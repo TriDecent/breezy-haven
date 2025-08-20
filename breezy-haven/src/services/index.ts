@@ -12,6 +12,7 @@ import BookingService from './BookingService';
 import CabinService from './CabinService';
 import GuestService from './GuestService';
 import SettingService from './SettingService';
+export * from './countryService';
 export * from './types';
 
 export const cabinService = new CabinService(

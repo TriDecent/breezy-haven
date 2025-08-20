@@ -1,6 +1,6 @@
-'use server'
-import { Auth, getCountries } from '@/lib';
-import { guestService } from '@/services';
+'use server';
+import { Auth } from '@/lib';
+import { getCountries, guestService } from '@/services';
 import { ROUTES } from '@/shared';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
@@ -32,7 +32,16 @@ export async function updateProfile(
   }
 
   const [inputCountry, inputFlag] = result.data.nationality.split('%');
-  const countries = await getCountries();
+  const { data: countries, error } = await getCountries();
+
+  if (error)
+    return {
+      userEntered: input,
+      errors: {
+        unexpected: `${error} - Please try again`,
+      },
+    };
+
   const doesCountryExist = countries.some(
     country => country.name === inputCountry && country.flag === inputFlag
   );
@@ -77,6 +86,7 @@ type UpdateProfileResponse = {
   errors:
     | (Partial<Record<keyof UnsafeProfile, { errors?: string[] }>> & {
         authenticated?: string;
+        unexpected?: string;
       })
     | null;
 };

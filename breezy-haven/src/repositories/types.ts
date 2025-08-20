@@ -1,9 +1,3 @@
-export interface Country {
-  readonly name: string;
-  readonly flag: string;
-  readonly independent: boolean;
-}
-
 export type DTOCabin = Database['public']['Tables']['cabins']['Row'];
 export type DTOBooking = Database['public']['Tables']['bookings']['Row'];
 export type DTOGuest = Database['public']['Tables']['guests']['Row'];

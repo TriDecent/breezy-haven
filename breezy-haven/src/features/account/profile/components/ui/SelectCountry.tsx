@@ -1,6 +1,6 @@
 'use client';
 import defaultFlagSrc from '@/../public/germany.webp';
-import { Country } from '@/repositories';
+import type { Country } from '@/services';
 import {
   Select,
   SelectContent,
