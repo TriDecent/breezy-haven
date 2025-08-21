@@ -1,4 +1,5 @@
 import backgroundImage from '@/../public/bg.png';
+import { ROUTES } from '@/shared';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -21,7 +22,7 @@ export default function Page() {
           Welcome to paradise.
         </h1>
         <Link
-          href='/cabins'
+          href={ROUTES.cabins.href}
           className='text-primary-800 shadow-accent-600 hover:shadow-accent-800 active:shadow-accent-800 from-accent-300 via-accent-400 to-accent-500 rounded bg-gradient-to-l from-5% px-6 py-4 font-semibold shadow-[15px_0_50px] transition-all select-none lg:px-8 lg:py-6 lg:text-lg xl:text-xl'
         >
           Explore luxury cabins

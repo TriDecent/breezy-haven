@@ -51,7 +51,9 @@ export default function NavTrail() {
               <Fragment key={href}>
                 <BreadcrumbItem>
                   <BreadcrumbLink asChild>
-                    <Link href={href}>{toUpperCaseFirstLetter(segment)}</Link>
+                    <Link href={href} prefetch={false}>
+                      {toUpperCaseFirstLetter(segment)}
+                    </Link>
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 {pathSegments.length !== index + 1 ? (
@@ -75,7 +77,9 @@ function NavTrailHome() {
     <>
       <BreadcrumbItem>
         <BreadcrumbLink asChild>
-          <Link href={`${ROUTES.home.href}`}>Home</Link>
+          <Link href={`${ROUTES.home.href}`} prefetch={false}>
+            Home
+          </Link>
         </BreadcrumbLink>
       </BreadcrumbItem>
       <BreadcrumbSeparator />
@@ -88,7 +92,9 @@ function NavTrailFirst({ segment }: { segment: string }) {
     <>
       <BreadcrumbItem>
         <BreadcrumbLink asChild>
-          <Link href={`/${segment}`}>{toUpperCaseFirstLetter(segment)}</Link>
+          <Link href={`/${segment}`} prefetch={false}>
+            {toUpperCaseFirstLetter(segment)}
+          </Link>
         </BreadcrumbLink>
       </BreadcrumbItem>
       <BreadcrumbSeparator />
@@ -120,7 +126,9 @@ function NavTrailDropdown({
                   asChild
                   className='hover:cursor-pointer'
                 >
-                  <Link href={href}>{toUpperCaseFirstLetter(segment)}</Link>
+                  <Link href={href} prefetch={false}>
+                    {toUpperCaseFirstLetter(segment)}
+                  </Link>
                 </DropdownMenuItem>
               );
             })}
@@ -149,7 +157,9 @@ function NavTrailLast({
           <Fragment key={href}>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href={href}>{toUpperCaseFirstLetter(segment)}</Link>
+                <Link href={href} prefetch={false}>
+                  {toUpperCaseFirstLetter(segment)}
+                </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             {index !== 1 && <BreadcrumbSeparator />}

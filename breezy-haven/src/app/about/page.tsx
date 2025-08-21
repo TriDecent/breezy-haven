@@ -84,7 +84,7 @@ export default async function Page() {
         </div>
       </div>
       <Link
-        href='/cabins'
+        href={ROUTES.cabins.href}
         className='bg-accent-500 text-primary-800 hover:bg-accent-600 mt-8 block animate-pulse px-4 py-3 text-center text-lg font-semibold transition-all select-none md:mx-auto md:w-fit md:px-8 md:py-6'
       >
         Explore our luxury cabins

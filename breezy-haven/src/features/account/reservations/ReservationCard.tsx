@@ -97,6 +97,7 @@ function BookingHeader({
         {numNights} nights in Cabin{' '}
         <Link
           href={`${ROUTES.cabins.href}/${cabinId}`}
+          prefetch={false}
           className='text-accent-500 underline'
         >
           {cabinName}

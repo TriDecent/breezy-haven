@@ -6,7 +6,7 @@ import {
   slideVariantKeys,
   Variants,
 } from '@/shared';
-import { differenceInDays, parseISO } from 'date-fns';
+import { differenceInDays, isPast, parseISO } from 'date-fns';
 import { AnimatePresence, motion, stagger } from 'framer-motion';
 import Link from 'next/link';
 import { useOptimistic } from 'react';
@@ -53,6 +53,12 @@ export default function BookingList({ bookings }: Props) {
       const today = new Date();
       const dateA = parseISO(a.startDate);
       const dateB = parseISO(b.startDate);
+
+      const aIsPast = isPast(dateA);
+      const bIsPast = isPast(dateB);
+
+      if (aIsPast && !bIsPast) return 1;
+      if (!aIsPast && bIsPast) return -1;
 
       return (
         Math.abs(differenceInDays(dateA, today)) -
