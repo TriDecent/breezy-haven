@@ -1,7 +1,9 @@
 'use client';
 import { default as PreviewImage } from '@/features/cabins/components/ui/PreviewImage';
 import { DTOBooking, type NonNullableObject } from '@/repositories';
+import { ROUTES } from '@/shared';
 import { format, formatDistance, isPast, isToday, parseISO } from 'date-fns';
+import Link from 'next/link';
 import Modification from './Modification';
 
 export default function ReservationCard({
@@ -11,6 +13,7 @@ export default function ReservationCard({
 }: {
   booking: NonNullableObject<DTOBooking>;
   cabin: {
+    id: number;
     name: string;
     image: string;
   };
@@ -31,7 +34,7 @@ function Information({
   cabin,
   booking,
 }: {
-  cabin: { image: string; name: string };
+  cabin: { id: number; image: string; name: string };
   booking: NonNullableObject<DTOBooking>;
 }) {
   return (
@@ -49,6 +52,7 @@ function Information({
       <div className='flex flex-grow flex-col justify-center-safe gap-y-4 p-6'>
         <BookingHeader
           numNights={booking.numNights}
+          cabinId={cabin.id}
           cabinName={cabin.name}
           shouldRenderPast={isPast(booking.startDate)}
         />
@@ -79,16 +83,24 @@ function Information({
 function BookingHeader({
   numNights,
   cabinName,
+  cabinId,
   shouldRenderPast,
 }: {
   numNights: number;
   cabinName: string;
+  cabinId: number;
   shouldRenderPast: boolean;
 }) {
   return (
     <div className='flex items-center justify-between'>
       <h3 className='text-xl font-semibold'>
-        {numNights} nights in Cabin {cabinName}
+        {numNights} nights in Cabin{' '}
+        <Link
+          href={`${ROUTES.cabins.href}/${cabinId}`}
+          className='text-accent-500 underline'
+        >
+          {cabinName}
+        </Link>
       </h3>
       {shouldRenderPast ? (
         <span className='flex h-7 items-center rounded-sm bg-yellow-800 px-3 text-xs font-bold text-yellow-200 uppercase'>

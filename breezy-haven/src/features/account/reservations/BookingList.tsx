@@ -140,7 +140,7 @@ function Booking({
     return (
       <ReservationCard
         booking={result.data}
-        cabin={result.data.cabin}
+        cabin={{ id: booking.cabinId, ...result.data.cabin }}
         onDelete={onDelete}
       />
     );
