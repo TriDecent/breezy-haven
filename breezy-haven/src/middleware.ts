@@ -3,10 +3,10 @@ import { Auth } from './lib/auth';
 import { ROUTES } from './shared';
 
 export const config: MiddlewareConfig = {
-  matcher: ['/account/:path*', '/login'],
+  matcher: ['/account/:path*', '/login', '/cabins/:path*'],
 };
 
-export async function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith(ROUTES.login.href))
@@ -14,6 +14,9 @@ export async function middleware(request: NextRequest) {
 
   if (pathname.startsWith(ROUTES.account.href))
     return handleAccountRouteAsync(request);
+
+  if (pathname.startsWith(ROUTES.cabins.href))
+    return handleCabinRouteAsync(request);
 
   return NextResponse.next();
 }
@@ -59,4 +62,23 @@ async function handleAccountRouteAsync(
   }
 
   return NextResponse.next();
+}
+
+async function handleCabinRouteAsync(
+  request: NextRequest
+): Promise<NextResponse> {
+  if (!/^\/cabins\/\d+$/.test(request.nextUrl.pathname))
+    return NextResponse.next();
+
+  const response = NextResponse.next();
+  response.headers.set(
+    'Cache-Control',
+    'no-store, no-cache, must-revalidate, proxy-revalidate'
+  );
+  response.headers.set('Pragma', 'no-cache');
+  response.headers.set('Expires', '0');
+  response.headers.set('Surrogate-Control', 'no-store');
+  response.headers.set('Vary', 'Accept-Encoding');
+
+  return response;
 }
