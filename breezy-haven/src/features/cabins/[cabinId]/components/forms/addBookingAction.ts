@@ -142,9 +142,8 @@ export async function addBookingAction(
       },
     };
 
-  const nightsCount = differenceInDays(
-    parsedInput.data.startDate,
-    parsedInput.data.endDate
+  const nightsCount = Math.abs(
+    differenceInDays(parsedInput.data.startDate, parsedInput.data.endDate)
   );
 
   const totalPrice = nightsCount * (cabin.regularPrice - cabin.discount);
@@ -154,8 +153,8 @@ export async function addBookingAction(
     cabinId: cabin.id,
     totalPrice,
     cabinPrice: cabin.regularPrice,
-    startDate: parsedInput.data.startDate.toISOString(),
-    endDate: parsedInput.data.endDate.toISOString(),
+    startDate: dateHelper.toISODateOnly(parsedInput.data.startDate),
+    endDate: dateHelper.toISODateOnly(parsedInput.data.endDate),
     numGuests: parsedInput.data.guestCount,
     numNights: nightsCount,
     observations: parsedInput.data.observations,

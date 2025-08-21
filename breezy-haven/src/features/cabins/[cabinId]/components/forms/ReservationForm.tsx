@@ -45,7 +45,7 @@ export default function ReservationForm({ cabin }: { cabin: Cabin }) {
     if (!formState.isSuccess) return;
     toast.success('Added booking successfully!');
     dispatch(uiActions.updateDateRange(undefined));
-  }, [dispatch, formState.isSuccess]);
+  }, [dispatch, formState]);
 
   return (
     <article className='h-fit shadow-lg lg:order-2'>

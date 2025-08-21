@@ -1,4 +1,10 @@
-import { formatISO } from 'date-fns';
+import {
+  eachDayOfInterval,
+  formatISO,
+  isBefore,
+  isSameDay,
+  startOfDay,
+} from 'date-fns';
 import type { DateRange } from 'react-day-picker';
 
 class DateHelper {
@@ -13,16 +19,15 @@ class DateHelper {
 
   isDateRangeValid(range: DateRange, alreadyBookedDates: readonly Date[]) {
     if (!range.from || !range.to) return true;
-    const days = [];
-    const current = new Date(range.from);
-    while (current <= range.to) {
-      days.push(new Date(current));
-      current.setDate(current.getDate() + 1);
-    }
+    const today = startOfDay(new Date());
+    const days = eachDayOfInterval({
+      start: startOfDay(range.from),
+      end: startOfDay(range.to),
+    });
     return days.every(
       day =>
-        !alreadyBookedDates.some(d => d.getTime() === day.getTime()) &&
-        day >= new Date()
+        !alreadyBookedDates.some(d => isSameDay(d, day)) &&
+        !isBefore(day, today)
     );
   }
 }

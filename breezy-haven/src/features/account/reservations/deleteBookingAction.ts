@@ -13,10 +13,11 @@ export async function deleteBooking(bookingId: number) {
 
   if (errors) throw errorHelper.handleError(errors);
 
-  const requesterBookingIds = data.map(booking => booking.id);
-  if (!requesterBookingIds.includes(bookingId))
+  const needsDeletedBooking = data.find(booking => booking.id === bookingId);
+  if (!needsDeletedBooking)
     throw new Error("You don't have permission to delete this booking");
 
   await bookingService.delete(bookingId);
   revalidatePath(ROUTES.account.nested.profile.href);
+  revalidatePath(`${ROUTES.cabins.href}/${needsDeletedBooking.cabinId}`);
 }
