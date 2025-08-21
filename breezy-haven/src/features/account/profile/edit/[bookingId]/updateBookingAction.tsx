@@ -193,10 +193,12 @@ async function validateSelectedDates(
     ];
   }
 
+  const dateRange = { from: input.startDate, to: input.endDate };
+
   if (
     !dateHelper.isDateRangeValid(
-      { from: input.startDate, to: input.endDate },
-      alreadyBookedDates
+      dateRange,
+      dateHelper.excludeDatesInRange(alreadyBookedDates, dateRange)
     )
   )
     return [

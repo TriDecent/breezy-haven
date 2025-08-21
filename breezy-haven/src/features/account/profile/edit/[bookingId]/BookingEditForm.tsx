@@ -3,6 +3,7 @@
 import {
   Button,
   Calendar,
+  dateHelper,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -25,7 +26,6 @@ import {
 } from 'react';
 import type { DateRange } from 'react-day-picker';
 import { toast } from 'sonner';
-import { dateHelper } from '../../../../../shared/utils/DateHelper';
 import { updateBookingAction } from './updateBookingAction';
 
 type BookingInfo = {
@@ -116,17 +116,11 @@ export default function BookingEditForm({
 
 function useBookingEditToasts(state: BookingActionResponse) {
   useEffect(() => {
+    if (state.errors) toast.error('Update failed due to an error');
+    if (state.errors?.unexpected) toast.error(state.errors.unexpected);
     if (state.isActionSuccess)
       toast.success('Your booking information has been updated!');
-  }, [state.isActionSuccess]);
-
-  useEffect(() => {
-    if (state.errors?.unexpected) toast.error(state.errors.unexpected);
-  }, [state.errors?.unexpected]);
-
-  useEffect(() => {
-    if (state.errors) toast.error('Update failed due to an error');
-  }, [state.errors]);
+  }, [state]);
 }
 
 function renderError(error?: string | string[]) {

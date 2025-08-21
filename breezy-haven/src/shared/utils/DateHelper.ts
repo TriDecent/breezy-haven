@@ -3,6 +3,7 @@ import {
   formatISO,
   isBefore,
   isSameDay,
+  isWithinInterval,
   startOfDay,
 } from 'date-fns';
 import type { DateRange } from 'react-day-picker';
@@ -29,6 +30,20 @@ class DateHelper {
         !alreadyBookedDates.some(d => isSameDay(d, day)) &&
         !isBefore(day, today)
     );
+  }
+
+  excludeDatesInRange(
+    dates: readonly Date[],
+    { from, to }: { from: Date; to: Date }
+  ): readonly Date[] {
+    const start = startOfDay(from);
+    const end = startOfDay(to);
+
+    return dates.filter(date => {
+      const today = startOfDay(date);
+
+      return !isWithinInterval(today, { start, end });
+    });
   }
 }
 
