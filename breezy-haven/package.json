@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prod": "next build && next start"
+    "prod": "next build && next start",
+    "postinstall": "npm rebuild sharp --platform=linux --arch=x64 || true"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
@@ -32,7 +33,8 @@
     "sonner": "^2.0.7",
     "supabase": "^2.30.4",
     "tailwind-merge": "^3.3.1",
-    "zod": "^4.0.15"
+    "zod": "^4.0.15",
+    "sharp": "^0.33.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
