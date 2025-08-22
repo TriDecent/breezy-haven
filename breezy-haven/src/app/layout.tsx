@@ -5,6 +5,7 @@ import {
   PageLayout,
   PageProgressBar,
   RootProvider,
+  ROUTES,
   ThemeProvider,
   ThemeToggle,
 } from '@/shared';
@@ -21,16 +22,7 @@ const josefin: NextFont = Josefin_Sans({
   display: 'swap',
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(process.env.BASE_URL ?? ''),
-  title: {
-    template: '%s - The Breezy Haven',
-    default: 'Welcome to The Breezy Haven',
-  },
-  icons: '/logo.png',
-  description:
-    'A high-end cabin retreat nestled deep within the Italian Dolomites, embraced by enchanting and shadowy woodlands.',
-};
+export const metadata: Metadata = ROUTES.home.metadata;
 
 export default function RootLayout({
   children,

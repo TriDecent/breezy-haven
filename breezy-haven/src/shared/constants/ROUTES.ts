@@ -6,12 +6,13 @@ type Route = {
   nested?: Record<string, Route>;
 };
 
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.BASE_URL ?? 'http://localhost:3000';
 
 export const ROUTES = {
   home: defineRoute({
     href: '/',
     metadata: {
+      metadataBase: new URL(BASE_URL ?? ''),
       title: {
         template: '%s - The Breezy Haven',
         default:
@@ -60,7 +61,7 @@ export const ROUTES = {
   about: defineRoute({
     href: '/about',
     metadata: {
-      title: 'About Us | The Breezy Haven',
+      title: 'About',
       description:
         'Learn the story behind The Breezy Haven — our eco vision and commitment to luxury, comfort, and nature.',
       keywords: [
@@ -101,7 +102,10 @@ export const ROUTES = {
   account: defineRoute({
     href: '/account',
     metadata: {
-      title: 'Guest Account | The Breezy Haven',
+      title: {
+        template: '%s - Account | The Breezy Haven',
+        default: 'Account',
+      },
       description:
         'Manage your profile, reservations, and account settings securely.',
       keywords: ['guest account', 'manage reservations', 'profile settings'],
@@ -112,7 +116,7 @@ export const ROUTES = {
       profile: defineRoute({
         href: '/account/profile',
         metadata: {
-          title: 'My Profile | The Breezy Haven',
+          title: 'My Profile',
           description: 'View and edit your personal details.',
           robots: 'noindex, follow',
           alternates: { canonical: `${BASE_URL}/account/profile` },
@@ -121,7 +125,7 @@ export const ROUTES = {
       reservations: defineRoute({
         href: '/account/reservations',
         metadata: {
-          title: 'My Reservations | The Breezy Haven',
+          title: 'My Reservations',
           description:
             'Track, view, and manage all your cabin bookings at The Breezy Haven.',
           robots: 'noindex, follow',
@@ -131,7 +135,7 @@ export const ROUTES = {
           edit: defineRoute({
             href: '/account/reservations/edit',
             metadata: {
-              title: 'Edit Reservation | The Breezy Haven',
+              title: 'Edit Reservation',
               description: 'Update your cabin booking details.',
               robots: 'noindex, nofollow',
               alternates: {
@@ -142,7 +146,7 @@ export const ROUTES = {
               bookingId: defineRoute({
                 href: 'unknown',
                 metadata: {
-                  title: 'Reservation Details | The Breezy Haven',
+                  title: 'Reservation Details',
                   description: 'Detailed view of your booking.',
                   robots: 'noindex, nofollow',
                 },
@@ -157,7 +161,7 @@ export const ROUTES = {
   cabins: defineRoute({
     href: '/cabins',
     metadata: {
-      title: 'Luxury Cabins in the Italian Dolomites | The Breezy Haven',
+      title: 'Cabins',
       description:
         'Browse eco-friendly luxury cabins in the Dolomites. Find your perfect stay surrounded by nature.',
       keywords: [
@@ -234,7 +238,7 @@ export const ROUTES = {
   login: defineRoute({
     href: '/login',
     metadata: {
-      title: 'Login | The Breezy Haven',
+      title: 'Login',
       description: 'Access your account to manage bookings and profile.',
       robots: 'noindex, nofollow',
       alternates: { canonical: `${BASE_URL}/login` },
@@ -244,7 +248,7 @@ export const ROUTES = {
   'setup-new-guest': defineRoute({
     href: '/setup-new-guest',
     metadata: {
-      title: 'Initializing Your Account | The Breezy Haven',
+      title: 'Initializing Your Account',
       description: 'We are setting up your guest profile. Please wait...',
       robots: 'noindex, nofollow',
       alternates: { canonical: `${BASE_URL}/setup-new-guest` },

@@ -1,14 +1,9 @@
 import { SideNavigation } from '@/features/account';
-import { MiniSidebar } from '@/shared';
+import { MiniSidebar, ROUTES } from '@/shared';
 import { Metadata } from 'next';
 import { Toaster } from 'sonner';
 
-export const metadata: Metadata = {
-  title: {
-    template: '%s - Account | The Breezy Haven',
-    default: 'Account',
-  },
-};
+export const metadata: Metadata = ROUTES.account.metadata;
 
 export default function AccountLayout({
   children,
