@@ -15,13 +15,13 @@ type Response = z.infer<typeof responseSchema>;
 
 const authApi = createApi({
   reducerPath: 'authApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000' }),
+  baseQuery: fetchBaseQuery({ baseUrl: '/api' }),
   tagTypes: ['Auth'],
   refetchOnMountOrArgChange: true,
   endpoints: builder => ({
     getAuth: builder.query<Response, void>({
       query: () => ({
-        url: '/api/session',
+        url: '/session',
         method: 'GET',
       }),
       transformResponse: response => responseSchema.parse(response),

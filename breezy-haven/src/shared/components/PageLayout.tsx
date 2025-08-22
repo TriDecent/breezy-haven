@@ -36,7 +36,7 @@ PageLayout.Footer = ({ children }: PageLayoutProps) => (
               src={facebookLogo}
               alt='github logo'
               className='h-12 w-auto'
-              quality={0}
+              quality={75}
               priority
             />
           </a>

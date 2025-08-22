@@ -1,10 +1,10 @@
 import about1Image from '@/../public/about-1.jpg';
+import about2Image from '@/../public/about-2.jpeg';
 import { cabinService } from '@/services';
 import { ROUTES, Spinner } from '@/shared';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
 export const revalidate = 86400;
@@ -27,11 +27,12 @@ export default async function Page() {
 
           <div className='space-y-4 lg:space-y-8'>
             <p>
-              Where nature&apos;s beauty and comfortable living blend
-              seamlessly. Hidden away in the heart of the Italian Dolomites,
-              this is your paradise away from home. But it&apos;s not just about
-              the luxury cabins. It&apos;s about the experience of reconnecting
-              with nature and enjoying simple pleasures with family.
+              Where the charm of nature meets the comfort of refined living.
+              Nestled deep in the heart of the Italian Dolomites, this tranquil
+              retreat is your sanctuary away from the everyday. But The Breezy
+              Haven is more than just luxurious cabins — it&apos;s about
+              rediscovering the joy of simplicity, reconnecting with nature, and
+              sharing meaningful moments with loved ones.
             </p>
             <Suspense fallback={<Spinner />}>
               <BreezyHavenIntroduction />
@@ -51,34 +52,32 @@ export default async function Page() {
           className='md:col-span-2'
         />
 
-        <div className='relative order-2 aspect-square md:order-1 md:col-span-2'>
-          <Image
-            src='/about-2.jpg'
-            sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-            alt='Family that manages The Breezy Haven'
-            fill
-          />
-        </div>
+        <Image
+          src={about2Image}
+          alt='Family that manages The Breezy Haven'
+          placeholder='blur'
+          quality={50}
+          className='relative order-2 aspect-square md:order-1 md:col-span-2'
+        />
 
         <div className='order-1 md:order-2 md:col-span-3'>
           <h2 className='text-accent-400 mb-4 text-2xl font-medium lg:mb-10 lg:text-4xl'>
-            Managed by our family since 1962
+            A Family Legacy Since 1954
           </h2>
 
           <div className='space-y-4 lg:space-y-8'>
             <p>
-              Since 1962, The Breezy Haven has been a cherished family-run
-              retreat. Started by our grandparents, this haven has been nurtured
-              with love and care, passing down through our family as a testament
-              to our dedication to creating a warm, welcoming environment.
+              The Breezy Haven has been lovingly managed by our family for
+              generations. Founded by our grandparents in 1954, this retreat has
+              grown with care and devotion, passed down through the years as a
+              symbol of our commitment to hospitality and warmth.
             </p>
             <p>
-              Over the years, we&apos;ve maintained the essence of The Breezy
-              Haven, blending the timeless beauty of the mountains with the
-              personal touch only a family business can offer. Here, you&apos;re
-              not just a guest; you&apos;re part of our extended family. So join
-              us at The Breezy Haven soon, where tradition meets tranquility,
-              and every visit is like coming home.
+              We&apos;ve preserved the soul of The Breezy Haven — blending
+              timeless alpine beauty with the personal touch only a family-run
+              destination can offer. Here, you&apos;re not just a guest —
+              you&apos;re part of our story. Come join us, where tradition meets
+              serenity, and every visit feels like coming home.
             </p>
           </div>
         </div>
@@ -98,14 +97,12 @@ async function BreezyHavenIntroduction() {
 
   if (error) throw new Error(error.message);
 
-  if (!count) notFound();
-
   return (
     <p>
-      Our {count} luxury cabins provide a cozy base, but the real freedom and
-      peace you&apos;ll find in the surrounding mountains. Wander through lush
-      forests, breathe in the fresh air, and watch the stars twinkle above from
-      the warmth of a campfire or your hot tub.
+      Our collection of {count} premium cabins offers a cozy home base, but the
+      true magic lies in the surrounding wilderness. Wander through lush
+      forests, breathe in crisp mountain air, and gaze at the stars from beside
+      a crackling fire or your private hot tub.
     </p>
   );
 }

@@ -3,7 +3,7 @@ import { Auth } from './lib/auth';
 import { ROUTES } from './shared';
 
 export const config: MiddlewareConfig = {
-  matcher: ['/account/:path*', '/login', '/cabins/:path*'],
+  matcher: ['/account/:path*', '/login', '/cabins/:path*', '/api/auth/callback/google'],
 };
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
@@ -18,7 +18,22 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   if (pathname.startsWith(ROUTES.cabins.href))
     return handleCabinRouteAsync(request);
 
+  if (pathname.startsWith('/api/auth/callback/google'))
+    return handleGoogleCallback(request);
+
   return NextResponse.next();
+}
+
+async function handleGoogleCallback(request: NextRequest) {
+  const doesErrorParamExist = request.nextUrl.searchParams.has('error');
+  if (!doesErrorParamExist) return NextResponse.next();
+
+  return NextResponse.redirect(
+    new URL(
+      `${ROUTES.login.href}?${request.nextUrl.searchParams.toString()}`,
+      request.nextUrl
+    )
+  );
 }
 
 async function handleLoginRouteAsync(
@@ -55,11 +70,10 @@ async function handleAccountRouteAsync(
   if (
     request.nextUrl.pathname ===
     ROUTES.account.nested.reservations.nested.edit.href
-  ) {
+  )
     return NextResponse.rewrite(
       new URL(`${ROUTES.account.nested.reservations.href}`, request.nextUrl)
     );
-  }
 
   return NextResponse.next();
 }
