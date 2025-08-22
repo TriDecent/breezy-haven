@@ -12,7 +12,7 @@ interface Route {
 const routes: readonly Route[] = [
   { title: ROUTES.cabins.metadata.title, href: ROUTES.cabins.href },
   { title: ROUTES.about.metadata.title, href: ROUTES.about.href },
-  { title: ROUTES.account.metadata.title, href: ROUTES.account.href },
+  { title: ROUTES.account.metadata.title.default, href: ROUTES.account.href },
 ];
 
 export default function Navigation() {
