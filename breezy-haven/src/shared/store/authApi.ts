@@ -24,6 +24,7 @@ const authApi = createApi({
         url: '/session',
         method: 'GET',
       }),
+      keepUnusedDataFor: 300,
       transformResponse: response => responseSchema.parse(response),
       providesTags: result => (result ? [{ type: 'Auth', id: 'CURRENT' }] : []),
     }),

@@ -6,100 +6,146 @@ type Route = {
   nested?: Record<string, Route>;
 };
 
+const BASE_URL = process.env.BASE_URL;
+
 export const ROUTES = {
   home: defineRoute({
     href: '/',
     metadata: {
       title: {
         template: '%s - The Breezy Haven',
-        default: 'Welcome to The Breezy Haven',
+        default:
+          'Luxury Cabin Retreat in the Italian Dolomites | The Breezy Haven',
       },
       description:
-        'A high-end cabin retreat in the Italian Dolomites, surrounded by enchanting woodlands. Book your dream escape today.',
+        'Escape to The Breezy Haven — luxury eco-friendly cabins in the Italian Dolomites. Breathtaking views, comfort, and nature-first experiences.',
       keywords: [
-        'cabin retreat',
-        'Italian Dolomites',
-        'luxury stay',
-        'nature getaway',
+        'luxury cabin retreat Italy',
+        'Dolomites eco lodge',
+        'nature getaway Italy',
+        'romantic cabin Dolomites',
+        'eco-friendly luxury stay',
       ],
       icons: '/logo.png',
       openGraph: {
-        title: 'Welcome to The Breezy Haven',
+        title: 'The Breezy Haven | Luxury Cabin Retreat',
         description:
-          'A high-end cabin retreat in the Italian Dolomites, surrounded by enchanting woodlands.',
-        url: 'https://thebreezyhaven.com',
+          'Discover luxury cabins in the Italian Dolomites — perfect for romantic getaways, family trips, and nature lovers.',
+        url: BASE_URL,
         siteName: 'The Breezy Haven',
-        images: ['/og/home.jpg'],
+        images: [
+          {
+            url: '/og/bg.png',
+            width: 1200,
+            height: 630,
+            alt: 'Luxury Cabin Retreat in the Dolomites',
+          },
+        ],
+        locale: 'en_US',
         type: 'website',
       },
       twitter: {
         card: 'summary_large_image',
-        title: 'Welcome to The Breezy Haven',
+        title: 'The Breezy Haven | Luxury Cabin Retreat',
         description:
-          'A luxury cabin retreat in the Italian Dolomites — perfect for nature lovers and dreamers.',
-        images: ['/og/home.jpg'],
+          'Eco-friendly luxury cabins in the Italian Dolomites. Book your dream escape today.',
+        images: ['/og/bg.png'],
+        creator: '@thebreezyhaven',
       },
       robots: 'index, follow',
+      alternates: { canonical: BASE_URL || '/' },
     },
   }),
+
   about: defineRoute({
     href: '/about',
     metadata: {
-      title: 'About',
+      title: 'About Us | The Breezy Haven',
       description:
-        'Learn the story behind The Breezy Haven and our commitment to comfort, luxury, and nature.',
-      keywords: ['about us', 'Breezy Haven story', 'eco-friendly cabins'],
+        'Learn the story behind The Breezy Haven — our eco vision and commitment to luxury, comfort, and nature.',
+      keywords: [
+        'about Breezy Haven',
+        'eco-friendly cabins Italy',
+        'luxury stay Dolomites',
+        'our story',
+      ],
       openGraph: {
-        title: 'About - The Breezy Haven',
+        title: 'About The Breezy Haven',
         description:
-          'Learn the story behind The Breezy Haven and our commitment to comfort, luxury, and nature.',
-        url: 'https://thebreezyhaven.com/about',
-        images: ['/og/about.jpg'],
+          'The philosophy behind The Breezy Haven: sustainable, design-forward luxury cabins in the Dolomites.',
+        url: `${BASE_URL}/about`,
+        images: [
+          {
+            url: '/og/about1.jpg',
+            width: 1200,
+            height: 800,
+            alt: 'About The Breezy Haven luxury cabins',
+          },
+        ],
+        locale: 'en_US',
         type: 'article',
       },
       twitter: {
         card: 'summary_large_image',
         title: 'About The Breezy Haven',
         description:
-          'Discover the story behind our luxury cabins in the Italian Dolomites.',
-        images: ['/og/about.jpg'],
+          'Our story and vision for eco-luxury cabins in the Italian Dolomites.',
+        images: ['/og/about2.jpeg'],
+        creator: '@thebreezyhaven',
       },
       robots: 'index, follow',
+      alternates: { canonical: `${BASE_URL}/about` },
     },
   }),
+
   account: defineRoute({
     href: '/account',
     metadata: {
-      title: 'Guest area',
-      description: 'Manage your profile, reservations, and account settings.',
+      title: 'Guest Account | The Breezy Haven',
+      description:
+        'Manage your profile, reservations, and account settings securely.',
       keywords: ['guest account', 'manage reservations', 'profile settings'],
       robots: 'noindex, follow',
+      alternates: { canonical: `${BASE_URL}/account` },
     },
     nested: {
       profile: defineRoute({
         href: '/account/profile',
         metadata: {
-          title: 'My profile',
-          description:
-            'View and edit your personal details at The Breezy Haven.',
+          title: 'My Profile | The Breezy Haven',
+          description: 'View and edit your personal details.',
           robots: 'noindex, follow',
+          alternates: { canonical: `${BASE_URL}/account/profile` },
         },
       }),
       reservations: defineRoute({
         href: '/account/reservations',
         metadata: {
-          title: 'My Reservations',
-          description: 'Track, view, and manage all your cabin bookings.',
+          title: 'My Reservations | The Breezy Haven',
+          description:
+            'Track, view, and manage all your cabin bookings at The Breezy Haven.',
           robots: 'noindex, follow',
+          alternates: { canonical: `${BASE_URL}/account/reservations` },
         },
         nested: {
           edit: defineRoute({
             href: '/account/reservations/edit',
-            metadata: {},
+            metadata: {
+              title: 'Edit Reservation | The Breezy Haven',
+              description: 'Update your cabin booking details.',
+              robots: 'noindex, nofollow',
+              alternates: {
+                canonical: `${BASE_URL}/account/reservations/edit`,
+              },
+            },
             nested: {
               bookingId: defineRoute({
                 href: 'unknown',
-                metadata: {},
+                metadata: {
+                  title: 'Reservation Details | The Breezy Haven',
+                  description: 'Detailed view of your booking.',
+                  robots: 'noindex, nofollow',
+                },
               }),
             },
           }),
@@ -107,65 +153,105 @@ export const ROUTES = {
       }),
     },
   }),
+
   cabins: defineRoute({
     href: '/cabins',
     metadata: {
-      title: 'Cabins',
+      title: 'Luxury Cabins in the Italian Dolomites | The Breezy Haven',
       description:
-        'Explore our collection of luxury cabins in the Italian Dolomites.',
+        'Browse eco-friendly luxury cabins in the Dolomites. Find your perfect stay surrounded by nature.',
       keywords: [
-        'cabins',
-        'Italian Dolomites',
-        'luxury stay',
-        'nature getaway',
+        'luxury cabins Dolomites',
+        'eco lodge Italy',
+        'mountain cabins Italy',
+        'nature holiday Dolomites',
+        'sustainable luxury retreat',
       ],
       openGraph: {
-        title: 'Cabins - The Breezy Haven',
+        title: 'Luxury Cabins in the Dolomites | The Breezy Haven',
         description:
-          'Explore our collection of luxury cabins in the Italian Dolomites.',
-        url: 'https://thebreezyhaven.com/cabins',
-        images: ['/og/cabins.jpg'],
+          'Choose from eco-friendly luxury cabins designed for comfort, romance, and adventure.',
+        url: `${BASE_URL}/cabins`,
+        images: [
+          {
+            url: '/og/cabins.jpg',
+            width: 1200,
+            height: 800,
+            alt: 'Luxury cabins in the Dolomites',
+          },
+        ],
+        locale: 'en_US',
         type: 'website',
       },
       twitter: {
         card: 'summary_large_image',
-        title: 'Luxury Cabins in the Italian Dolomites',
-        description: 'Choose your perfect cabin retreat in nature.',
+        title: 'Luxury Cabins in the Dolomites',
+        description:
+          'Plan your dream escape to The Breezy Haven — luxury eco-friendly cabins in the Dolomites.',
         images: ['/og/cabins.jpg'],
+        creator: '@thebreezyhaven',
       },
       robots: 'index, follow',
+      alternates: { canonical: `${BASE_URL}/cabins` },
     },
     nested: {
       cabinId: defineRoute({
         href: 'unknown',
         metadata: {
-          title: 'Cabin Details',
+          title: 'Cabin Details | The Breezy Haven',
           description:
-            'Detailed information about this cabin, amenities, and booking options.',
+            'Detailed information about this cabin: amenities, availability, and booking options.',
+          keywords: ['cabin details', 'Dolomites luxury stay', 'cabin booking'],
+          openGraph: {
+            title: 'Cabin Details | The Breezy Haven',
+            description:
+              'Explore features, design, and booking information for your chosen cabin.',
+            url: `${BASE_URL}/cabins/[cabinId]`,
+            images: [
+              {
+                url: '/og/cabin-detail.jpg',
+                width: 1200,
+                height: 800,
+                alt: 'Cabin detail in the Dolomites',
+              },
+            ],
+            locale: 'en_US',
+            type: 'article',
+          },
+          twitter: {
+            card: 'summary_large_image',
+            title: 'Cabin Details | The Breezy Haven',
+            description:
+              'See full details and amenities of our cabins in the Italian Dolomites.',
+            images: ['/og/cabin-detail.jpg'],
+          },
           robots: 'index, follow',
         },
       }),
     },
   }),
+
   login: defineRoute({
     href: '/login',
     metadata: {
-      title: 'Login',
+      title: 'Login | The Breezy Haven',
       description: 'Access your account to manage bookings and profile.',
-      robots: 'noindex, follow',
+      robots: 'noindex, nofollow',
+      alternates: { canonical: `${BASE_URL}/login` },
     },
   }),
+
   'setup-new-guest': defineRoute({
     href: '/setup-new-guest',
     metadata: {
-      title: 'Initializing your account',
+      title: 'Initializing Your Account | The Breezy Haven',
       description: 'We are setting up your guest profile. Please wait...',
       robots: 'noindex, nofollow',
+      alternates: { canonical: `${BASE_URL}/setup-new-guest` },
     },
   }),
 } as const;
 
-// Let it return T shape object instead of Route object since Route object does not know the properties of nested property
 function defineRoute<T extends Route>(route: T): T {
   return route;
 }

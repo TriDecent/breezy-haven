@@ -10,7 +10,9 @@ import {
 } from '@/shared';
 import '@/styles/globals.css';
 import { Metadata } from 'next';
-import { NextFont } from 'next/dist/compiled/@next/font';
+
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import type { NextFont } from 'next/dist/compiled/@next/font';
 
 import { Josefin_Sans } from 'next/font/google';
 
@@ -20,6 +22,7 @@ const josefin: NextFont = Josefin_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.BASE_URL ?? ''),
   title: {
     template: '%s - The Breezy Haven',
     default: 'Welcome to The Breezy Haven',
@@ -63,6 +66,7 @@ export default function RootLayout({
             <PageProgressBar />
           </ThemeProvider>
         </RootProvider>
+        <SpeedInsights />
       </body>
     </html>
   );

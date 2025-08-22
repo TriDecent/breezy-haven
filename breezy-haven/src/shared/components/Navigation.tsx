@@ -16,7 +16,7 @@ const routes: readonly Route[] = [
 ];
 
 export default function Navigation() {
-  const { data, isError, isFetching, isLoading } = useGetAuthQuery();
+  const { data, isError, isFetching, isLoading } = useGetAuthQuery(undefined);
 
   return isError ? (
     <nav className='z-10 md:text-xl'>

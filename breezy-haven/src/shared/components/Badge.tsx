@@ -16,6 +16,7 @@ export default function Badge({
         width={28}
         height={28}
         alt='user avatar'
+        quality={75}
         className='ring-accent-500 rounded-full object-cover object-center ring'
       />
       <span className='font-semibold'>{name}</span>
