@@ -2,6 +2,7 @@
 
 import {
   GetByGuestIdBookingSchema,
+  PriorityProvider,
   ROUTES,
   slideVariantKeys,
   Variants,
@@ -90,21 +91,23 @@ export default function BookingList({ bookings }: Props) {
           transition={{ delayChildren: stagger(0.5) }}
           className='space-y-6'
         >
-          {optimisticBookings.map(booking => (
+          {optimisticBookings.map((booking, index) => (
             <motion.li
               layout
               variants={Variants.slideVariant(0, -30)}
               key={booking.id}
             >
-              <Booking
-                booking={booking}
-                onDelete={() =>
-                  updateOptimisticBookings({
-                    type: 'delete',
-                    payload: { bookingId: booking.id },
-                  })
-                }
-              />
+              <PriorityProvider isPriority={index === 0}>
+                <Booking
+                  booking={booking}
+                  onDelete={() =>
+                    updateOptimisticBookings({
+                      type: 'delete',
+                      payload: { bookingId: booking.id },
+                    })
+                  }
+                />
+              </PriorityProvider>
             </motion.li>
           ))}
         </motion.ul>

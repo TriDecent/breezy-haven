@@ -1,9 +1,10 @@
 'use client';
 import { default as PreviewImage } from '@/features/guest/cabins/components/ui/PreviewImage';
 import { DTOBooking, type NonNullableObject } from '@/repositories';
-import { ROUTES } from '@/shared';
+import { PriorityContext, ROUTES } from '@/shared';
 import { format, formatDistance, isPast, isToday, parseISO } from 'date-fns';
 import Link from 'next/link';
+import { use } from 'react';
 import Modification from './Modification';
 
 export default function ReservationCard({
@@ -37,6 +38,8 @@ function Information({
   cabin: { id: number; image: string; name: string };
   booking: NonNullableObject<DTOBooking>;
 }) {
+  const isPriority = use(PriorityContext);
+
   return (
     <div className='flex flex-grow flex-col lg:flex-row'>
       <div className='aspect-square h-52 w-full flex-none overflow-hidden lg:h-full lg:w-52'>
@@ -45,6 +48,7 @@ function Information({
           fill
           src={cabin.image}
           alt={`Cabin ${cabin.name}`}
+          priority={isPriority}
           className='object-cover transition-transform duration-300 hover:scale-150 active:scale-150'
         />
       </div>

@@ -1,5 +1,5 @@
 'use client';
-import type { Cabin } from '@/shared';
+import { PriorityProvider, type Cabin } from '@/shared';
 import { animate, motion, stagger } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import CabinCard from './CabinCard';
@@ -32,7 +32,9 @@ export default function CabinsDisplay({
       >
         {cabins.map((cabin, index) => (
           <motion.li variants={myVariants} key={`${cabin.id}`}>
-            <CabinCard cabin={cabin} isFirstCabin={index === 0} />
+            <PriorityProvider isPriority={index === 0}>
+              <CabinCard cabin={cabin} />
+            </PriorityProvider>
           </motion.li>
         ))}
       </motion.ul>

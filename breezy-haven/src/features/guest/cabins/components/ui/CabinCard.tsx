@@ -1,16 +1,18 @@
+'use client';
 import { DTOCabin, NonNullableObject } from '@/repositories';
+import { PriorityContext } from '@/shared';
 import { UsersIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
+import { use } from 'react';
 import PreviewImage from './PreviewImage';
 
 export default function CabinCard({
   cabin,
-  isFirstCabin,
 }: {
   cabin: NonNullableObject<DTOCabin>;
-  isFirstCabin: boolean;
 }) {
   const { id, name, maxCapacity, regularPrice, discount, image } = cabin;
+  const isPriority = use(PriorityContext);
 
   return (
     <article className='border-primary-800 0 hover:shadow-accent-600 active:shadow-accent-600 flex flex-col overflow-hidden rounded-md border transition duration-100 hover:scale-105 hover:shadow-md active:scale-105 active:shadow-md lg:flex-row'>
@@ -20,7 +22,7 @@ export default function CabinCard({
           alt={`Cabin ${name}`}
           sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
           fill
-          priority={isFirstCabin}
+          priority={isPriority}
           className='border-primary-800 object-cover object-center lg:border-r'
         />
       </div>

@@ -31,6 +31,10 @@ export { default as TextExpander } from './components/TextExpander';
 export { default as ThemeToggle } from './components/ThemeToggle';
 export { ROUTES } from './constants/ROUTES';
 export { default as useScrollDirection } from './hooks/useScrollDirection';
+export {
+  PriorityContext,
+  default as PriorityProvider,
+} from './providers/PriorityProvider';
 export { default as RootProvider } from './providers/RootProvider';
 export { default as ThemeProvider } from './providers/ThemeProvider';
 export { useGetAuthQuery } from './store/authApi';
