@@ -1,5 +1,9 @@
 import { Spinner } from '@/shared';
 
 export default function RootLoading() {
-  return <Spinner />;
+  return (
+    <div className='min-h-screen'>
+      <Spinner />;
+    </div>
+  );
 }

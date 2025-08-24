@@ -3,7 +3,13 @@ import { Auth } from './lib/auth';
 import { ROUTES } from './shared';
 
 export const config: MiddlewareConfig = {
-  matcher: ['/account/:path*', '/login', '/cabins/:path*', '/api/auth/callback/google'],
+  matcher: [
+    '/guest/account/:path*',
+    '/guest/login',
+    '/guest/cabins/:path*',
+    '/guest/api/auth/callback/google',
+    '/guest',
+  ],
 };
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
@@ -18,8 +24,11 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   if (pathname.startsWith(ROUTES.cabins.href))
     return handleCabinRouteAsync(request);
 
-  if (pathname.startsWith('/api/auth/callback/google'))
+  if (pathname.startsWith('/guest/api/auth/callback/google'))
     return handleGoogleCallback(request);
+
+  if (pathname === '/guest')
+    return NextResponse.redirect(new URL(ROUTES.cabins.href, request.nextUrl));
 
   return NextResponse.next();
 }

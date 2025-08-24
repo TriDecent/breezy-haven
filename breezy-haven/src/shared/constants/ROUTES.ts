@@ -59,7 +59,7 @@ export const ROUTES = {
   }),
 
   about: defineRoute({
-    href: '/about',
+    href: '/guest/about',
     metadata: {
       title: 'About',
       description:
@@ -100,7 +100,7 @@ export const ROUTES = {
   }),
 
   account: defineRoute({
-    href: '/account',
+    href: '/guest/account',
     metadata: {
       title: {
         template: '%s - Account | The Breezy Haven',
@@ -114,7 +114,7 @@ export const ROUTES = {
     },
     nested: {
       profile: defineRoute({
-        href: '/account/profile',
+        href: '/guest/account/profile',
         metadata: {
           title: 'My Profile',
           description: 'View and edit your personal details.',
@@ -123,7 +123,7 @@ export const ROUTES = {
         },
       }),
       reservations: defineRoute({
-        href: '/account/reservations',
+        href: '/guest/account/reservations',
         metadata: {
           title: 'My Reservations',
           description:
@@ -133,7 +133,7 @@ export const ROUTES = {
         },
         nested: {
           edit: defineRoute({
-            href: '/account/reservations/edit',
+            href: '/guest/account/reservations/edit',
             metadata: {
               title: 'Edit Reservation',
               description: 'Update your cabin booking details.',
@@ -159,7 +159,7 @@ export const ROUTES = {
   }),
 
   cabins: defineRoute({
-    href: '/cabins',
+    href: '/guest/cabins',
     metadata: {
       title: 'Cabins',
       description:
@@ -236,7 +236,7 @@ export const ROUTES = {
   }),
 
   login: defineRoute({
-    href: '/login',
+    href: '/guest/login',
     metadata: {
       title: 'Login',
       description: 'Access your account to manage bookings and profile.',
@@ -246,7 +246,7 @@ export const ROUTES = {
   }),
 
   'setup-new-guest': defineRoute({
-    href: '/setup-new-guest',
+    href: '/guest/setup-new-guest',
     metadata: {
       title: 'Initializing Your Account',
       description: 'We are setting up your guest profile. Please wait...',
@@ -254,6 +254,16 @@ export const ROUTES = {
       alternates: { canonical: `${BASE_URL}/setup-new-guest` },
     },
   }),
+
+  staff: defineRoute({
+    href: '/staff',
+    metadata: {
+      title: {
+        template: '',
+        default: 'Staff - The breezy'
+      }
+    }
+  })
 } as const;
 
 function defineRoute<T extends Route>(route: T): T {

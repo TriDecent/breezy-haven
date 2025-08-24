@@ -8,7 +8,7 @@ export default function RootError({
   reset: () => void;
 }) {
   return (
-    <section className='flex flex-1 flex-col items-center justify-center gap-4'>
+    <section className='flex flex-1 flex-col items-center justify-center gap-4 min-h-screen'>
       <h1 className='text-2xl font-bold text-red-500 md:text-3xl'>
         Oops! Something went wrong.
       </h1>
