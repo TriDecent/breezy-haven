@@ -268,6 +268,38 @@ export const ROUTES = {
         default: 'Staff',
       },
     },
+    nested: {
+      dashboard: defineRoute({
+        href: '/staff/dashboard',
+        metadata: {
+          title: 'Dashboard',
+        },
+      }),
+      bookings: defineRoute({
+        href: '/staff/bookings',
+        metadata: {
+          title: 'Bookings',
+        },
+      }),
+      cabins: defineRoute({
+        href: '/staff/cabins',
+        metadata: {
+          title: 'Cabins',
+        },
+      }),
+      user: defineRoute({
+        href: '/staff/user',
+        metadata: {
+          title: 'User',
+        },
+      }),
+      settings: defineRoute({
+        href: '/staff/settings',
+        metadata: {
+          title: 'Settings',
+        },
+      }),
+    },
   }),
 } as const;
 

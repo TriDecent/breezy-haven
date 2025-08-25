@@ -9,10 +9,34 @@ export const config: MiddlewareConfig = {
     '/guest/cabins/:path*',
     '/guest/api/auth/callback/google',
     '/guest',
+
+    '/staff',
   ],
 };
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
+  const { pathname } = request.nextUrl;
+
+  if (pathname.startsWith('/guest')) return handleGuestRouteAsync(request);
+
+  if (pathname.startsWith(ROUTES.staff.href))
+    return handleStaffRouteAsync(request);
+
+  return NextResponse.next();
+}
+
+async function handleStaffRouteAsync(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (pathname === ROUTES.staff.href)
+    return NextResponse.redirect(
+      new URL(ROUTES.staff.nested.dashboard.href, request.nextUrl)
+    );
+
+  return NextResponse.next();
+}
+
+async function handleGuestRouteAsync(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith(ROUTES.login.href))

@@ -62,7 +62,7 @@ export default function MiniSidebar({
               ref={outsideRef}
               className='fixed inset-x-0 inset-y-0 z-1000 backdrop-blur-xs'
             >
-              <div className='bg-primary-950 pointer-events-auto h-full w-2/3 py-4'>
+              <div className='bg-primary-950 border-r-popover pointer-events-auto h-full w-2/3 max-w-3xs border-r py-4'>
                 {children}
               </div>
             </motion.div>
