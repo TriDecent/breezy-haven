@@ -14,7 +14,6 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-  throw new Error('catch giúp')
   return (
     <section>
       <h1 className='text-accent-400 mb-4 text-end text-2xl tracking-widest lg:text-4xl'>

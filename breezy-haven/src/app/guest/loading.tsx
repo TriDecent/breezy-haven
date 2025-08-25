@@ -1,5 +1,5 @@
-import { Spinner } from '@/shared';
+import RootLoading from '@/app/loading';
 
 export default function GuestLoading() {
-  return <Spinner />;
+  return <RootLoading />;
 }

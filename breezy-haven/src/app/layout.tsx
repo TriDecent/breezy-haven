@@ -1,7 +1,8 @@
-import { PageProgressBar, RootProvider, ThemeProvider } from '@/shared';
+import { PageProgressBar, RootProvider, ROUTES, ThemeProvider } from '@/shared';
 import '@/styles/globals.css';
 
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import type { Metadata } from 'next';
 import type { NextFont } from 'next/dist/compiled/@next/font';
 
 import { Josefin_Sans } from 'next/font/google';
@@ -10,6 +11,8 @@ const josefin: NextFont = Josefin_Sans({
   subsets: ['latin', 'vietnamese'],
   display: 'swap',
 });
+
+export const metadata: Metadata = ROUTES.root.metadata;
 
 export default function RootLayout({
   children,

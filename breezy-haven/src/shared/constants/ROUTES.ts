@@ -9,7 +9,7 @@ type Route = {
 const BASE_URL = process.env.BASE_URL ?? 'http://localhost:3000';
 
 export const ROUTES = {
-  home: defineRoute({
+  root: defineRoute({
     href: '/',
     metadata: {
       metadataBase: new URL(BASE_URL ?? ''),
@@ -18,6 +18,12 @@ export const ROUTES = {
         default:
           'Luxury Cabin Retreat in the Italian Dolomites | The Breezy Haven',
       },
+      icons: '/logo.png',
+    },
+  }),
+  home: defineRoute({
+    href: '/',
+    metadata: {
       description:
         'Escape to The Breezy Haven — luxury eco-friendly cabins in the Italian Dolomites. Breathtaking views, comfort, and nature-first experiences.',
       keywords: [
@@ -27,7 +33,6 @@ export const ROUTES = {
         'romantic cabin Dolomites',
         'eco-friendly luxury stay',
       ],
-      icons: '/logo.png',
       openGraph: {
         title: 'The Breezy Haven | Luxury Cabin Retreat',
         description:
@@ -259,11 +264,11 @@ export const ROUTES = {
     href: '/staff',
     metadata: {
       title: {
-        template: '',
-        default: 'Staff - The breezy'
-      }
-    }
-  })
+        template: '%s - Staff | The Breezy Haven',
+        default: 'Staff',
+      },
+    },
+  }),
 } as const;
 
 function defineRoute<T extends Route>(route: T): T {

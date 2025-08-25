@@ -1,4 +1,5 @@
-import { Metadata } from 'next';
+import { NotFound } from '@/shared';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: '404 - Page not found',
@@ -7,15 +8,8 @@ export const metadata: Metadata = {
 
 export default function RootNotFound() {
   return (
-    <section className='flex flex-1 items-center justify-center space-x-6 py-8 min-h-screen'>
-      <h1 className='border-r border-black pr-6 text-3xl leading-relaxed font-semibold dark:border-white'>
-        404
-      </h1>
-      <div>
-        <h2 className='m-0 text-base leading-normal font-normal'>
-          This page could not be found
-        </h2>
-      </div>
-    </section>
+    <div className='flex min-h-screen items-center'>
+      <NotFound />
+    </div>
   );
 }
