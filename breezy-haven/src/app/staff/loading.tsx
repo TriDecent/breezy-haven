@@ -1,5 +1,5 @@
-import RootLoading from '@/app/loading';
+import { Spinner } from '@/shared';
 
 export default function StaffLoading() {
-  return <RootLoading />;
+  return <Spinner />;
 }
