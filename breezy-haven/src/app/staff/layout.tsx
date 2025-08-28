@@ -1,5 +1,5 @@
 import { SideNavigation } from '@/features/staff';
-import { MiniSidebar, PageLayout, ROUTES } from '@/shared';
+import { MiniSidebar, PageLayout, ROUTES, Toaster } from '@/shared';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
@@ -13,7 +13,7 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
           <div className='hidden py-4 md:block'>
             <SideNavigation />
           </div>
-          <div className='flex grow flex-col'>
+          <div className='flex grow flex-col overflow-hidden'>
             <PageLayout.Header>HEADER</PageLayout.Header>
             <PageLayout.Main>{children}</PageLayout.Main>
           </div>
@@ -23,6 +23,7 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
       <MiniSidebar>
         <SideNavigation />
       </MiniSidebar>
+      <Toaster richColors position='top-center' />
     </>
   );
 }

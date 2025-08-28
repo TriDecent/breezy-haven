@@ -1,0 +1,1 @@
+export { CabinsList } from './CabinsList';
