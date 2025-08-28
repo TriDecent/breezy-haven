@@ -17,6 +17,8 @@ export * from './store/uiSlice';
 export { default as Variants } from './animations/Variants';
 export { default as Badge } from './components/Badge';
 export { default as Counter } from './components/Counter';
+export * from './components/DataTable';
+export { default as DataTable } from './components/DataTable';
 export { default as DateSelector } from './components/DateSelector';
 export { default as Error } from './components/Error';
 export { default as Logo } from './components/Logo';
