@@ -75,51 +75,12 @@ export default function DataTable<TData, TValue>({
   defaultPageSize = 5,
   filter,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const [pageSize, setPageSize] = useState(defaultPageSize);
-  const [pageIndex, setPageIndex] = useState(0);
-
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues(),
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-      pagination: { pageSize, pageIndex },
-    },
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    onPaginationChange: updater => {
-      if (typeof updater === 'function') {
-        const next = updater({ pageSize, pageIndex });
-        setPageSize(next.pageSize);
-        setPageIndex(next.pageIndex);
-      } else {
-        setPageSize(updater.pageSize);
-        setPageIndex(updater.pageIndex);
-      }
-    },
-    enableRowSelection: true,
-  });
+  const table = useDataTable(data, columns, defaultPageSize);
 
   return (
     <div className='rounded-sm border px-2 pb-4'>
-      <ScrollArea type='hover' className='py-2'>
-        <Table className='text-center'>
+      <ScrollArea className='h-96 p-2 lg:h-[36rem] xl:h-[48rem]'>
+        <Table className='text-center select-none'>
           <TableHeader>
             {table.getHeaderGroups().map(headerGroup => (
               <TableRow key={headerGroup.id}>
@@ -169,6 +130,7 @@ export default function DataTable<TData, TValue>({
         </Table>
 
         <ScrollBar orientation='horizontal' />
+        <ScrollBar orientation='vertical' />
       </ScrollArea>
 
       <div className='flex flex-col items-center justify-between gap-4 py-4 sm:flex-row'>
@@ -179,6 +141,55 @@ export default function DataTable<TData, TValue>({
       {filter ? filter(table) : null}
     </div>
   );
+}
+
+function useDataTable<TData, TValue>(
+  data: DataTableProps<TData, TValue>['data'],
+  columns: DataTableProps<TData, TValue>['columns'],
+  defaultPageSize = 5
+) {
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const [pageSize, setPageSize] = useState(defaultPageSize);
+  const [pageIndex, setPageIndex] = useState(0);
+
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    getFacetedMinMaxValues: getFacetedMinMaxValues(),
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+      pagination: { pageSize, pageIndex },
+    },
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    onPaginationChange: updater => {
+      if (typeof updater === 'function') {
+        const next = updater({ pageSize, pageIndex });
+        setPageSize(next.pageSize);
+        setPageIndex(next.pageIndex);
+      } else {
+        setPageSize(updater.pageSize);
+        setPageIndex(updater.pageIndex);
+      }
+    },
+    enableRowSelection: true,
+  });
+
+  return table;
 }
 
 interface DataTableColumnHeaderProps<TData, TValue>
@@ -324,7 +335,11 @@ function DataTablePagination<TData>({
   );
 }
 
-function DataTableViewOptions<TData>({ table }: { table: ReactTable<TData> }) {
+export function DataTableViewOptions<TData>({
+  table,
+}: {
+  table: ReactTable<TData>;
+}) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -337,7 +352,7 @@ function DataTableViewOptions<TData>({ table }: { table: ReactTable<TData> }) {
         <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {table
-          .getAllColumns()
+          .getAllLeafColumns()
           .filter(
             column =>
               typeof column.accessorFn !== 'undefined' && column.getCanHide()

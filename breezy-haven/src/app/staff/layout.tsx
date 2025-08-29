@@ -23,7 +23,7 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
       <MiniSidebar>
         <SideNavigation />
       </MiniSidebar>
-      <Toaster richColors position='top-center' />
+      <Toaster richColors position='top-right' />
     </>
   );
 }

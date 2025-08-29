@@ -1,5 +1,4 @@
 'use client';
-import publicImage from '@/../public/bg.png';
 
 import {
   Button,
@@ -18,9 +17,13 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { CopyIcon, MoreHorizontalIcon, Trash2Icon } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'sonner';
+import { deleteCabinAction } from './deleteCabinAction';
 
 const columns: ColumnDef<
-  Pick<Cabin, 'image' | 'name' | 'regularPrice' | 'discount'>
+  Pick<
+    Cabin,
+    'id' | 'image' | 'name' | 'regularPrice' | 'discount' | 'maxCapacity'
+  >
 >[] = [
   {
     header: 'Cabin Info',
@@ -39,6 +42,7 @@ const columns: ColumnDef<
                 fill
                 quality={75}
                 sizes='(max-width: 768px) 100vw, 208px'
+                draggable={false}
                 className='object-cover object-center'
               />
             </div>
@@ -56,7 +60,7 @@ const columns: ColumnDef<
         ),
       },
       {
-        accessorKey: 'capacity',
+        accessorKey: 'maxCapacity',
         header: ({ column }) => (
           <DataTableColumnHeader
             column={column}
@@ -92,7 +96,7 @@ const columns: ColumnDef<
     columns: [
       {
         id: 'actions',
-        cell: () => (
+        cell: ({ row }) => (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant='ghost'>
@@ -108,18 +112,11 @@ const columns: ColumnDef<
                     action: {
                       label: 'Yes',
                       onClick: () =>
-                        toast.promise(
-                          async () => {
-                            await new Promise(resolve =>
-                              setTimeout(resolve, 3000)
-                            );
-                          },
-                          {
-                            loading: 'Deleting...',
-                            success: 'Cabin (id) has been deleted!',
-                            error: 'Error has been occurred!',
-                          }
-                        ),
+                        toast.promise(deleteCabinAction(row.original.id), {
+                          loading: 'Deleting...',
+                          success: `Cabin ${row.original.id} has been deleted!`,
+                          error: 'An error has  occurred!',
+                        }),
                     },
                   })
                 }
@@ -129,7 +126,9 @@ const columns: ColumnDef<
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={async () => {
-                  await navigator.clipboard.writeText('copy cabin json here');
+                  await navigator.clipboard.writeText(
+                    JSON.stringify(row.original)
+                  );
                   toast.success('Copy successfully!');
                 }}
               >
@@ -143,10 +142,10 @@ const columns: ColumnDef<
   },
 ];
 
-export function CabinsTable() {
+export function CabinsTable({ cabins }: { cabins: readonly Cabin[] }) {
   return (
     <DataTable
-      data={cabins}
+      data={[...cabins]}
       columns={columns}
       filter={table => (
         <div className='mt-4 flex gap-2'>
@@ -164,39 +163,40 @@ export function CabinsTable() {
   );
 }
 
-const cabins: Array<{
-  image: string;
-  name: string;
-  capacity: number;
-  regularPrice: number;
-  discount: number;
-}> = [
-  {
-    image: publicImage as unknown as string,
-    name: 'Cozy Cabin',
-    capacity: 4,
-    regularPrice: 120,
-    discount: 10,
-  },
-  {
-    image: publicImage as unknown as string,
-    name: 'Mountain Retreat',
-    capacity: 6,
-    regularPrice: 180,
-    discount: 20,
-  },
-  {
-    image: publicImage as unknown as string,
-    name: 'Lakeside Lodge',
-    capacity: 8,
-    regularPrice: 250,
-    discount: 15,
-  },
-  {
-    image: publicImage as unknown as string,
-    name: 'Forest Hideaway',
-    capacity: 2,
-    regularPrice: 90,
-    discount: 5,
-  },
-];
+// import publicImage from '@/../public/bg.png';
+// const cabins: Array<{
+//   image: string;
+//   name: string;
+//   capacity: number;
+//   regularPrice: number;
+//   discount: number;
+// }> = [
+//   {
+//     image: publicImage as unknown as string,
+//     name: 'Cozy Cabin',
+//     capacity: 4,
+//     regularPrice: 120,
+//     discount: 10,
+//   },
+//   {
+//     image: publicImage as unknown as string,
+//     name: 'Mountain Retreat',
+//     capacity: 6,
+//     regularPrice: 180,
+//     discount: 20,
+//   },
+//   {
+//     image: publicImage as unknown as string,
+//     name: 'Lakeside Lodge',
+//     capacity: 8,
+//     regularPrice: 250,
+//     discount: 15,
+//   },
+//   {
+//     image: publicImage as unknown as string,
+//     name: 'Forest Hideaway',
+//     capacity: 2,
+//     regularPrice: 90,
+//     discount: 5,
+//   },
+// ];
