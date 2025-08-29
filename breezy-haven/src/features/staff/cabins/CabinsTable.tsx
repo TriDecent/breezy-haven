@@ -23,103 +23,123 @@ const columns: ColumnDef<
   Pick<Cabin, 'image' | 'name' | 'regularPrice' | 'discount'>
 >[] = [
   {
-    accessorKey: 'image',
-    header: '',
-    cell: ({ row }) => {
-      const cabin = row.original;
+    header: 'Cabin Info',
+    columns: [
+      {
+        accessorKey: 'image',
+        header: '',
+        cell: ({ row }) => {
+          const cabin = row.original;
 
-      return (
-        <div className='relative mx-auto aspect-video w-52 overflow-hidden rounded-md'>
-          <Image
-            src={cabin.image}
-            alt='A cabin image'
-            fill
-            quality={75}
-            sizes='(max-width: 768px) 100vw, 208px'
-            className='object-cover object-center'
+          return (
+            <div className='relative mx-auto aspect-video w-52 overflow-hidden rounded-md'>
+              <Image
+                src={cabin.image}
+                alt='A cabin image'
+                fill
+                quality={75}
+                sizes='(max-width: 768px) 100vw, 208px'
+                className='object-cover object-center'
+              />
+            </div>
+          );
+        },
+      },
+      {
+        accessorKey: 'name',
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title='Name'
+            className='py-2'
           />
-        </div>
-      );
-    },
+        ),
+      },
+      {
+        accessorKey: 'capacity',
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title='Max capacity'
+            className='py-2'
+          />
+        ),
+      },
+      {
+        accessorKey: 'regularPrice',
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title='Price'
+            className='py-2'
+          />
+        ),
+      },
+      {
+        accessorKey: 'discount',
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title='Discount'
+            className='py-2'
+          />
+        ),
+      },
+    ],
   },
   {
-    accessorKey: 'name',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Name' className='py-2' />
-    ),
-  },
-  {
-    accessorKey: 'capacity',
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title='Max capacity'
-        className='py-2'
-      />
-    ),
-  },
-  {
-    accessorKey: 'regularPrice',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Price' className='py-2' />
-    ),
-  },
-  {
-    accessorKey: 'discount',
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title='Discount'
-        className='py-2'
-      />
-    ),
-  },
-  {
-    id: 'actions',
-    cell: () => (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant='ghost'>
-            <MoreHorizontalIcon />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() =>
-              toast.warning('Are you sure to delete this cabin?', {
-                action: {
-                  label: 'Yes',
-                  onClick: () =>
-                    toast.promise(
-                      async () => {
-                        await new Promise(resolve => setTimeout(resolve, 3000));
-                      },
-                      {
-                        loading: 'Deleting...',
-                        success: 'Cabin (id) has been deleted!',
-                        error: 'Error has been occurred!',
-                      }
-                    ),
-                },
-              })
-            }
-          >
-            <Trash2Icon />
-            Delete
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={async () => {
-              await navigator.clipboard.writeText('copy cabin json here');
-              toast.success('Copy successfully!');
-            }}
-          >
-            <CopyIcon /> Copy info
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    ),
+    header: 'Actions',
+    columns: [
+      {
+        id: 'actions',
+        cell: () => (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant='ghost'>
+                <MoreHorizontalIcon />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() =>
+                  toast.warning('Are you sure to delete this cabin?', {
+                    action: {
+                      label: 'Yes',
+                      onClick: () =>
+                        toast.promise(
+                          async () => {
+                            await new Promise(resolve =>
+                              setTimeout(resolve, 3000)
+                            );
+                          },
+                          {
+                            loading: 'Deleting...',
+                            success: 'Cabin (id) has been deleted!',
+                            error: 'Error has been occurred!',
+                          }
+                        ),
+                    },
+                  })
+                }
+              >
+                <Trash2Icon />
+                Delete
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={async () => {
+                  await navigator.clipboard.writeText('copy cabin json here');
+                  toast.success('Copy successfully!');
+                }}
+              >
+                <CopyIcon /> Copy info
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ),
+      },
+    ],
   },
 ];
 
