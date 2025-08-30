@@ -32,6 +32,7 @@ export default function RootLayout({
             {children}
             <div id='mini-sidebar' className='md:hidden'></div>
             <div id='image-previewing'></div>
+            <div id='modal'></div>
             <PageProgressBar />
           </ThemeProvider>
         </RootProvider>

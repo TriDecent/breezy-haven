@@ -1,6 +1,7 @@
 export * from './animations/Variants';
 export * from './components/ui/button';
 export * from './components/ui/calendar';
+export * from './components/ui/card';
 export * from './components/ui/input';
 export * from './components/ui/popover';
 export * from './components/ui/scroll-area';
@@ -14,6 +15,7 @@ export * from './schemas/Guest';
 export * from './schemas/Setting';
 export * from './schemas/types';
 export * from './store/uiSlice';
+export * from './types/types';
 
 export { default as Variants } from './animations/Variants';
 export { default as Badge } from './components/Badge';
@@ -25,6 +27,7 @@ export { default as Error } from './components/Error';
 export { default as Logo } from './components/Logo';
 export { default as MiniSidebar } from './components/MiniSidebar';
 export { default as MiniSpinner } from './components/MiniSpinner';
+export { default as Modal } from './components/Modal';
 export { default as Navigation } from './components/Navigation';
 export { default as NavTrail } from './components/NavTrail';
 export { default as NotFound } from './components/NotFound';

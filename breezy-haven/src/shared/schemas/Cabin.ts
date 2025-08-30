@@ -1,24 +1,36 @@
 import { z } from 'zod';
 
 export const CabinSchema = z.object({
-  created_at: z.string({ error: 'created_at must be a string' }),
-  description: z.string({ error: 'description must be a string' }),
-  discount: z.coerce.number({ error: 'discount must be a number' }),
-  id: z.coerce.number({ error: 'id must be a number' }),
-  image: z.string({ error: 'image must be a string' }),
-  maxCapacity: z.coerce.number({ error: 'maxCapacity must be a number' }),
-  name: z.string({ error: 'name must be a string' }),
-  regularPrice: z.coerce.number({ error: 'regularPrice must be a number' }),
+  created_at: z.string({ error: 'CreatedAt must be a string' }),
+  description: z.string({ error: 'Description must be a string' }),
+  discount: z.coerce
+    .number({ error: 'Discount must be a number' })
+    .refine(val => val >= 0 && val <= 100, {
+      message: 'Discount must be between 0 and 100',
+    }),
+  id: z.coerce.number({ error: 'Id must be a number' }),
+  image: z.url({ error: 'Image must be URL' }),
+  maxCapacity: z.coerce
+    .number({ error: 'Capacity must be a number' })
+    .positive({ message: 'Capacity must be a positive number' }),
+  name: z.string({ error: 'Name must be a string' }),
+  regularPrice: z.coerce
+    .number({ error: 'Price must be a number' })
+    .positive({ message: 'Price must be a positive number' }),
 });
 export const NullableCabinSchema = z.object({
-  created_at: z.string({ error: 'created_at must be a string' }),
-  description: z.string({ error: 'description must be a string' }).nullable(),
-  discount: z.coerce.number({ error: 'discount must be a number' }).nullable(),
-  id: z.coerce.number({ error: 'id must be a number' }),
-  image: z.string({ error: 'image must be a string' }).nullable(),
-  maxCapacity: z.coerce.number({ error: 'maxCapacity must be a number' }).nullable(),
-  name: z.string({ error: 'name must be a string' }).nullable(),
-  regularPrice: z.coerce.number({ error: 'regularPrice must be a number' }).nullable(),
+  created_at: z.string({ error: 'CreatedAt must be a string' }),
+  description: z.string({ error: 'Description must be a string' }).nullable(),
+  discount: z.coerce.number({ error: 'Discount must be a number' }).nullable(),
+  id: z.coerce.number({ error: 'Id must be a number' }),
+  image: z.url({ error: 'Image must be a string' }).nullable(),
+  maxCapacity: z.coerce
+    .number({ error: 'MaxCapacity must be a number' })
+    .nullable(),
+  name: z.string({ error: 'Name must be a string' }).nullable(),
+  regularPrice: z.coerce
+    .number({ error: 'RegularPrice must be a number' })
+    .nullable(),
 });
 
 export type Cabin = z.infer<typeof CabinSchema>;
