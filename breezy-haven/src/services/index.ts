@@ -65,3 +65,14 @@ export const guestSetupService = new GuestService(
     NullableGuestSchema
   )
 );
+
+export const staffCabinService = new CabinService(
+  new BaseService(
+    new Repository('cabins'),
+    () => {
+      // TODO: perform verify staff permission
+      return Promise.resolve();
+    },
+    CabinSchema
+  )
+);

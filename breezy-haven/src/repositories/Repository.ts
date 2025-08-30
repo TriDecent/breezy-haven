@@ -2,11 +2,8 @@ import { supabase } from '@/lib/supabase';
 import { PostgrestError } from '@supabase/supabase-js';
 import { DTORow, DTOToTableName } from './types';
 
-export type RepositoryReturnType<Data, Error> = Promise<
-  Readonly<{
-    readonly data: Data | null;
-    readonly error: Error | null;
-  }>
+export type RepositoryReturnType<TData, TError> = Promise<
+  Readonly<{ data: TData; error: null } | { data: null; error: TError }>
 >;
 
 export interface IRepository<T> {

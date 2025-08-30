@@ -9,7 +9,7 @@ import type {
   ValidationError,
 } from './types';
 
-export interface IService<DTOType extends DTORow, SchemaType extends Schemas> {
+export interface IService<DTOType, SchemaType> {
   getAll(): GetAllServiceReturnType<SchemaType>;
   getById(id: number): ServiceReturnType<SchemaType>;
   create(item: Partial<DTOType>): ServiceReturnType<SchemaType>;
