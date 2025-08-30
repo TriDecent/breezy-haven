@@ -76,7 +76,11 @@ export class Repository<T extends DTORow> implements IRepository<T> {
   }
 
   async delete(id: number): RepositoryReturnType<T, PostgrestError> {
-    const { data, error } = await this.table.delete().eq('id', id);
+    const { data, error } = await this.table
+      .delete()
+      .eq('id', id)
+      .select()
+      .single();
 
     return {
       data,
