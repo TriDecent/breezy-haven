@@ -27,7 +27,7 @@ PageLayout.Footer = ({ children }: PageLayoutProps) => (
       <div className='py-2 text-center text-sm text-gray-500 md:py-4'>
         <div className='flex justify-center gap-4'>
           <a
-            href='https://github.com/TriDecent'
+            href='https://www.facebook.com/Tridecent/'
             target='_blank'
             rel='noopener noreferrer'
             className='text-gray-600 transition-colors hover:text-gray-800'
@@ -41,7 +41,7 @@ PageLayout.Footer = ({ children }: PageLayoutProps) => (
             />
           </a>
           <a
-            href='https://www.facebook.com/Tridecent/'
+            href='https://github.com/TriDecent'
             target='_blank'
             rel='noopener noreferrer'
             className='text-blue-500 transition-colors hover:text-blue-700'

@@ -2,7 +2,10 @@ import { z } from 'zod';
 
 export const CabinSchema = z.object({
   created_at: z.string({ error: 'CreatedAt must be a string' }),
-  description: z.string({ error: 'Description must be a string' }),
+  description: z
+    .string({ error: 'Description must be a string' })
+    .min(10, { error: 'Description must be at least 10 characters ' })
+    .max(1000, { error: 'Description cannot exceed 1000 characters' }),
   discount: z.coerce
     .number({ error: 'Discount must be a number' })
     .refine(val => val >= 0 && val <= 100, {
@@ -13,7 +16,9 @@ export const CabinSchema = z.object({
   maxCapacity: z.coerce
     .number({ error: 'Capacity must be a number' })
     .positive({ message: 'Capacity must be a positive number' }),
-  name: z.string({ error: 'Name must be a string' }),
+  name: z
+    .string({ error: 'Name must be a string' })
+    .min(3, { error: 'Name must be at least 3 characters' }),
   regularPrice: z.coerce
     .number({ error: 'Price must be a number' })
     .positive({ message: 'Price must be a positive number' }),

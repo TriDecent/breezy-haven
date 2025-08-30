@@ -9,8 +9,8 @@ export async function CabinsList() {
 
   return (
     <>
-      <CabinsTable cabins={data} />
       <CabinAdding />
+      <CabinsTable cabins={data} />
     </>
   );
 }

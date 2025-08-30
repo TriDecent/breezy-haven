@@ -17,7 +17,7 @@ export function CabinAdding() {
 
   return (
     <>
-      <div className='mt-4 flex flex-col'>
+      <div className='mb-4 flex flex-col'>
         <Button
           className='self-end bg-green-500 text-white'
           onClick={() => setShouldOpenForm(true)}
