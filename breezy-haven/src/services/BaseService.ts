@@ -41,7 +41,7 @@ export class BaseService<DTOType extends DTORow, SchemaType extends Schemas>
   }
 
   async getAll(): GetAllServiceReturnType<SchemaType> {
-    this.verifyPermission();
+    await this._verifyPermissionAsync();
 
     const { data, error: postgrestError } = await this._repository.getAll();
 
@@ -87,12 +87,12 @@ export class BaseService<DTOType extends DTORow, SchemaType extends Schemas>
   }
 
   async getById(id: number): ServiceReturnType<SchemaType> {
-    this.verifyPermission();
+    await this._verifyPermissionAsync();
     return this.handleRepositoryResult(() => this._repository.getById(id));
   }
 
   async create(item: Partial<DTOType>): ServiceReturnType<SchemaType> {
-    this.verifyPermission();
+    await this._verifyPermissionAsync();
     return this.handleRepositoryResult(() => this._repository.create(item));
   }
 
@@ -100,14 +100,14 @@ export class BaseService<DTOType extends DTORow, SchemaType extends Schemas>
     id: number,
     updatedFields: Partial<DTOType>
   ): ServiceReturnType<SchemaType> {
-    this.verifyPermission();
+    await this._verifyPermissionAsync();
     return this.handleRepositoryResult(() =>
       this._repository.update(id, updatedFields)
     );
   }
 
   async delete(id: number): ServiceReturnType<SchemaType> {
-    this.verifyPermission();
+    await this._verifyPermissionAsync();
     return this.handleRepositoryResult(() => this._repository.delete(id));
   }
 
