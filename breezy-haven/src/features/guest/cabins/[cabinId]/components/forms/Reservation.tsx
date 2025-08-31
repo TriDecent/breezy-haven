@@ -1,4 +1,4 @@
-import { settingService, unauthBookingService } from '@/services';
+import { unauthBookingService, unauthSettingService } from '@/services';
 import { errorHelper, type Cabin } from '@/shared';
 import ReservationForm from './ReservationForm';
 import ReservationSummary from './ReservationSummary';
@@ -6,7 +6,7 @@ import ReservationSummary from './ReservationSummary';
 export default async function Reservation({ cabin }: { cabin: Cabin }) {
   const promises = [
     unauthBookingService.getBookedDatesByCabinId(cabin.id),
-    settingService.getDefaultSettings(),
+    unauthSettingService.getDefaultSettings(),
   ] as const;
 
   const [bookedDates, settingResult] = await Promise.all(promises);

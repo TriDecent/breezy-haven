@@ -6,7 +6,7 @@ import { NavItem } from './NavItem';
 
 export function SideNavigation() {
   return (
-    <>
+    <div className='sticky top-0 hidden h-fit py-4 md:block'>
       <div className='flex flex-col items-center gap-1'>
         <Image
           src={breezyHavenLogo}
@@ -26,6 +26,6 @@ export function SideNavigation() {
           ))}
         </ul>
       </nav>
-    </>
+    </div>
   );
 }

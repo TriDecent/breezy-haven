@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
 
-import { guestSetupService } from '@/services';
+import { unauthGuestService } from '@/services';
 import { cache } from 'react';
 
 import type { NonNullableObject } from '@/repositories';
@@ -21,7 +21,7 @@ const getCurrentUser = cache(async () => {
 
   if (!session?.user?.email) return null;
 
-  return await guestSetupService.getByEmailAsync(session.user.email);
+  return await unauthGuestService.getByEmailAsync(session.user.email);
 });
 
 const getFullSessionAsync = cache(async () => {

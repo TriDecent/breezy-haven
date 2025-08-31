@@ -1,5 +1,5 @@
 import { Auth } from '@/lib';
-import { guestSetupService } from '@/services';
+import { unauthGuestService } from '@/services';
 import { ROUTES, Spinner } from '@/shared';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
@@ -47,7 +47,7 @@ async function SetupGuest({ callbackUrl }: { callbackUrl: string }) {
 
   const { email, name } = user;
 
-  const { errors } = await guestSetupService.create({ email, fullName: name });
+  const { errors } = await unauthGuestService.create({ email, fullName: name });
 
   if (errors) redirect(ROUTES.login.href);
 

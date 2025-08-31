@@ -1,6 +1,6 @@
 'use client';
 import { DTOCabin, NonNullableObject } from '@/repositories';
-import { PriorityContext } from '@/shared';
+import { PriorityContext, ROUTES } from '@/shared';
 import { UsersIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import { use } from 'react';
@@ -59,7 +59,7 @@ export default function CabinCard({
 
         <div className='bg-primary-950 border-t-primary-800 border-t text-right'>
           <Link
-            href={`/cabins/${id}`}
+            href={`${ROUTES.cabins.href}/${id}`}
             prefetch={true} // /cabin/[cabinId] is ISR route so this is not that necessary
             className='border-primary-800 hover:bg-accent-600 hover:text-primary-900 group active:bg-accent-600 inline-block border-l px-6 py-4 transition-all'
           >

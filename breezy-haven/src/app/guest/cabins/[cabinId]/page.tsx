@@ -1,5 +1,5 @@
 import { CabinDetail, Reservation } from '@/features/guest/cabins';
-import { cabinService } from '@/services';
+import { unauthCabinService } from '@/services';
 
 import { CabinSchema, errorHelper } from '@/shared';
 import { Metadata } from 'next';
@@ -18,7 +18,7 @@ export async function generateStaticParams(): Promise<
     readonly cabinId: string;
   }[]
 > {
-  const { data: cabins } = await cabinService.getAll();
+  const { data: cabins } = await unauthCabinService.getAll();
 
   return cabins
     ? cabins.map(cabin => ({
@@ -31,7 +31,7 @@ export async function generateMetadata({
   params,
 }: PageParams): Promise<Metadata> {
   const { cabinId } = await params;
-  const { data: cabin, errors: cabinError } = await cabinService.getById(
+  const { data: cabin, errors: cabinError } = await unauthCabinService.getById(
     Number(cabinId)
   );
 
@@ -53,7 +53,7 @@ export default async function Page({ params }: PageParams) {
 
   if (Number.isNaN(Number(cabinId))) notFound();
 
-  const cabinResult = await cabinService.getById(Number(cabinId));
+  const cabinResult = await unauthCabinService.getById(Number(cabinId));
 
   if (cabinResult.errors) {
     if (

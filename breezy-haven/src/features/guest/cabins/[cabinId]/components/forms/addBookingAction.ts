@@ -1,7 +1,7 @@
 'use server';
 
 import { Auth } from '@/lib';
-import { bookingService, cabinService } from '@/services';
+import { bookingService, unauthCabinService } from '@/services';
 import { dateHelper, ROUTES } from '@/shared';
 import { differenceInDays, isValid, parseISO } from 'date-fns';
 import { revalidatePath } from 'next/cache';
@@ -64,7 +64,7 @@ export async function addBookingAction(
     };
   }
 
-  const { data: cabin, errors: cabinErrors } = await cabinService.getById(
+  const { data: cabin, errors: cabinErrors } = await unauthCabinService.getById(
     parsedInput.data.cabinId
   );
 

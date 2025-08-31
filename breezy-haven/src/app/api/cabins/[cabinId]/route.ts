@@ -1,4 +1,4 @@
-import { bookingService, cabinService } from '@/services';
+import { unauthBookingService, unauthCabinService } from '@/services';
 import { NextRequest } from 'next/server';
 
 export async function GET(
@@ -12,8 +12,8 @@ export async function GET(
     if (Number.isNaN(cabinIdNumber)) throw new Error('id is not valid');
 
     const promises = [
-      cabinService.getById(cabinIdNumber),
-      bookingService.getBookedDatesByCabinId(cabinIdNumber),
+      unauthCabinService.getById(cabinIdNumber),
+      unauthBookingService.getBookedDatesByCabinId(cabinIdNumber),
     ];
 
     const [cabinResult, bookingResult] = await Promise.all(promises);

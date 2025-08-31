@@ -29,5 +29,8 @@ export type GetAllServiceReturnType<SchemaType> = Promise<
 
 export type ServiceReturnType<DataType, ErrorType = DataType> = Promise<
   | { data: DataType; errors: null }
-  | { data: null; errors: DatabaseError | ValidationError<ErrorType> }
+  | {
+      data: null;
+      errors: DatabaseError | ValidationError<ErrorType> | UnexpectedError;
+    }
 >;

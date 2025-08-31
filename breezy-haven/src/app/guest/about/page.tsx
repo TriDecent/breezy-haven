@@ -1,6 +1,6 @@
 import about1Image from '@/../public/about-1.jpg';
 import about2Image from '@/../public/about-2.jpeg';
-import { cabinService } from '@/services';
+import { unauthCabinService } from '@/services';
 import { ROUTES, Spinner } from '@/shared';
 import { Metadata } from 'next';
 import Image from 'next/image';
@@ -93,7 +93,7 @@ export default async function Page() {
 }
 
 async function BreezyHavenIntroduction() {
-  const { count, error } = await cabinService.getCount();
+  const { count, error } = await unauthCabinService.getCount();
 
   if (error) throw new Error(error.message);
 

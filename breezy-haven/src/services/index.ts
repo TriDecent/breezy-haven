@@ -4,75 +4,56 @@ import {
   BookingSchema,
   CabinSchema,
   GuestSchema,
-  NullableGuestSchema,
   SettingSchema,
 } from '@/shared';
 import { BaseService } from './BaseService';
+import { BaseStaffService } from './BaseStaffService';
 import BookingService from './BookingService';
 import CabinService from './CabinService';
+import CabinStaffService from './CabinStaffService';
 import GuestService from './GuestService';
 import SettingService from './SettingService';
 export * from './countryService';
 export * from './types';
 
-export const cabinService = new CabinService(
-  new BaseService(
-    new Repository('cabins'),
-    () => Promise.resolve(),
-    CabinSchema
-  )
+const cabinRepository = new Repository('cabins');
+const bookingRepository = new Repository('bookings');
+const guestRepository = new Repository('guests');
+const settingRepository = new Repository('settings');
+
+const verifyUnauthAsync = () => Promise.resolve();
+const verifyAuthAsync = async () => {
+  await Auth.verifySession();
+};
+const verifyStaffAuthAsync = () => Promise.resolve();
+
+export const unauthCabinService = new CabinService(
+  new BaseService(cabinRepository, verifyUnauthAsync, CabinSchema)
 );
 
 export const bookingService = new BookingService(
-  new BaseService(
-    new Repository('bookings'),
-    async () => {
-      await Auth.verifySession();
-    },
-    BookingSchema
-  )
+  new BaseService(bookingRepository, verifyAuthAsync, BookingSchema)
 );
+
 export const unauthBookingService = new BookingService(
-  new BaseService(
-    new Repository('bookings'),
-    () => Promise.resolve(),
-    BookingSchema
-  )
+  new BaseService(bookingRepository, verifyUnauthAsync, BookingSchema)
 );
 
 export const guestService = new GuestService(
-  new BaseService(
-    new Repository('guests'),
-    async () => {
-      await Auth.verifySession();
-    },
-    GuestSchema
-  )
+  new BaseService(guestRepository, verifyAuthAsync, GuestSchema)
 );
 
-export const settingService = new SettingService(
-  new BaseService(
-    new Repository('settings'),
-    () => Promise.resolve(),
-    SettingSchema
-  )
+export const unauthSettingService = new SettingService(
+  new BaseService(settingRepository, verifyUnauthAsync, SettingSchema)
 );
 
-export const guestSetupService = new GuestService(
-  new BaseService(
-    new Repository('guests'),
-    () => Promise.resolve(),
-    NullableGuestSchema
-  )
+export const unauthGuestService = new GuestService(
+  new BaseService(guestRepository, verifyUnauthAsync, GuestSchema)
 );
 
-export const staffCabinService = new CabinService(
-  new BaseService(
-    new Repository('cabins'),
-    () => {
-      // TODO: perform verify staff permission
-      return Promise.resolve();
-    },
-    CabinSchema
+export const staffCabinService = new CabinStaffService(
+  new BaseStaffService(
+    new BaseService(cabinRepository, verifyStaffAuthAsync, CabinSchema),
+    cabinRepository
   )
 );

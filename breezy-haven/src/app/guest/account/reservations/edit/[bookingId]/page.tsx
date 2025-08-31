@@ -1,6 +1,6 @@
 import { BookingEditForm } from '@/features/guest/account/profile';
 import { Auth } from '@/lib';
-import { bookingService, settingService } from '@/services';
+import { bookingService, unauthSettingService } from '@/services';
 import { errorHelper } from '@/shared';
 import { parseISO } from 'date-fns';
 import type { Metadata } from 'next';
@@ -46,7 +46,7 @@ export default async function BookingEditPage({ params }: PageParams) {
 
   const [bookedDatesResult, settingResult] = await Promise.all([
     bookingService.getBookedDatesByCabinId(needsEditedBooking.cabinId),
-    settingService.getDefaultSettings(),
+    unauthSettingService.getDefaultSettings(),
   ]);
 
   if (bookedDatesResult.errors)
