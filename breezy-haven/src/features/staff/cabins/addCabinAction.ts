@@ -1,14 +1,22 @@
 'use server';
 import { staffCabinService } from '@/services';
-import { CabinSchema, type DeepReadonly } from '@/shared';
+import { CabinSchema, type Cabin, type DeepReadonly } from '@/shared';
+import path from 'path';
 import z from 'zod';
 
-const AddCabinSchema = CabinSchema.omit({ id: true, created_at: true });
+const AddCabinSchema = CabinSchema.omit({ id: true, created_at: true }).extend({
+  image: z
+    .file({ error: 'Image must be File' })
+    .refine(
+      file => ['image/png', 'image/jpeg', 'image/webp'].includes(file.type),
+      { error: 'Image file must be png, jpg or webp' }
+    ),
+});
 type SafeAddCabinInput = z.infer<typeof AddCabinSchema>;
 
 type ActionResponse = DeepReadonly<
   | {
-      userEntered: Partial<SafeAddCabinInput>;
+      userEntered: Partial<Omit<SafeAddCabinInput, 'image'>>;
       error: Partial<
         Record<keyof SafeAddCabinInput, string[]> & {
           unexpected: string;
@@ -36,11 +44,33 @@ export async function addCabinAction(
     };
   }
 
-  const { errors } = await staffCabinService.create(parsedInput.data);
+  const userEnteredWithoutImage = { ...input };
+  delete userEnteredWithoutImage.image;
 
-  if (errors)
+  const fileName = `${crypto.randomUUID()}-${parsedInput.data.image.name}`;
+  const [uploadResult] = await uploadImageAsync(
+    fileName,
+    parsedInput.data.image
+  );
+  if (!uploadResult)
     return {
-      userEntered: input,
+      userEntered: userEnteredWithoutImage,
+      error: {
+        image: ['Upload image failed!.'],
+      },
+    };
+
+  const doesCreateCabinSuccess = await createCabinAsync({
+    ...parsedInput.data,
+    image: path.posix.join(
+      process.env.SUPABASE_BUCKET ?? '',
+      uploadResult.fullPath
+    ),
+  });
+
+  if (!doesCreateCabinSuccess)
+    return {
+      userEntered: userEnteredWithoutImage,
       error: {
         unexpected:
           'An error occurred while trying to add a new a cabin. Please try again!',
@@ -51,4 +81,44 @@ export async function addCabinAction(
     userEntered: null,
     error: null,
   };
+}
+
+async function uploadImageAsync(
+  path: string,
+  image: File
+): Promise<
+  [success: { id: string; path: string; fullPath: string }] | [success: null]
+> {
+  const { data, errors } = await staffCabinService.uploadFile(
+    image,
+    path,
+    'cabin-images'
+  );
+
+  if (errors) return [null];
+
+  return [data];
+}
+
+async function createCabinAsync(
+  cabin: Omit<Cabin, 'id' | 'created_at'>
+): Promise<[success: boolean]> {
+  const { errors } = await staffCabinService.create(cabin);
+
+  if (errors) {
+    let doesDeleteImageErrorExist = true;
+    let deleteRetryCount = 0;
+    do {
+      const { errors: deleteImageError } = await staffCabinService.deleteFiles(
+        [cabin.image.split('/').pop()!],
+        'cabin-images'
+      );
+      if (deleteImageError) doesDeleteImageErrorExist = true;
+      ++deleteRetryCount;
+    } while (doesDeleteImageErrorExist && deleteRetryCount < 3);
+
+    return [false];
+  }
+
+  return [true];
 }
