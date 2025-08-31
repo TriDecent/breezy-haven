@@ -1,8 +1,11 @@
 'use client';
 import { Button, CardAction, Input, ScrollArea, Textarea } from '@/shared';
 import { CirclePlus } from 'lucide-react';
+import Image from 'next/image';
 import {
   useActionState,
+  useEffect,
+  useState,
   type InputHTMLAttributes,
   type TextareaHTMLAttributes,
 } from 'react';
@@ -13,6 +16,13 @@ export function AddCabinForm({ onCancel }: { onCancel: () => void }) {
     userEntered: null,
     error: null,
   });
+  const [previewImageURL, setPreviewImageURL] = useState<string | null>(null);
+  const [doesImageExceed, setDoesImageSizeExceed] = useState(false);
+
+  useEffect(() => {
+    if (state.userEntered) return;
+    setPreviewImageURL(null);
+  }, [state]);
 
   return (
     <form action={action} className='space-y-4'>
@@ -67,12 +77,41 @@ export function AddCabinForm({ onCancel }: { onCancel: () => void }) {
           <InputField
             id='image'
             name='image'
-            labelText='Image'
+            labelText='Image (< 1MB)'
             placeholder='Enter image URL...'
-            defaultValue={state.userEntered?.image ?? ''}
+            accept='image/png, image/jpeg, image/webp'
             error={state.error?.image?.[0] ?? ''}
+            type='file'
             autoComplete='off'
+            onChange={e => {
+              const file = e.target.files?.[0];
+              if (!file) {
+                setPreviewImageURL(null);
+                return;
+              }
+
+              if (file.size >= 1024 * 1024) {
+                e.target.value = '';
+                setDoesImageSizeExceed(true);
+                return;
+              }
+              setPreviewImageURL(URL.createObjectURL(file));
+              setDoesImageSizeExceed(false);
+            }}
           />
+          {doesImageExceed ? (
+            <p className='text-red-500'>Image size must be less than 1MB.</p>
+          ) : null}
+
+          {previewImageURL ? (
+            <Image
+              src={previewImageURL}
+              alt='Cabin preview'
+              width='256'
+              height='256'
+              className='ml-auto aspect-video h-36 rounded-lg mask-y-from-75% mask-x-from-95% object-cover'
+            />
+          ) : null}
         </div>
       </ScrollArea>
 
@@ -121,7 +160,7 @@ function InputField({
         {labelText}
       </label>
       <Input id={id} name={name} {...props} className='flex-2' />
-      {error ? <p className='text-red-500 flex-1'>{error}</p> : null}
+      {error ? <p className='flex-1 text-red-500'>{error}</p> : null}
     </div>
   );
 }
@@ -144,7 +183,7 @@ function TextareaField({
         {labelText}
       </label>
       <Textarea id={id} name={name} className='flex-2' {...props} />
-      {error ? <p className='text-red-500 flex-1'>{error}</p> : null}
+      {error ? <p className='flex-1 text-red-500'>{error}</p> : null}
     </div>
   );
 }
