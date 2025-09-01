@@ -11,6 +11,7 @@ import {
 import { CirclePlus } from 'lucide-react';
 import Image from 'next/image';
 import {
+  use,
   useActionState,
   useEffect,
   useState,
@@ -18,25 +19,21 @@ import {
   type TextareaHTMLAttributes,
 } from 'react';
 import { toast } from 'sonner';
-import type { ActionResponse } from './actions/types';
+import { CabinFormContext } from './CabinFormProvider';
+import type { AddActionResponse, UpdateActionResponse } from './actions/types';
 
-export function CabinForm({
-  action,
-  onCancel,
-  defaultCabin,
-}: {
-  action: (
-    currentState: ActionResponse,
-    formData: FormData
-  ) => Promise<ActionResponse>;
-  onCancel: () => void;
-  defaultCabin?: Cabin;
-}) {
-  const [state, dispatch, isPending] = useActionState(action, {
+export function CabinForm({ defaultCabin }: { defaultCabin?: Cabin }) {
+  const { action } = use(CabinFormContext);
+  const [state, dispatch, isPending] = useActionState<
+    UpdateActionResponse | AddActionResponse,
+    FormData
+  >(action, {
     userEntered: null,
     error: null,
   });
-  const [previewImageURL, setPreviewImageURL] = useState<string | null>(null);
+  const [previewImageURL, setPreviewImageURL] = useState<string | null>(
+    defaultCabin?.image ?? null
+  );
   const [doesImageExceed, setDoesImageSizeExceed] = useState(false);
 
   useEffect(() => {
@@ -160,7 +157,8 @@ export function CabinForm({
         <Button
           variant='ghost'
           className='hover:cursor-pointer disabled:cursor-not-allowed'
-          onClick={onCancel}
+          type='reset'
+          onClick={() => setPreviewImageURL(null)}
           disabled={isPending}
         >
           Cancel
