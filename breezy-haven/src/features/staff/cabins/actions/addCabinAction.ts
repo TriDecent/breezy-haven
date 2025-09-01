@@ -4,12 +4,12 @@ import { ROUTES, type Cabin } from '@/shared';
 import { revalidatePath } from 'next/cache';
 import path from 'path';
 import z from 'zod';
-import { AddCabinSchema, type ActionResponse } from './types';
+import { AddCabinSchema, type AddActionResponse } from './types';
 
 export async function addCabinAction(
-  _currentState: ActionResponse,
+  _currentState: AddActionResponse,
   formData: FormData
-): Promise<ActionResponse> {
+): Promise<AddActionResponse> {
   // TODO: verify staff authentication
   const input = Object.fromEntries(formData.entries());
 

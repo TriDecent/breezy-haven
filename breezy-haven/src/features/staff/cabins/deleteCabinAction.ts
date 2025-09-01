@@ -12,6 +12,7 @@ export async function deleteCabinAction(cabinId: Cabin['id']) {
       `An error has occurred while trying to delete cabin ${cabinId}. Error: ${errors.type}`
     );
 
+  revalidatePath(ROUTES.cabins.href);
   revalidatePath(ROUTES.staff.nested.cabins.href);
   revalidatePath(`${ROUTES.cabins.href}/${cabinId}`);
 }

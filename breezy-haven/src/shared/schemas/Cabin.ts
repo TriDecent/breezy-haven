@@ -11,7 +11,9 @@ export const CabinSchema = z.object({
     .refine(val => val >= 0 && val <= 100, {
       message: 'Discount must be between 0 and 100',
     }),
-  id: z.coerce.number({ error: 'Id must be a number' }),
+  id: z.coerce
+    .number({ error: 'Id must be a number' })
+    .positive({ error: 'Id must be a positive number' }),
   image: z.url({ error: 'Image must be URL' }),
   maxCapacity: z.coerce
     .number({ error: 'Capacity must be a number' })
