@@ -6,6 +6,7 @@ import {
   ScrollArea,
   Textarea,
   Toaster,
+  type Cabin,
 } from '@/shared';
 import { CirclePlus } from 'lucide-react';
 import Image from 'next/image';
@@ -17,10 +18,21 @@ import {
   type TextareaHTMLAttributes,
 } from 'react';
 import { toast } from 'sonner';
-import { addCabinAction } from './addCabinAction';
+import type { ActionResponse } from './actions/types';
 
-export function AddCabinForm({ onCancel }: { onCancel: () => void }) {
-  const [state, action, isPending] = useActionState(addCabinAction, {
+export function CabinForm({
+  action,
+  onCancel,
+  defaultCabin,
+}: {
+  action: (
+    currentState: ActionResponse,
+    formData: FormData
+  ) => Promise<ActionResponse>;
+  onCancel: () => void;
+  defaultCabin?: Cabin;
+}) {
+  const [state, dispatch, isPending] = useActionState(action, {
     userEntered: null,
     error: null,
   });
@@ -28,23 +40,25 @@ export function AddCabinForm({ onCancel }: { onCancel: () => void }) {
   const [doesImageExceed, setDoesImageSizeExceed] = useState(false);
 
   useEffect(() => {
-    if (!state.userEntered) setPreviewImageURL(null);
-    if (state.error) toast.error('An error has occurred!');
+    if (state.error)
+      toast.error('An error has occurred!', { toasterId: 'add-cabin' });
     if (state.success)
       toast.success('Upload cabin successfully!', { toasterId: 'add-cabin' });
+    setPreviewImageURL(null);
   }, [state]);
 
   return (
-    <form action={action} className='space-y-4'>
+    <form action={dispatch} className='space-y-4'>
       <Toaster id='add-cabin' richColors position='bottom-right' />
       <ScrollArea className='h-96 px-4' type='always'>
         <div className='space-y-4 md:space-y-8'>
+          <input type='hidden' name='id' value={defaultCabin?.id ?? 99999999} />
           <InputField
             id='name'
             name='name'
             labelText='Name'
             placeholder='Enter the cabin name...'
-            defaultValue={state.userEntered?.name ?? ''}
+            defaultValue={state.userEntered?.name ?? defaultCabin?.name}
             error={state.error?.name?.[0] ?? ''}
             autoComplete='off'
           />
@@ -53,7 +67,9 @@ export function AddCabinForm({ onCancel }: { onCancel: () => void }) {
             name='maxCapacity'
             labelText='Max Capacity'
             placeholder='Enter max capacity...'
-            defaultValue={state.userEntered?.maxCapacity ?? ''}
+            defaultValue={
+              state.userEntered?.maxCapacity ?? defaultCabin?.maxCapacity
+            }
             error={state.error?.maxCapacity?.[0] ?? ''}
             autoComplete='off'
           />
@@ -62,7 +78,9 @@ export function AddCabinForm({ onCancel }: { onCancel: () => void }) {
             name='regularPrice'
             labelText='Price'
             placeholder='Enter regular price...'
-            defaultValue={state.userEntered?.regularPrice ?? ''}
+            defaultValue={
+              state.userEntered?.regularPrice ?? defaultCabin?.maxCapacity
+            }
             error={state.error?.regularPrice?.[0] ?? ''}
             autoComplete='off'
           />
@@ -71,7 +89,9 @@ export function AddCabinForm({ onCancel }: { onCancel: () => void }) {
             name='discount'
             labelText='Discount'
             placeholder='Enter discount...'
-            defaultValue={state.userEntered?.discount ?? 0}
+            defaultValue={
+              state.userEntered?.discount ?? defaultCabin?.maxCapacity ?? 0
+            }
             error={state.error?.discount?.[0] ?? ''}
             autoComplete='off'
           />
@@ -80,7 +100,9 @@ export function AddCabinForm({ onCancel }: { onCancel: () => void }) {
             name='description'
             labelText='Description'
             placeholder='Enter description...'
-            defaultValue={state.userEntered?.description ?? ''}
+            defaultValue={
+              state.userEntered?.description ?? defaultCabin?.description
+            }
             error={state.error?.description?.[0] ?? ''}
             autoComplete='off'
           />
@@ -116,7 +138,7 @@ export function AddCabinForm({ onCancel }: { onCancel: () => void }) {
 
           {previewImageURL ? (
             <Image
-              src={previewImageURL}
+              src={previewImageURL ?? defaultCabin?.image}
               alt='Cabin preview'
               width='256'
               height='256'

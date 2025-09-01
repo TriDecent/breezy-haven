@@ -10,7 +10,8 @@ import {
 } from '@/shared';
 import { SquarePenIcon } from 'lucide-react';
 import { useState } from 'react';
-import { AddCabinForm } from './AddCabinForm';
+import { CabinForm } from './CabinForm';
+import { addCabinAction } from './actions/addCabinAction';
 
 export function CabinAdding() {
   const [shouldOpenForm, setShouldOpenForm] = useState(false);
@@ -41,7 +42,10 @@ export function CabinAdding() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <AddCabinForm onCancel={() => setShouldOpenForm(false)} />
+            <CabinForm
+              onCancel={() => setShouldOpenForm(false)}
+              action={addCabinAction}
+            />
           </CardContent>
         </Card>
       </Modal>

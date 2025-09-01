@@ -1,32 +1,10 @@
 'use server';
 import { staffCabinService } from '@/services';
-import { CabinSchema, ROUTES, type Cabin, type DeepReadonly } from '@/shared';
+import { ROUTES, type Cabin } from '@/shared';
 import { revalidatePath } from 'next/cache';
 import path from 'path';
 import z from 'zod';
-
-const AddCabinSchema = CabinSchema.omit({ id: true, created_at: true }).extend({
-  image: z
-    .file({ error: 'Image must be File' })
-    .refine(
-      file => ['image/png', 'image/jpeg', 'image/webp'].includes(file.type),
-      { error: 'Image file must be png, jpg or webp' }
-    ),
-});
-type SafeAddCabinInput = z.infer<typeof AddCabinSchema>;
-
-type ActionResponse = DeepReadonly<
-  | {
-      userEntered: Partial<Omit<SafeAddCabinInput, 'image'>>;
-      error: Partial<
-        Record<keyof SafeAddCabinInput, string[]> & {
-          unexpected: string;
-        }
-      >;
-      success?: boolean;
-    }
-  | { userEntered: null; error: null; success?: boolean }
->;
+import { AddCabinSchema, type ActionResponse } from './types';
 
 export async function addCabinAction(
   _currentState: ActionResponse,
@@ -47,7 +25,6 @@ export async function addCabinAction(
   }
 
   const userEnteredWithoutImage = { ...input };
-  delete userEnteredWithoutImage.image;
 
   const fileName = `${crypto.randomUUID()}-${parsedInput.data.image.name}`;
   const [uploadResult] = await uploadImageAsync(
