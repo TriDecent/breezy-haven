@@ -1,16 +1,9 @@
 'use client';
-import {
-  Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  Modal,
-} from '@/shared';
+import { Button } from '@/shared';
 import { SquarePenIcon } from 'lucide-react';
 import { useState } from 'react';
-import { CabinForm } from './CabinForm';
+import { CabinFormProvider } from './CabinFormProvider';
+import { CabinModal } from './CabinModal';
 import { addCabinAction } from './actions/addCabinAction';
 
 export function CabinAdding() {
@@ -28,27 +21,14 @@ export function CabinAdding() {
         </Button>
       </div>
 
-      <Modal isOpen={shouldOpenForm} onClose={() => setShouldOpenForm(false)}>
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              <p className='flex items-center gap-4'>
-                <SquarePenIcon />
-                <span>Add a cabin</span>
-              </p>
-            </CardTitle>
-            <CardDescription>
-              Fill out the form below to add a new cabin to the list.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <CabinForm
-              onCancel={() => setShouldOpenForm(false)}
-              action={addCabinAction}
-            />
-          </CardContent>
-        </Card>
-      </Modal>
+      <CabinFormProvider defaultContext={{ action: addCabinAction }}>
+        <CabinModal
+          title='Add a cabin'
+          description=' Fill out the form below to add a new cabin to the list.'
+          shouldOpenForm={shouldOpenForm}
+          onClose={() => setShouldOpenForm(false)}
+        />
+      </CabinFormProvider>
     </>
   );
 }
