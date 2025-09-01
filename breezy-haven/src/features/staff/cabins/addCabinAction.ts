@@ -1,6 +1,7 @@
 'use server';
 import { staffCabinService } from '@/services';
-import { CabinSchema, type Cabin, type DeepReadonly } from '@/shared';
+import { CabinSchema, ROUTES, type Cabin, type DeepReadonly } from '@/shared';
+import { revalidatePath } from 'next/cache';
 import path from 'path';
 import z from 'zod';
 
@@ -22,8 +23,9 @@ type ActionResponse = DeepReadonly<
           unexpected: string;
         }
       >;
+      success?: boolean;
     }
-  | { userEntered: null; error: null }
+  | { userEntered: null; error: null; success?: boolean }
 >;
 
 export async function addCabinAction(
@@ -77,9 +79,12 @@ export async function addCabinAction(
       },
     };
 
+  revalidatePath(ROUTES.staff.nested.cabins.href);
+
   return {
     userEntered: null,
     error: null,
+    success: true,
   };
 }
 

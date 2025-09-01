@@ -1,5 +1,12 @@
 'use client';
-import { Button, CardAction, Input, ScrollArea, Textarea } from '@/shared';
+import {
+  Button,
+  CardAction,
+  Input,
+  ScrollArea,
+  Textarea,
+  Toaster,
+} from '@/shared';
 import { CirclePlus } from 'lucide-react';
 import Image from 'next/image';
 import {
@@ -9,6 +16,7 @@ import {
   type InputHTMLAttributes,
   type TextareaHTMLAttributes,
 } from 'react';
+import { toast } from 'sonner';
 import { addCabinAction } from './addCabinAction';
 
 export function AddCabinForm({ onCancel }: { onCancel: () => void }) {
@@ -20,12 +28,15 @@ export function AddCabinForm({ onCancel }: { onCancel: () => void }) {
   const [doesImageExceed, setDoesImageSizeExceed] = useState(false);
 
   useEffect(() => {
-    if (state.userEntered) return;
-    setPreviewImageURL(null);
+    if (!state.userEntered) setPreviewImageURL(null);
+    if (state.error) toast.error('An error has occurred!');
+    if (state.success)
+      toast.success('Upload cabin successfully!', { toasterId: 'add-cabin' });
   }, [state]);
 
   return (
     <form action={action} className='space-y-4'>
+      <Toaster id='add-cabin' richColors position='bottom-right' />
       <ScrollArea className='h-96 px-4' type='always'>
         <div className='space-y-4 md:space-y-8'>
           <InputField
