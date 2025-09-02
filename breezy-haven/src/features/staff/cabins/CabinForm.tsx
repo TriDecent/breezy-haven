@@ -6,12 +6,11 @@ import {
   ScrollArea,
   Textarea,
   Toaster,
-  type Cabin,
+  type RootState,
 } from '@/shared';
 import { CirclePlus } from 'lucide-react';
 import Image from 'next/image';
 import {
-  use,
   useActionState,
   useEffect,
   useState,
@@ -19,18 +18,32 @@ import {
   type TextareaHTMLAttributes,
 } from 'react';
 import { toast } from 'sonner';
-import { CabinFormContext } from './CabinFormProvider';
-import type { AddActionResponse, UpdateActionResponse } from './actions/types';
+import type {
+  ActionResponse,
+  SafeAddCabinInput,
+  SafeUpdateCabinInput,
+} from './actions/types';
+import { useSelector } from 'react-redux';
 
-export function CabinForm({ defaultCabin }: { defaultCabin?: Cabin }) {
-  const { action } = use(CabinFormContext);
+export function CabinForm<T extends SafeAddCabinInput | SafeUpdateCabinInput>({
+  action,
+}: {
+  action: (
+    currentState: ActionResponse<T>,
+    formData: FormData
+  ) => Promise<ActionResponse<T>>;
+}) {
+  const defaultCabin = useSelector(
+    (state: RootState) => state.cabinForm.defaultCabin
+  );
   const [state, dispatch, isPending] = useActionState<
-    UpdateActionResponse | AddActionResponse,
+    ActionResponse<T>,
     FormData
   >(action, {
     userEntered: null,
     error: null,
   });
+
   const [previewImageURL, setPreviewImageURL] = useState<string | null>(
     defaultCabin?.image ?? null
   );
