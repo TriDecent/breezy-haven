@@ -15,7 +15,6 @@ export * from './schemas/Guest';
 export * from './schemas/Setting';
 export * from './schemas/types';
 export * from './store/uiSlice';
-export * from './types/types';
 
 export { default as Variants } from './animations/Variants';
 export { default as Badge } from './components/Badge';
@@ -48,6 +47,7 @@ export {
 export { default as RootProvider } from './providers/RootProvider';
 export { default as ThemeProvider } from './providers/ThemeProvider';
 export { useGetAuthQuery } from './store/authApi';
+export { cabinFormActions } from './store/cabinFormSlice';
 export type { RootState } from './store/store';
 export { dateHelper } from './utils/DateHelper';
 export { errorHelper } from './utils/ErrorHelper';

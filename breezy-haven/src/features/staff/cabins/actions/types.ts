@@ -1,4 +1,4 @@
-import { CabinSchema, type DeepReadonly } from '@/shared';
+import { CabinSchema } from '@/shared';
 import z from 'zod';
 
 export const AddCabinSchema = CabinSchema.omit({
@@ -33,19 +33,20 @@ export const UpdateCabinSchema = CabinSchema.omit({
 
 export type SafeUpdateCabinInput = z.infer<typeof UpdateCabinSchema>;
 
-export type ActionResponse<T extends SafeAddCabinInput | SafeUpdateCabinInput> =
-  DeepReadonly<
-    | {
-        userEntered: Partial<Omit<T, 'image'>>;
-        error: Partial<
+export type ActionResponse<T> = Readonly<
+  | {
+      userEntered: Readonly<Partial<Omit<T, 'image'>>>;
+      error: Readonly<
+        Partial<
           Record<keyof T, string[]> & {
             unexpected: string;
           }
-        >;
-        success?: boolean;
-      }
-    | { userEntered: null; error: null; success?: boolean }
-  >;
+        >
+      >;
+      success?: boolean;
+    }
+  | { userEntered: null; error: null; success?: boolean }
+>;
 
 export type AddActionResponse = ActionResponse<SafeAddCabinInput>;
 export type UpdateActionResponse = ActionResponse<SafeUpdateCabinInput>;
