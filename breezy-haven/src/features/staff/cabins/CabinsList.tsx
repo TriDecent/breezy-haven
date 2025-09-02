@@ -2,6 +2,7 @@ import { staffCabinService } from '@/services';
 import { errorHelper } from '@/shared';
 import { CabinAdding } from './CabinAdding';
 import { CabinsTable } from './CabinsTable';
+import { CabinModal } from './CabinModal';
 
 export async function CabinsList() {
   const { data, errors } = await staffCabinService.getAll();
@@ -11,6 +12,7 @@ export async function CabinsList() {
     <>
       <CabinAdding />
       <CabinsTable cabins={data} />
+      <CabinModal />
     </>
   );
 }

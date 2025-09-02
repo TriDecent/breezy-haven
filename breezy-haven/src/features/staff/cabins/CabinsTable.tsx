@@ -2,6 +2,7 @@
 
 import {
   Button,
+  cabinFormActions,
   DataTable,
   DataTableColumnHeader,
   DropdownMenu,
@@ -14,17 +15,18 @@ import {
 } from '@/shared';
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import type { ColumnDef } from '@tanstack/react-table';
-import { CopyIcon, MoreHorizontalIcon, Trash2Icon } from 'lucide-react';
+import {
+  CopyIcon,
+  MoreHorizontalIcon,
+  PencilIcon,
+  Trash2Icon,
+} from 'lucide-react';
 import Image from 'next/image';
+import { useDispatch } from 'react-redux';
 import { toast } from 'sonner';
 import { deleteCabinAction } from './deleteCabinAction';
 
-const columns: ColumnDef<
-  Pick<
-    Cabin,
-    'id' | 'image' | 'name' | 'regularPrice' | 'discount' | 'maxCapacity'
-  >
->[] = [
+const columns: ColumnDef<Cabin>[] = [
   {
     header: 'Cabin Info',
     columns: [
@@ -106,34 +108,9 @@ const columns: ColumnDef<
             <DropdownMenuContent>
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() =>
-                  toast.warning('Are you sure to delete this cabin?', {
-                    action: {
-                      label: 'Yes',
-                      onClick: () =>
-                        toast.promise(deleteCabinAction(row.original.id), {
-                          loading: 'Deleting...',
-                          success: `Cabin ${row.original.id} has been deleted!`,
-                          error: 'An error has  occurred!',
-                        }),
-                    },
-                  })
-                }
-              >
-                <Trash2Icon />
-                Delete
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={async () => {
-                  await navigator.clipboard.writeText(
-                    JSON.stringify(row.original)
-                  );
-                  toast.success('Copy successfully!');
-                }}
-              >
-                <CopyIcon /> Copy info
-              </DropdownMenuItem>
+              <CopyAction cabin={row.original} />
+              <EditAction cabin={row.original} />
+              <DeleteAction cabinId={row.original.id} />
             </DropdownMenuContent>
           </DropdownMenu>
         ),
@@ -144,22 +121,74 @@ const columns: ColumnDef<
 
 export function CabinsTable({ cabins }: { cabins: readonly Cabin[] }) {
   return (
-    <DataTable
-      data={[...cabins]}
-      columns={columns}
-      filter={table => (
-        <div className='mt-4 flex gap-2'>
-          <Input
-            id='filter'
-            placeholder='Filter by name...'
-            value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
-            onChange={e =>
-              table.getColumn('name')?.setFilterValue(e.target.value)
-            }
-          />
-        </div>
-      )}
-    />
+    <>
+      <DataTable
+        data={[...cabins]}
+        columns={columns}
+        filter={table => (
+          <div className='mt-4 flex gap-2'>
+            <Input
+              id='filter'
+              placeholder='Filter by name...'
+              value={
+                (table.getColumn('name')?.getFilterValue() as string) ?? ''
+              }
+              onChange={e =>
+                table.getColumn('name')?.setFilterValue(e.target.value)
+              }
+            />
+          </div>
+        )}
+      />
+    </>
+  );
+}
+
+function EditAction({ cabin }: { cabin: Cabin }) {
+  const dispatch = useDispatch();
+
+  return (
+    <DropdownMenuItem
+      onClick={() => dispatch(cabinFormActions.openUpdateForm(cabin))}
+    >
+      <PencilIcon /> Edit
+    </DropdownMenuItem>
+  );
+}
+
+function CopyAction({ cabin }: { cabin: Cabin }) {
+  return (
+    <DropdownMenuItem
+      onClick={async () => {
+        await navigator.clipboard.writeText(JSON.stringify(cabin));
+        toast.success('Copy successfully!');
+      }}
+    >
+      <CopyIcon /> Copy info
+    </DropdownMenuItem>
+  );
+}
+
+function DeleteAction({ cabinId }: { cabinId: Cabin['id'] }) {
+  return (
+    <DropdownMenuItem
+      onClick={() =>
+        toast.warning('Are you sure to delete this cabin?', {
+          action: {
+            label: 'Yes',
+            onClick: () =>
+              toast.promise(deleteCabinAction(cabinId), {
+                loading: 'Deleting...',
+                success: `Cabin ${cabinId} has been deleted!`,
+                error: 'An error has  occurred!',
+              }),
+          },
+        })
+      }
+    >
+      <Trash2Icon />
+      Delete
+    </DropdownMenuItem>
   );
 }
 
