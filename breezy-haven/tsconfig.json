@@ -30,5 +30,5 @@
     "src/app/guest/about/page.tsx",
     "src/shared/components/NotFound.tsx"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist", ".next"]
 }

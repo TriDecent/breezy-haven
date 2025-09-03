@@ -1,6 +1,10 @@
 import { CabinSchema, type Cabin } from '@/shared';
 import z from 'zod';
 
+export type Result<S, F> =
+  | readonly [success: S, failed: null]
+  | readonly [success: null, failed: F];
+
 export const AddCabinSchema = CabinSchema.omit({
   id: true,
   created_at: true,

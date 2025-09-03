@@ -8,6 +8,7 @@ import {
   SafeUpdateCabinInput,
   UpdateCabinSchema,
   type FailedResponse,
+  type Result,
   type UpdateActionResponse,
 } from './types';
 
@@ -71,10 +72,7 @@ export async function updateCabinAction(
  */
 function validateInput(
   input: Readonly<Record<string, FormDataEntryValue>>
-): Readonly<
-  | [success: SafeUpdateCabinInput, failed: null]
-  | [success: null, failed: FailedResponse<SafeUpdateCabinInput>]
-> {
+): Result<SafeUpdateCabinInput, FailedResponse<SafeUpdateCabinInput>> {
   const parsedInput = UpdateCabinSchema.safeParse(input);
 
   if (!parsedInput.success) {
@@ -95,10 +93,7 @@ function validateInput(
 async function handleWithoutImageUploadAsync(
   cabin: Omit<Cabin, 'image' | 'created_at'>,
   input: Record<string, FormDataEntryValue>
-): Promise<
-  | [success: null, failed: FailedResponse<SafeUpdateCabinInput>]
-  | [success: Cabin, failed: null]
-> {
+): Promise<Result<Cabin, FailedResponse<SafeUpdateCabinInput>>> {
   const [updatedCabin] = await updateCabinAsync(cabin.id, cabin);
 
   if (!updatedCabin)
@@ -119,10 +114,7 @@ async function handleWithoutImageUploadAsync(
 async function handleWithImageUploadAsync(
   cabin: SafeUpdateCabinInput & { image: File },
   input: Record<string, FormDataEntryValue>
-): Promise<
-  | [success: null, failed: FailedResponse<SafeUpdateCabinInput>]
-  | [success: Cabin, failed: null]
-> {
+): Promise<Result<Cabin, FailedResponse<SafeUpdateCabinInput>>> {
   const fileName = `${crypto.randomUUID()}-${cabin.image.name}`;
 
   const [uploadResult] = await uploadImageAsync(fileName, cabin.image);
