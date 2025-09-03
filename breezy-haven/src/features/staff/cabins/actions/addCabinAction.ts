@@ -39,7 +39,7 @@ export async function addCabinAction(
       },
     };
 
-  const doesCreateCabinSuccess = await createCabinAsync({
+  const [doesCreateCabinSuccess] = await createCabinAsync({
     ...parsedInput.data,
     image: path.posix.join(
       process.env.SUPABASE_BUCKET ?? '',
@@ -95,7 +95,7 @@ async function createCabinAsync(
         [cabin.image.split('/').pop()!],
         'cabin-images'
       );
-      if (deleteImageError) doesDeleteImageErrorExist = true;
+      if (deleteImageError) doesDeleteImageErrorExist = !!errors;
       ++deleteRetryCount;
     } while (doesDeleteImageErrorExist && deleteRetryCount < 3);
 
