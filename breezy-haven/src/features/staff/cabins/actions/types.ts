@@ -1,4 +1,4 @@
-import { CabinSchema } from '@/shared';
+import { CabinSchema, type Cabin } from '@/shared';
 import z from 'zod';
 
 export const AddCabinSchema = CabinSchema.omit({
@@ -27,26 +27,31 @@ export const UpdateCabinSchema = CabinSchema.omit({
         { error: 'Image file must be png, jpg or webp' }
       )
       .optional(),
-    originalImage: z.url({ error: 'Original image must be url' }),
   })
   .strip();
 
 export type SafeUpdateCabinInput = z.infer<typeof UpdateCabinSchema>;
 
-export type ActionResponse<T> = Readonly<
-  | {
-      userEntered: Readonly<Partial<Omit<T, 'image'>>>;
-      error: Readonly<
-        Partial<
-          Record<keyof T, string[]> & {
-            unexpected: string;
-          }
-        >
-      >;
-      success?: boolean;
-    }
-  | { userEntered: null; error: null; success?: boolean }
->;
+export type SuccessResponse = Readonly<{
+  userEntered: null;
+  error: null;
+  success?: true;
+  updatedCabin?: Cabin;
+}>;
+
+export type FailedResponse<T> = Readonly<{
+  userEntered: Readonly<Partial<Omit<T, 'image'>>>;
+  error: Readonly<
+    Partial<
+      Record<keyof T, string[]> & {
+        unexpected: string;
+      }
+    >
+  >;
+  success?: false;
+}>;
+
+export type ActionResponse<T> = Readonly<SuccessResponse | FailedResponse<T>>;
 
 export type AddActionResponse = ActionResponse<SafeAddCabinInput>;
 export type UpdateActionResponse = ActionResponse<SafeUpdateCabinInput>;

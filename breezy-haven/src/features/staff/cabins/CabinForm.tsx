@@ -1,6 +1,7 @@
 'use client';
 import {
   Button,
+  cabinFormActions,
   CardAction,
   Input,
   ScrollArea,
@@ -17,13 +18,13 @@ import {
   type InputHTMLAttributes,
   type TextareaHTMLAttributes,
 } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'sonner';
 import type {
   ActionResponse,
   SafeAddCabinInput,
   SafeUpdateCabinInput,
 } from './actions/types';
-import { useSelector } from 'react-redux';
 
 export function CabinForm<T extends SafeAddCabinInput | SafeUpdateCabinInput>({
   action,
@@ -36,7 +37,9 @@ export function CabinForm<T extends SafeAddCabinInput | SafeUpdateCabinInput>({
   const defaultCabin = useSelector(
     (state: RootState) => state.cabinForm.defaultCabin
   );
-  const [state, dispatch, isPending] = useActionState<
+  const mode = useSelector((state: RootState) => state.cabinForm.mode);
+  const dispatch = useDispatch();
+  const [formState, formDispatch, isPending] = useActionState<
     ActionResponse<T>,
     FormData
   >(action, {
@@ -50,26 +53,42 @@ export function CabinForm<T extends SafeAddCabinInput | SafeUpdateCabinInput>({
   const [doesImageExceed, setDoesImageSizeExceed] = useState(false);
 
   useEffect(() => {
-    if (state.error)
-      toast.error('An error has occurred!', { toasterId: 'add-cabin' });
-    if (state.success)
-      toast.success('Upload cabin successfully!', { toasterId: 'add-cabin' });
-    setPreviewImageURL(null);
-  }, [state]);
+    if (formState.error)
+      toast.error('An error has occurred!', { toasterId: 'cabin-operation' });
+    if (formState.success) {
+      toast.success('Upload cabin successfully!', {
+        toasterId: 'cabin-operation',
+      });
+      if (mode === 'update' && formState.updatedCabin)
+        dispatch(cabinFormActions.openUpdateForm(formState.updatedCabin));
+      if (mode !== 'update') setPreviewImageURL(null);
+    }
+  }, [formDispatch, mode, formState, dispatch]);
 
   return (
-    <form action={dispatch} className='space-y-4'>
-      <Toaster id='add-cabin' richColors position='bottom-right' />
+    <form
+      action={formData => {
+        const image = formData.get('image');
+
+        if (image instanceof File && image.size === 0) formData.delete('image');
+
+        formDispatch(formData);
+      }}
+      className='space-y-4'
+    >
+      <Toaster id='cabin-operation' richColors position='top-right' />
       <ScrollArea className='h-96 px-4' type='always'>
         <div className='space-y-4 md:space-y-8'>
-          <input type='hidden' name='id' value={defaultCabin?.id ?? 99999999} />
+          {defaultCabin?.id ? (
+            <input type='hidden' name='id' value={defaultCabin.id} />
+          ) : null}
           <InputField
             id='name'
             name='name'
             labelText='Name'
             placeholder='Enter the cabin name...'
-            defaultValue={state.userEntered?.name ?? defaultCabin?.name}
-            error={state.error?.name?.[0] ?? ''}
+            defaultValue={formState.userEntered?.name ?? defaultCabin?.name}
+            error={formState.error?.name?.[0] ?? ''}
             autoComplete='off'
           />
           <InputField
@@ -78,9 +97,9 @@ export function CabinForm<T extends SafeAddCabinInput | SafeUpdateCabinInput>({
             labelText='Max Capacity'
             placeholder='Enter max capacity...'
             defaultValue={
-              state.userEntered?.maxCapacity ?? defaultCabin?.maxCapacity
+              formState.userEntered?.maxCapacity ?? defaultCabin?.maxCapacity
             }
-            error={state.error?.maxCapacity?.[0] ?? ''}
+            error={formState.error?.maxCapacity?.[0] ?? ''}
             autoComplete='off'
           />
           <InputField
@@ -89,9 +108,9 @@ export function CabinForm<T extends SafeAddCabinInput | SafeUpdateCabinInput>({
             labelText='Price'
             placeholder='Enter regular price...'
             defaultValue={
-              state.userEntered?.regularPrice ?? defaultCabin?.maxCapacity
+              formState.userEntered?.regularPrice ?? defaultCabin?.regularPrice
             }
-            error={state.error?.regularPrice?.[0] ?? ''}
+            error={formState.error?.regularPrice?.[0] ?? ''}
             autoComplete='off'
           />
           <InputField
@@ -100,9 +119,9 @@ export function CabinForm<T extends SafeAddCabinInput | SafeUpdateCabinInput>({
             labelText='Discount'
             placeholder='Enter discount...'
             defaultValue={
-              state.userEntered?.discount ?? defaultCabin?.maxCapacity ?? 0
+              formState.userEntered?.discount ?? defaultCabin?.discount ?? 0
             }
-            error={state.error?.discount?.[0] ?? ''}
+            error={formState.error?.discount?.[0] ?? ''}
             autoComplete='off'
           />
           <TextareaField
@@ -111,9 +130,9 @@ export function CabinForm<T extends SafeAddCabinInput | SafeUpdateCabinInput>({
             labelText='Description'
             placeholder='Enter description...'
             defaultValue={
-              state.userEntered?.description ?? defaultCabin?.description
+              formState.userEntered?.description ?? defaultCabin?.description
             }
-            error={state.error?.description?.[0] ?? ''}
+            error={formState.error?.description?.[0] ?? ''}
             autoComplete='off'
           />
 
@@ -123,7 +142,7 @@ export function CabinForm<T extends SafeAddCabinInput | SafeUpdateCabinInput>({
             labelText='Image (< 1MB)'
             placeholder='Enter image URL...'
             accept='image/png, image/jpeg, image/webp'
-            error={state.error?.image?.[0] ?? ''}
+            error={formState.error?.image?.[0] ?? ''}
             type='file'
             autoComplete='off'
             onChange={e => {
@@ -152,6 +171,7 @@ export function CabinForm<T extends SafeAddCabinInput | SafeUpdateCabinInput>({
               alt='Cabin preview'
               width='256'
               height='256'
+              style={{ width: 'auto', height: 'auto' }}
               className='ml-auto aspect-video h-36 rounded-lg mask-y-from-75% mask-x-from-95% object-cover'
             />
           ) : null}
@@ -177,9 +197,9 @@ export function CabinForm<T extends SafeAddCabinInput | SafeUpdateCabinInput>({
           Cancel
         </Button>
       </CardAction>
-      {state.error?.unexpected ? (
+      {formState.error?.unexpected ? (
         <p className='mt-4 text-center text-red-500'>
-          {state.error.unexpected}
+          {formState.error.unexpected}
         </p>
       ) : null}
     </form>

@@ -149,7 +149,10 @@ function EditAction({ cabin }: { cabin: Cabin }) {
 
   return (
     <DropdownMenuItem
-      onClick={() => dispatch(cabinFormActions.openUpdateForm(cabin))}
+      onClick={async () => {
+        await new Promise(resolve => setTimeout(resolve, 300)); // give some time for DropdownMenu to cleanup aria-hidden, avoid warning accessibility
+        return dispatch(cabinFormActions.openUpdateForm(cabin));
+      }}
     >
       <PencilIcon /> Edit
     </DropdownMenuItem>
