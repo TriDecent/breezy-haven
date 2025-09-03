@@ -34,36 +34,19 @@ export function CabinForm<T extends SafeAddCabinInput | SafeUpdateCabinInput>({
     formData: FormData
   ) => Promise<ActionResponse<T>>;
 }) {
-  const defaultCabin = useSelector(
-    (state: RootState) => state.cabinForm.defaultCabin
-  );
-  const mode = useSelector((state: RootState) => state.cabinForm.mode);
-  const dispatch = useDispatch();
-  const [formState, formDispatch, isPending] = useActionState<
-    ActionResponse<T>,
-    FormData
-  >(action, {
-    userEntered: null,
-    error: null,
-  });
+  const {
+    state,
+    action: dispatch,
+    isPending,
+    defaultCabin,
+  } = useCabinForm(action);
 
-  const [previewImageURL, setPreviewImageURL] = useState<string | null>(
-    defaultCabin?.image ?? null
-  );
-  const [doesImageExceed, setDoesImageSizeExceed] = useState(false);
-
-  useEffect(() => {
-    if (formState.error)
-      toast.error('An error has occurred!', { toasterId: 'cabin-operation' });
-    if (formState.success) {
-      toast.success('Upload cabin successfully!', {
-        toasterId: 'cabin-operation',
-      });
-      if (mode === 'update' && formState.updatedCabin)
-        dispatch(cabinFormActions.openUpdateForm(formState.updatedCabin));
-      if (mode !== 'update') setPreviewImageURL(null);
-    }
-  }, [formDispatch, mode, formState, dispatch]);
+  const {
+    previewImageURL,
+    setPreviewImageURL,
+    isImageSizeExceeded,
+    setIsImageSizeExceeded,
+  } = usePreviewImage(defaultCabin?.image ?? null, state);
 
   return (
     <form
@@ -72,7 +55,7 @@ export function CabinForm<T extends SafeAddCabinInput | SafeUpdateCabinInput>({
 
         if (image instanceof File && image.size === 0) formData.delete('image');
 
-        formDispatch(formData);
+        dispatch(formData);
       }}
       className='space-y-4'
     >
@@ -87,8 +70,8 @@ export function CabinForm<T extends SafeAddCabinInput | SafeUpdateCabinInput>({
             name='name'
             labelText='Name'
             placeholder='Enter the cabin name...'
-            defaultValue={formState.userEntered?.name ?? defaultCabin?.name}
-            error={formState.error?.name?.[0] ?? ''}
+            defaultValue={state.userEntered?.name ?? defaultCabin?.name}
+            error={state.error?.name?.[0] ?? ''}
             autoComplete='off'
           />
           <InputField
@@ -97,9 +80,9 @@ export function CabinForm<T extends SafeAddCabinInput | SafeUpdateCabinInput>({
             labelText='Max Capacity'
             placeholder='Enter max capacity...'
             defaultValue={
-              formState.userEntered?.maxCapacity ?? defaultCabin?.maxCapacity
+              state.userEntered?.maxCapacity ?? defaultCabin?.maxCapacity
             }
-            error={formState.error?.maxCapacity?.[0] ?? ''}
+            error={state.error?.maxCapacity?.[0] ?? ''}
             autoComplete='off'
           />
           <InputField
@@ -108,9 +91,9 @@ export function CabinForm<T extends SafeAddCabinInput | SafeUpdateCabinInput>({
             labelText='Price'
             placeholder='Enter regular price...'
             defaultValue={
-              formState.userEntered?.regularPrice ?? defaultCabin?.regularPrice
+              state.userEntered?.regularPrice ?? defaultCabin?.regularPrice
             }
-            error={formState.error?.regularPrice?.[0] ?? ''}
+            error={state.error?.regularPrice?.[0] ?? ''}
             autoComplete='off'
           />
           <InputField
@@ -119,9 +102,9 @@ export function CabinForm<T extends SafeAddCabinInput | SafeUpdateCabinInput>({
             labelText='Discount'
             placeholder='Enter discount...'
             defaultValue={
-              formState.userEntered?.discount ?? defaultCabin?.discount ?? 0
+              state.userEntered?.discount ?? defaultCabin?.discount ?? 0
             }
-            error={formState.error?.discount?.[0] ?? ''}
+            error={state.error?.discount?.[0] ?? ''}
             autoComplete='off'
           />
           <TextareaField
@@ -130,9 +113,9 @@ export function CabinForm<T extends SafeAddCabinInput | SafeUpdateCabinInput>({
             labelText='Description'
             placeholder='Enter description...'
             defaultValue={
-              formState.userEntered?.description ?? defaultCabin?.description
+              state.userEntered?.description ?? defaultCabin?.description
             }
-            error={formState.error?.description?.[0] ?? ''}
+            error={state.error?.description?.[0] ?? ''}
             autoComplete='off'
           />
 
@@ -142,7 +125,7 @@ export function CabinForm<T extends SafeAddCabinInput | SafeUpdateCabinInput>({
             labelText='Image (< 1MB)'
             placeholder='Enter image URL...'
             accept='image/png, image/jpeg, image/webp'
-            error={formState.error?.image?.[0] ?? ''}
+            error={state.error?.image?.[0] ?? ''}
             type='file'
             autoComplete='off'
             onChange={e => {
@@ -154,14 +137,14 @@ export function CabinForm<T extends SafeAddCabinInput | SafeUpdateCabinInput>({
 
               if (file.size >= 1024 * 1024) {
                 e.target.value = '';
-                setDoesImageSizeExceed(true);
+                setIsImageSizeExceeded(true);
                 return;
               }
               setPreviewImageURL(URL.createObjectURL(file));
-              setDoesImageSizeExceed(false);
+              setIsImageSizeExceeded(false);
             }}
           />
-          {doesImageExceed ? (
+          {isImageSizeExceeded ? (
             <p className='text-red-500'>Image size must be less than 1MB.</p>
           ) : null}
 
@@ -191,20 +174,84 @@ export function CabinForm<T extends SafeAddCabinInput | SafeUpdateCabinInput>({
           variant='ghost'
           className='hover:cursor-pointer disabled:cursor-not-allowed'
           type='reset'
-          onClick={() => setPreviewImageURL(null)}
           disabled={isPending}
         >
           Cancel
         </Button>
       </CardAction>
-      {formState.error?.unexpected ? (
+      {state.error?.unexpected ? (
         <p className='mt-4 text-center text-red-500'>
-          {formState.error.unexpected}
+          {state.error.unexpected}
         </p>
       ) : null}
     </form>
   );
 }
+
+const useCabinForm = <T,>(
+  action: (
+    currentState: ActionResponse<T>,
+    formData: FormData
+  ) => Promise<ActionResponse<T>>
+) => {
+  const defaultCabin = useSelector(
+    (state: RootState) => state.cabinForm.defaultCabin
+  );
+  const dispatch = useDispatch();
+  const [formState, formDispatch, isPending] = useActionState<
+    ActionResponse<T>,
+    FormData
+  >(action, {
+    userEntered: null,
+    error: null,
+  });
+
+  const mode = useSelector((state: RootState) => state.cabinForm.mode);
+
+  useEffect(() => {
+    if (formState.error)
+      toast.error('An error has occurred!', { toasterId: 'cabin-operation' });
+    if (formState.success) {
+      toast.success('Upload cabin successfully!', {
+        toasterId: 'cabin-operation',
+      });
+      if (mode === 'update' && formState.updatedCabin)
+        dispatch(cabinFormActions.openUpdateForm(formState.updatedCabin));
+    }
+  }, [formDispatch, mode, formState, dispatch]);
+
+  return {
+    state: formState,
+    action: formDispatch,
+    isPending,
+    defaultCabin,
+  };
+};
+
+const usePreviewImage = <T,>(
+  defaultImage: string | null,
+  state: ActionResponse<T>
+) => {
+  const mode = useSelector((state: RootState) => state.cabinForm.mode);
+  const [isImageSizeExceeded, setIsImageSizeExceeded] = useState(false);
+  const [previewImageURL, setPreviewImageURL] = useState<string | null>(
+    defaultImage
+  );
+
+  useEffect(() => {
+    if (!state?.success) return;
+
+    if (mode !== 'update') setPreviewImageURL(null);
+  }, [mode, state]);
+
+  return {
+    previewImageURL,
+    setPreviewImageURL,
+    isImageSizeExceeded,
+
+    setIsImageSizeExceeded,
+  };
+};
 
 function InputField({
   id,
