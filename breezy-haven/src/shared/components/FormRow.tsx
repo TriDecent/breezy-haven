@@ -44,7 +44,7 @@ function InputField({
   labelText: string;
   labelClassname?: string;
   className?: string;
-  error: string;
+  error?: string;
 } & InputHTMLAttributes<HTMLInputElement>) {
   return (
     <div className='flex flex-col gap-1 md:flex-row md:items-center md:gap-4'>
@@ -57,7 +57,9 @@ function InputField({
         {...props}
         className={cn('flex-2', className)}
       />
-      {error ? <p className='flex-1 text-red-500'>{error}</p> : null}
+      {error ? (
+        <p className='flex-1 text-red-500 first-letter:capitalize'>{error}</p>
+      ) : null}
     </div>
   );
 }
@@ -76,7 +78,7 @@ function TextareaField({
   labelText: string;
   labelClassname: string;
   className?: string;
-  error: string;
+  error?: string;
 } & TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <div className='flex flex-col gap-1 md:flex-row md:items-center md:gap-4'>
@@ -89,7 +91,9 @@ function TextareaField({
         className={cn('flex-2', className)}
         {...props}
       />
-      {error ? <p className='flex-1 text-red-500'>{error}</p> : null}
+      {error ? (
+        <p className='flex-1 text-red-500 first-letter:capitalize'>{error}</p>
+      ) : null}
     </div>
   );
 }

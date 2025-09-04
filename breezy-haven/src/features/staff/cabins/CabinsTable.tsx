@@ -129,11 +129,11 @@ const columns: ColumnDef<Cabin>[] = [
   },
 ];
 
-export function CabinsTable({ cabins }: { cabins: readonly Cabin[] }) {
+export function CabinsTable({ cabins }: { cabins: Cabin[] }) {
   return (
     <>
       <DataTable
-        data={[...cabins]}
+        data={cabins}
         columns={columns}
         filter={table => (
           <div className='mt-4 flex gap-2'>
