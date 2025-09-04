@@ -13,6 +13,7 @@ import CabinService from './CabinService';
 import CabinStaffService from './CabinStaffService';
 import GuestService from './GuestService';
 import SettingService from './SettingService';
+import SettingStaffService from './SettingStaffService';
 export * from './countryService';
 export * from './types';
 
@@ -55,5 +56,12 @@ export const staffCabinService = new CabinStaffService(
   new BaseStaffService(
     new BaseService(cabinRepository, verifyStaffAuthAsync, CabinSchema),
     cabinRepository
+  )
+);
+
+export const staffSettingService = new SettingStaffService(
+  new BaseStaffService(
+    new BaseService(settingRepository, verifyStaffAuthAsync, SettingSchema),
+    settingRepository
   )
 );

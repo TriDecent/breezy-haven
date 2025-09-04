@@ -23,6 +23,7 @@ export * from './components/DataTable';
 export { default as DataTable } from './components/DataTable';
 export { default as DateSelector } from './components/DateSelector';
 export { default as Error } from './components/Error';
+export { FormRow } from './components/FormRow';
 export { default as Logo } from './components/Logo';
 export { default as MiniSidebar } from './components/MiniSidebar';
 export { default as MiniSpinner } from './components/MiniSpinner';
