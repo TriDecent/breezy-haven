@@ -4,7 +4,7 @@ import {
   Filter,
   ReservationReminder,
 } from '@/features/guest/cabins';
-import { ROUTES } from '@/shared';
+import { ROUTES, ScrollTo } from '@/shared';
 
 import { Metadata } from 'next';
 import { Suspense } from 'react';
@@ -16,7 +16,10 @@ export const metadata: Metadata = ROUTES.cabins.metadata;
 export default function Page() {
   return (
     <>
-      <h1 className='text-accent-400 mb-5 text-xl font-medium md:text-2xl lg:text-4xl'>
+      <h1
+        className='text-accent-400 mb-5 scroll-mt-4 text-xl font-medium md:text-2xl lg:text-4xl'
+        id='header'
+      >
         Our Luxury Cabins
       </h1>
       <p className='text-primary-200 mb-10 lg:text-lg'>
@@ -36,6 +39,10 @@ export default function Page() {
         <CabinsList />
       </Suspense>
       <ReservationReminder />
+
+      <div className='fixed right-4 bottom-8 w-fit'>
+        <ScrollTo id='header' />
+      </div>
     </>
   );
 }

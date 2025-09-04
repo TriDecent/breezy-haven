@@ -33,6 +33,7 @@ export { default as NotFound } from './components/NotFound';
 export { default as PageLayout } from './components/PageLayout';
 export { default as PageProgressBar } from './components/PageProgressBar';
 export { default as PrimaryButton } from './components/PrimaryButton';
+export { ScrollTo } from './components/ScrollTo';
 export { default as Spinner } from './components/Spinner';
 export { default as Textarea } from './components/Textarea';
 export { default as TextExpander } from './components/TextExpander';
