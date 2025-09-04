@@ -17,13 +17,16 @@ import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import type { ColumnDef } from '@tanstack/react-table';
 import {
   CopyIcon,
+  CopyPlusIcon,
   MoreHorizontalIcon,
   PencilIcon,
   Trash2Icon,
 } from 'lucide-react';
 import Image from 'next/image';
+import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'sonner';
+import { duplicateCabinAction } from './actions/duplicateCabinAction';
 import { deleteCabinAction } from './deleteCabinAction';
 
 const columns: ColumnDef<Cabin>[] = [
@@ -90,6 +93,12 @@ const columns: ColumnDef<Cabin>[] = [
             className='py-2'
           />
         ),
+        cell: ({ row }) =>
+          row.original.discount === 0 ? (
+            <span>&mdash;</span>
+          ) : (
+            row.original.discount
+          ),
       },
     ],
   },
@@ -110,6 +119,7 @@ const columns: ColumnDef<Cabin>[] = [
               <DropdownMenuSeparator />
               <CopyAction cabin={row.original} />
               <EditAction cabin={row.original} />
+              <DuplicateAction cabin={row.original} />
               <DeleteAction cabinId={row.original.id} />
             </DropdownMenuContent>
           </DropdownMenu>
@@ -191,6 +201,31 @@ function DeleteAction({ cabinId }: { cabinId: Cabin['id'] }) {
     >
       <Trash2Icon />
       Delete
+    </DropdownMenuItem>
+  );
+}
+
+function DuplicateAction({
+  cabin,
+}: {
+  cabin: Omit<Cabin, 'id' | 'created_at'>;
+}) {
+  const handleDuplicateAction = useCallback(
+    () =>
+      toast.promise(duplicateCabinAction(cabin), {
+        loading: 'Duplicating cabin...',
+        error: 'An error has occurred while trying to duplicate the cabin',
+        success: 'Duplicate the cabin successfully!',
+      }),
+
+    [cabin]
+  );
+
+  return (
+    <DropdownMenuItem asChild>
+      <button onClick={handleDuplicateAction}>
+        <CopyPlusIcon /> Duplicate
+      </button>
     </DropdownMenuItem>
   );
 }

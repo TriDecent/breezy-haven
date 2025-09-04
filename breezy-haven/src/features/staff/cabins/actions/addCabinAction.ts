@@ -57,6 +57,7 @@ export async function addCabinAction(
     };
 
   revalidatePath(ROUTES.staff.nested.cabins.href);
+  revalidatePath(ROUTES.cabins.href);
 
   return {
     userEntered: null,
