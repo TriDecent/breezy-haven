@@ -1,12 +1,12 @@
-import { DTOCabin, type DTOSetting } from '@/repositories';
-import type { NullableCabin, Setting } from '@/shared';
+import { type DTOSetting } from '@/repositories';
+import type { NullableSetting, Setting } from '@/shared';
 import { PostgrestError } from '@supabase/supabase-js';
 import { cache } from 'react';
 
 import type { IStaffService } from './BaseStaffService';
 import type { ServiceReturnType } from './types';
 
-export default class SettingStaffService<T extends Setting | NullableCabin>
+export default class SettingStaffService<T extends Setting | NullableSetting>
   implements IStaffService<DTOSetting, T>
 {
   constructor(private readonly _service: IStaffService<DTOSetting, T>) {
@@ -32,10 +32,10 @@ export default class SettingStaffService<T extends Setting | NullableCabin>
   getById(id: number) {
     return this._service.getById(id);
   }
-  create(item: Partial<DTOCabin>) {
+  create(item: Partial<DTOSetting>) {
     return this._service.create(item);
   }
-  update(id: number, updatedFields: Partial<DTOCabin>) {
+  update(id: number, updatedFields: Partial<DTOSetting>) {
     return this._service.update(id, updatedFields);
   }
   delete(id: number) {
