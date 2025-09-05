@@ -66,14 +66,14 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   defaultPageSize?: number;
-  filter?: (table: ReactTable<TData>) => JSX.Element;
+  render?: (table: ReactTable<TData>) => JSX.Element;
 }
 
 export default function DataTable<TData, TValue>({
   columns,
   data,
   defaultPageSize = 5,
-  filter,
+  render,
 }: DataTableProps<TData, TValue>) {
   const table = useDataTable(data, columns, defaultPageSize);
 
@@ -138,7 +138,7 @@ export default function DataTable<TData, TValue>({
         <DataTableViewOptions table={table} />
       </div>
 
-      {filter ? filter(table) : null}
+      {render ? render(table) : null}
     </div>
   );
 }

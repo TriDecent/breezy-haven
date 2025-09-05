@@ -1,4 +1,13 @@
 import { Settings } from '@/features/staff/settings';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Spinner,
+} from '@/shared';
+import { Suspense } from 'react';
 
 export default function SettingsPage() {
   return (
@@ -7,7 +16,19 @@ export default function SettingsPage() {
         Settings
       </h1>
 
-      <Settings />
+      <Card className='mx-auto w-fit min-w-2xs'>
+        <CardHeader>
+          <CardTitle>Update Settings</CardTitle>
+          <CardDescription>
+            Update The Breezy Haven preferences below.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Suspense fallback={<Spinner />}>
+            <Settings />
+          </Suspense>
+        </CardContent>
+      </Card>
     </>
   );
 }

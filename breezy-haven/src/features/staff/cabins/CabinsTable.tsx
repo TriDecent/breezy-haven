@@ -131,26 +131,22 @@ const columns: ColumnDef<Cabin>[] = [
 
 export function CabinsTable({ cabins }: { cabins: Cabin[] }) {
   return (
-    <>
-      <DataTable
-        data={cabins}
-        columns={columns}
-        filter={table => (
-          <div className='mt-4 flex gap-2'>
-            <Input
-              id='filter'
-              placeholder='Filter by name...'
-              value={
-                (table.getColumn('name')?.getFilterValue() as string) ?? ''
-              }
-              onChange={e =>
-                table.getColumn('name')?.setFilterValue(e.target.value)
-              }
-            />
-          </div>
-        )}
-      />
-    </>
+    <DataTable
+      data={cabins}
+      columns={columns}
+      render={table => (
+        <div className='mt-4 flex gap-2'>
+          <Input
+            id='filter'
+            placeholder='Filter by name...'
+            value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
+            onChange={e =>
+              table.getColumn('name')?.setFilterValue(e.target.value)
+            }
+          />
+        </div>
+      )}
+    />
   );
 }
 

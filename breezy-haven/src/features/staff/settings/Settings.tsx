@@ -1,14 +1,5 @@
 import { staffSettingService } from '@/services';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  errorHelper,
-  Spinner,
-} from '@/shared';
-import { Suspense } from 'react';
+import { errorHelper } from '@/shared';
 import { SettingForm } from './SettingForm';
 
 export async function Settings() {
@@ -22,19 +13,5 @@ export async function Settings() {
 
   if (!setting) throw new Error('Settings do not exist');
 
-  return (
-    <Suspense fallback={<Spinner />}>
-      <Card className='mx-auto w-fit'>
-        <CardHeader>
-          <CardTitle>Update Settings</CardTitle>
-          <CardDescription>
-            Update The Breezy Haven preferences below.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <SettingForm defaultSetting={setting} />
-        </CardContent>
-      </Card>
-    </Suspense>
-  );
+  return <SettingForm defaultSetting={setting} />;
 }
