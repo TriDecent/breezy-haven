@@ -1,6 +1,9 @@
 import { CabinsList } from '@/features/staff/cabins';
-import { Spinner } from '@/shared';
+import { ROUTES, Spinner } from '@/shared';
+import type { Metadata } from 'next';
 import { Suspense } from 'react';
+
+export const metadata: Metadata = ROUTES.staff.nested.cabins.metadata;
 
 export default function CabinsPage() {
   // TODO: verify staff authentication

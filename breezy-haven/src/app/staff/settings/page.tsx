@@ -5,9 +5,13 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  ROUTES,
   Spinner,
 } from '@/shared';
+import type { Metadata } from 'next';
 import { Suspense } from 'react';
+
+export const metadata: Metadata = ROUTES.staff.nested.settings.metadata;
 
 export default function SettingsPage() {
   // TODO: Verify Staff Authentication
