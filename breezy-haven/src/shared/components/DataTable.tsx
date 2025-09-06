@@ -80,13 +80,17 @@ export default function DataTable<TData, TValue>({
   return (
     <div className='rounded-sm border px-2 pb-4'>
       <ScrollArea className='h-96 p-2 lg:h-[36rem] xl:h-[48rem]'>
-        <Table className='text-center select-none'>
+        <Table className='select-none'>
           <TableHeader>
             {table.getHeaderGroups().map(headerGroup => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map(header => {
                   return (
-                    <TableHead key={header.id} colSpan={header.colSpan}>
+                    <TableHead
+                      key={header.id}
+                      colSpan={header.colSpan}
+                      className={header.colSpan === 1 ? 'text-center' : ''}
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -99,7 +103,7 @@ export default function DataTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody className='text-center'>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map(row => (
                 <TableRow
@@ -259,7 +263,7 @@ function DataTablePagination<TData>({
 }: DataTablePaginationProps<TData>) {
   return (
     <div className='flex flex-col items-center justify-between gap-4 px-2 sm:flex-row'>
-      <div className='text-muted-foreground flex-1 text-sm'>
+      <div className='text-muted-foreground flex-1 space-y-2 text-sm'>
         {table.getFilteredSelectedRowModel().rows.length} of{' '}
         {table.getFilteredRowModel().rows.length} row(s) selected.
       </div>

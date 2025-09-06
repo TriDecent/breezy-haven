@@ -3,6 +3,7 @@
 import {
   Button,
   cabinFormActions,
+  Checkbox,
   DataTable,
   DataTableColumnHeader,
   DropdownMenu,
@@ -30,6 +31,26 @@ import { duplicateCabinAction } from './actions/duplicateCabinAction';
 import { deleteCabinAction } from './deleteCabinAction';
 
 const columns: ColumnDef<Cabin>[] = [
+  {
+    header: 'Select All',
+    columns: [
+      {
+        id: 'select-all',
+        header: ({ table }) => (
+          <Checkbox
+            checked={table.getIsAllRowsSelected()}
+            onCheckedChange={() => table.toggleAllRowsSelected()}
+          />
+        ),
+        cell: ({ row }) => (
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={() => row.toggleSelected()}
+          />
+        ),
+      },
+    ],
+  },
   {
     header: 'Cabin Info',
     columns: [
@@ -134,18 +155,37 @@ export function CabinsTable({ cabins }: { cabins: Cabin[] }) {
     <DataTable
       data={cabins}
       columns={columns}
-      render={table => (
-        <div className='mt-4 flex gap-2'>
-          <Input
-            id='filter'
-            placeholder='Filter by name...'
-            value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
-            onChange={e =>
-              table.getColumn('name')?.setFilterValue(e.target.value)
-            }
-          />
-        </div>
-      )}
+      render={table => {
+        const pageIndex = table.getState().pagination.pageIndex;
+        const pageSize = table.getState().pagination.pageSize;
+        const totalRows = table.getFilteredRowModel().rows.length;
+
+        const firstRow = totalRows === 0 ? 0 : pageIndex * pageSize + 1;
+        const lastRow = Math.min((pageIndex + 1) * pageSize, totalRows);
+
+        return (
+          <div className='mt-4 flex flex-col items-center gap-2'>
+            <Input
+              id='filter'
+              placeholder='Filter by name...'
+              value={
+                (table.getColumn('name')?.getFilterValue() as string) ?? ''
+              }
+              onChange={e =>
+                table.getColumn('name')?.setFilterValue(e.target.value)
+              }
+            />
+
+            <p className='text-muted-foreground text-sm'>
+              Showing{' '}
+              <span className='text-foreground text-base'>{firstRow}</span> to{' '}
+              <span className='text-foreground text-base'>{lastRow}</span> of{' '}
+              <span className='text-foreground text-base'>{totalRows}</span>{' '}
+              results
+            </p>
+          </div>
+        );
+      }}
     />
   );
 }
