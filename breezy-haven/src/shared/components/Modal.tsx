@@ -1,18 +1,33 @@
 'use client';
-import { AnimatePresence, motion, type HTMLMotionProps } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import {
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+  type Ref,
+} from 'react';
 import { createPortal } from 'react-dom';
 import Variants, { slideVariantKeys } from '../animations/Variants';
 
-interface ModalProps extends HTMLMotionProps<'dialog'> {
-  isOpen: boolean;
-  onClose: () => void;
-  children: React.ReactNode;
+export interface ModalHandle {
+  readonly open: () => void;
 }
 
-const Modal = ({ children, isOpen, onClose, ...props }: ModalProps) => {
+interface ModalProps {
+  readonly onClose?: () => void;
+  readonly children: React.ReactNode;
+  readonly ref: Ref<ModalHandle>;
+}
+
+const Modal = ({ children, onClose, ref }: ModalProps) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+
+  useImperativeHandle(ref, () => ({
+    open: () => setIsOpen(true),
+  }));
 
   useEffect(() => {
     if (!isOpen) return;
@@ -26,6 +41,7 @@ const Modal = ({ children, isOpen, onClose, ...props }: ModalProps) => {
 
     function handleClickOutsideModal(e: MouseEvent): void {
       if (dialogRef.current !== e.target) return;
+      setIsOpen(false);
       onClose?.();
     }
   }, [isOpen, onClose]);
@@ -49,9 +65,9 @@ const Modal = ({ children, isOpen, onClose, ...props }: ModalProps) => {
               }}
               onCancel={e => {
                 e.preventDefault();
+                setIsOpen(false);
                 onClose?.();
               }}
-              {...props}
               className='mx-auto my-auto w-4/5 max-w-2xl rounded-lg bg-transparent p-4 select-none backdrop:backdrop-blur-sm'
             >
               {children}

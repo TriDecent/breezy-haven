@@ -7,9 +7,11 @@ import {
   CardHeader,
   CardTitle,
   Modal,
+  type ModalHandle,
   type RootState,
 } from '@/shared';
 import { SquarePenIcon } from 'lucide-react';
+import { useEffect, useRef } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { CabinForm } from './CabinForm';
 import { addCabinAction } from './actions/addCabinAction';
@@ -37,11 +39,17 @@ export const CabinModal = () => {
     (state: RootState) => state.cabinForm,
     shallowEqual
   );
+  const modalRef = useRef<ModalHandle>(null);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!state.isOpen) return;
+    modalRef.current?.open();
+  }, [state.isOpen]);
 
   return (
     <Modal
-      isOpen={state.isOpen}
+      ref={modalRef}
       onClose={() => dispatch(cabinFormActions.closeForm())}
     >
       {state.mode !== 'unknown' ? (

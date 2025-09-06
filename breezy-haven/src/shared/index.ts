@@ -28,7 +28,7 @@ export { FormRow } from './components/FormRow';
 export { default as Logo } from './components/Logo';
 export { default as MiniSidebar } from './components/MiniSidebar';
 export { default as MiniSpinner } from './components/MiniSpinner';
-export { default as Modal } from './components/Modal';
+export { default as Modal, type ModalHandle } from './components/Modal';
 export { default as Navigation } from './components/Navigation';
 export { default as NavTrail } from './components/NavTrail';
 export { default as NotFound } from './components/NotFound';

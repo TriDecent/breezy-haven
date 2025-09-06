@@ -3,8 +3,6 @@ import { errorHelper } from '@/shared';
 import { SettingForm } from './SettingForm';
 
 export async function Settings() {
-  // TODO: verify staff authentication
-
   const { data, errors } = await staffSettingService.getAll();
 
   if (errors) throw errorHelper.handleError(errors);
