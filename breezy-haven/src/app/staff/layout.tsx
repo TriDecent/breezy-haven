@@ -16,7 +16,9 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
     <>
       <PageLayout>
         <div className='flex flex-1'>
-          <SideNavigation />
+          <div className='hidden md:block'>
+            <SideNavigation />
+          </div>
 
           <div className='flex grow flex-col overflow-hidden'>
             <PageLayout.Header>
