@@ -1,6 +1,18 @@
 'use client';
 
-import { MiniSpinner, ROUTES } from '@/shared';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+  MiniSpinner,
+  ROUTES,
+} from '@/shared';
 
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
@@ -21,9 +33,11 @@ export default function Modification({
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = () => {
-    toast('Are you sure that you want to delete this reservation?', {
+    toast.warning('Are you sure that you want to delete this reservation?', {
+      description: 'This action cannot be undone',
       action: {
         label: 'Yes',
+
         onClick: () => {
           startTransition(async () => {
             onDelete();
@@ -50,10 +64,27 @@ export default function Modification({
         <span className='mt-1'>Edit</span>
       </Link>
       {!isPending ? (
-        <button onClick={handleDelete} disabled={isPending} className={styles}>
-          <TrashIcon className='text-primary-600 group-hover:text-primary-800 h-5 w-5 transition-colors' />
-          <span className='mt-1'>Delete</span>
-        </button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <button disabled={isPending} className={styles}>
+              <TrashIcon className='text-primary-600 group-hover:text-primary-800 h-5 w-5 transition-colors' />
+              <span className='mt-1'>Delete</span>
+            </button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete your
+                reservation and remove it from our servers.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDelete}>Yes</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       ) : (
         <div className={styles}>
           <MiniSpinner />

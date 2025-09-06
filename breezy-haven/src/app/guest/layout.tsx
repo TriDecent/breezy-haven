@@ -1,4 +1,4 @@
-import { PageLayout } from '@/shared';
+import { PageLayout, Toaster } from '@/shared';
 
 import { Logo, Navigation, NavTrail, ROUTES, ThemeToggle } from '@/shared';
 import '@/styles/globals.css';
@@ -25,6 +25,7 @@ export default function GuestLayout({
       </PageLayout.Header>
       <PageLayout.Main>{children}</PageLayout.Main>
       <PageLayout.Footer />
+      <Toaster richColors position='top-center' />
     </PageLayout>
   );
 }

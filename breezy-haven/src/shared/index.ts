@@ -1,4 +1,5 @@
 export * from './animations/Variants';
+export * from './components/ui/alert-dialog';
 export * from './components/ui/button';
 export * from './components/ui/calendar';
 export * from './components/ui/card';

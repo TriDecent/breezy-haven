@@ -1,7 +1,6 @@
 import { SideNavigation } from '@/features/guest/account';
 import { MiniSidebar, ROUTES } from '@/shared';
 import { Metadata } from 'next';
-import { Toaster } from 'sonner';
 
 export const metadata: Metadata = ROUTES.account.metadata;
 
@@ -20,8 +19,6 @@ export default function AccountLayout({
       <MiniSidebar>
         <SideNavigation />
       </MiniSidebar>
-
-      <Toaster richColors position='top-center' />
     </div>
   );
 }
