@@ -45,7 +45,7 @@ export default function MiniSidebar({
               exit={slideVariantKeys.safelyHidden}
               transition={{ type: 'spring' }}
               onClick={() => setShouldOpenSideBar(true)}
-              className='bg-primary-950 fixed right-6 bottom-8 rounded-full p-4 shadow-md shadow-black'
+              className='bg-background fixed right-6 bottom-8 rounded-full p-4 shadow-md shadow-black'
             >
               <Bars3Icon className='w-8' />
             </motion.button>
@@ -62,7 +62,7 @@ export default function MiniSidebar({
               ref={outsideRef}
               className='fixed inset-x-0 inset-y-0 z-1000 backdrop-blur-xs'
             >
-              <div className='bg-primary-950 border-r-popover pointer-events-auto h-full w-2/3 max-w-3xs border-r py-4'>
+              <div className='bg-background pointer-events-auto h-full w-2/3 max-w-3xs border-r py-4'>
                 {children}
               </div>
             </motion.div>

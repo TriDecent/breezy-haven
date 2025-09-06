@@ -30,7 +30,7 @@ export function NavItem({ href, title }: { href: string; title: string }) {
   return (
     <Link
       href={href}
-      className={`hover:bg-popover relative flex justify-center rounded-md p-3 ${isActiveNav ? 'bg-popover' : ''}`}
+      className={`hover:bg-border relative flex justify-center rounded-md p-3 ${isActiveNav ? 'bg-border' : ''}`}
     >
       <p className='flex min-w-36 items-center gap-4'>
         <span>{Icons[title]}</span>
