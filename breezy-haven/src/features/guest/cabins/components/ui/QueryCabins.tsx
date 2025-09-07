@@ -20,6 +20,7 @@ export default function QueryCabins({ cabins }: { cabins: Cabin[] }) {
   const capacity = params.get('capacity') ?? 'all';
   const [displayedCabins, setDisplayedCabins] = useState(cabins);
   const [isPending, startTransition] = useTransition();
+  const [isFirstRender, setIsFirstRender] = useState(true);
 
   if (!CabinCapacities.includes(capacity)) notFound();
 
@@ -27,11 +28,12 @@ export default function QueryCabins({ cabins }: { cabins: Cabin[] }) {
 
   const updateCabinsAction = useCallback(
     async (query: string, capacity: string) => {
+      await new Promise(resolve => setTimeout(resolve, 300)); // debounce for loading to show while user typing
+
       const queryCabins = cabins.filter(cabin =>
         `cabin ${cabin.name}`.toLowerCase().includes(query)
       );
 
-      await new Promise(resolve => setTimeout(resolve, 300)); // debounce for loading to show while user typing
       return filterCabinsBasedOnCapacity(capacity, queryCabins);
     },
     [cabins]
@@ -44,12 +46,12 @@ export default function QueryCabins({ cabins }: { cabins: Cabin[] }) {
     });
   }, [currentQuery, capacity, cabins, updateCabinsAction]);
 
-  const shouldShowLoading = isPending && currentQuery;
+  useEffect(() => setIsFirstRender(false), []);
 
-  return shouldShowLoading ? (
+  return isPending && !isFirstRender ? (
     <CabinLoading />
   ) : (
-    <CabinsDisplay identifier={capacity} cabins={displayedCabins} />
+    <CabinsDisplay cabins={displayedCabins} />
   );
 }
 

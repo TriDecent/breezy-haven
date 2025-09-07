@@ -1,24 +1,11 @@
 'use client';
 import { PriorityProvider, type Cabin } from '@/shared';
-import { animate, motion, stagger } from 'framer-motion';
+import { motion, stagger, type Variant } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import CabinCard from './CabinCard';
 
-export default function CabinsDisplay({
-  cabins,
-  identifier,
-}: {
-  cabins: Cabin[];
-  identifier: string;
-}) {
+export default function CabinsDisplay({ cabins }: { cabins: Cabin[] }) {
   const breakpoint = useBreakpoint();
-
-  useEffect(() => {
-    animate('ul.trigger-animation', {
-      scale: [1, 0.9, 1],
-      opacity: [1, 0, 1],
-    });
-  }, [identifier]);
 
   return cabins.length > 0 ? (
     <section>
@@ -28,7 +15,7 @@ export default function CabinsDisplay({
         initial='initial'
         animate='animate'
         transition={{ type: 'spring', delayChildren: stagger(0.5) }}
-        className='trigger-animation grid gap-8 md:grid-cols-2 lg:grid-cols-[repeat(auto-fit,_minmax(25rem,_1fr))] lg:gap-12 xl:gap-14'
+        className='grid gap-8 md:grid-cols-2 lg:grid-cols-[repeat(auto-fit,_minmax(25rem,_1fr))] lg:gap-12 xl:gap-14'
       >
         {cabins.map((cabin, index) => (
           <motion.li variants={myVariants} key={`${cabin.id}`}>
@@ -42,10 +29,10 @@ export default function CabinsDisplay({
   ) : null;
 }
 
-const myVariants = {
-  initial: { opacity: 0, scale: 0.9 },
+const myVariants: Record<string, Variant> = {
+  initial: { opacity: 0, scale: 0.75 },
   animate: { opacity: 1, scale: 1 },
-};
+} as const;
 
 function useBreakpoint() {
   const [breakpoint, setBreakpoint] = useState<
