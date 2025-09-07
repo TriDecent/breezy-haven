@@ -7,7 +7,7 @@ import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import Loading from './loading';
 
-export const revalidate = 3600;
+export const revalidate = 2592000;
 
 interface PageParams {
   readonly params: Promise<{ cabinId: string }>;

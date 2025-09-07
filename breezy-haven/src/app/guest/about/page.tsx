@@ -7,7 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
-export const revalidate = 86400;
+export const revalidate = 2592000;
 
 export async function generateMetadata(): Promise<Metadata> {
   return ROUTES.about.metadata;

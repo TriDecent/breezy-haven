@@ -9,7 +9,7 @@ import { ROUTES, ScrollTo } from '@/shared';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 
-export const revalidate = 3600;
+export const revalidate = 2592000;
 
 export const metadata: Metadata = ROUTES.cabins.metadata;
 
