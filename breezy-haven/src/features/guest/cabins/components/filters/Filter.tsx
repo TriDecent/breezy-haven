@@ -1,24 +1,24 @@
 'use client';
 
-import { usePathname, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { HTMLAttributes, useCallback } from 'react';
-import { ViewSizeClassifier, type CabinQuery } from '../constants/SizeClassifier';
-
+import {
+  ViewSizeClassifier,
+  type CabinQuery,
+} from '../constants/SizeClassifier';
 
 export default function Filter() {
-  const pathname = usePathname();
   const searchParams = useSearchParams();
   const capacityQuery = searchParams.get('capacity') ?? 'all';
 
   const handleFilter = useCallback(
     (filter: CabinQuery['capacity']): void => {
-      const otherParams = Object.fromEntries(searchParams.entries());
-      const params = new URLSearchParams({ ...otherParams });
-      params.set('capacity', filter);
+      const currentSearchParams = new URLSearchParams(searchParams);
+      currentSearchParams.set('capacity', filter);
 
-      window.history.pushState(null, '', `${pathname}?${params.toString()}`);
+      history.replaceState(null, '', `?${currentSearchParams.toString()}`);
     },
-    [pathname, searchParams]
+    [searchParams]
   );
 
   return (
