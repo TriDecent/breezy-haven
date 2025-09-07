@@ -44,6 +44,7 @@ import {
   type SortingState,
   type VisibilityState,
 } from '@tanstack/react-table';
+import { useSearchParams } from 'next/navigation';
 import { useState, type JSX } from 'react';
 import { ScrollArea, ScrollBar } from './ui/scroll-area';
 import {
@@ -66,6 +67,7 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   defaultPageSize?: number;
+  onPageIndexChange?: (currentPageIndex: number) => void;
   render?: (table: ReactTable<TData>) => JSX.Element;
 }
 
@@ -73,9 +75,10 @@ export default function DataTable<TData, TValue>({
   columns,
   data,
   defaultPageSize = 5,
+  onPageIndexChange = () => {},
   render,
 }: DataTableProps<TData, TValue>) {
-  const table = useDataTable(data, columns, defaultPageSize);
+  const table = useDataTable(data, columns, defaultPageSize, onPageIndexChange);
 
   return (
     <div className='rounded-sm border px-2 pb-4'>
@@ -150,15 +153,25 @@ export default function DataTable<TData, TValue>({
 function useDataTable<TData, TValue>(
   data: DataTableProps<TData, TValue>['data'],
   columns: DataTableProps<TData, TValue>['columns'],
-  defaultPageSize = 5
+  defaultPageSize: number,
+  onPageIndexChange: (currentPageIndex: number) => void
 ) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [pageSize, setPageSize] = useState(defaultPageSize);
-  const [pageIndex, setPageIndex] = useState(0);
-
+  const searchParams = useSearchParams();
+  const [pageIndex, setPageIndex] = useState(() => {
+    const totalPageCount = Math.max(1, Math.ceil(data.length / pageSize));
+    const pageIndexParam = searchParams.get('tablePageIndex');
+    const urlPageIndex = Number(pageIndexParam);
+    return isNaN(urlPageIndex) ||
+      urlPageIndex < 0 ||
+      urlPageIndex >= totalPageCount
+      ? 0
+      : urlPageIndex;
+  });
   const table = useReactTable({
     data,
     columns,
@@ -181,15 +194,21 @@ function useDataTable<TData, TValue>(
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     onPaginationChange: updater => {
-      if (typeof updater === 'function') {
-        const next = updater({ pageSize, pageIndex });
-        setPageSize(next.pageSize);
-        setPageIndex(next.pageIndex);
-      } else {
-        setPageSize(updater.pageSize);
-        setPageIndex(updater.pageIndex);
-      }
+      const params = new URLSearchParams(searchParams);
+
+      const next =
+        typeof updater === 'function'
+          ? updater({ pageSize, pageIndex })
+          : updater;
+
+      setPageSize(next.pageSize);
+      setPageIndex(next.pageIndex);
+      onPageIndexChange(next.pageIndex);
+
+      params.set('tablePageIndex', next.pageIndex.toString());
+      history.replaceState(null, '', `?${params.toString()}`);
     },
+
     enableRowSelection: true,
   });
 

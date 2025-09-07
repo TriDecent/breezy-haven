@@ -14,7 +14,7 @@ export async function CabinsList({ query }: { query: Query }) {
   return (
     <>
       <CabinOperations />
-      <CabinsTable cabins={[...cabins]} />
+      <CabinsTable cabins={[...cabins]} key={query} />
       <CabinModal />
     </>
   );

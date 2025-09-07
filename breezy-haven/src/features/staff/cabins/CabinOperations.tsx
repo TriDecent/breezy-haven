@@ -3,7 +3,7 @@ import { Button, cabinFormActions } from '@/shared';
 import { SquarePenIcon } from 'lucide-react';
 import Form from 'next/form';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Operations, type Query } from './Operations';
 
@@ -15,10 +15,6 @@ export function CabinOperations() {
   const urlQuery = Operations.some(operation => operation[0] === currentQuery)
     ? currentQuery
     : 'all';
-
-  useEffect(() => {
-    console.log(urlQuery);
-  }, [urlQuery]);
 
   return (
     <>
