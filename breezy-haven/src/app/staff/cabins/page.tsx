@@ -1,12 +1,22 @@
-import { CabinsList } from '@/features/staff/cabins';
+import { CabinsList, QuerySchema, type Query } from '@/features/staff/cabins';
 import { ROUTES, Spinner } from '@/shared';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 
 export const metadata: Metadata = ROUTES.staff.nested.cabins.metadata;
 
-export default function CabinsPage() {
+export default async function CabinsPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<'query', Query>>;
+}) {
   // TODO: verify staff authentication
+  const query = (await searchParams).query;
+
+  const parsedQueryResult = QuerySchema.safeParse(query);
+  const parsedQuery = parsedQueryResult.success
+    ? parsedQueryResult.data
+    : 'all';
 
   return (
     <section>
@@ -14,7 +24,7 @@ export default function CabinsPage() {
         All cabins
       </h1>
       <Suspense fallback={<Spinner />}>
-        <CabinsList />
+        <CabinsList query={parsedQuery}/>
       </Suspense>
     </section>
   );
