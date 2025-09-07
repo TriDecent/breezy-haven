@@ -1,23 +1,9 @@
 'use client';
 
-import { useScroll, useSpring } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useScrollProgress } from '../hooks/useScrollProgress';
 
 export default function PageProgressBar() {
-  const { scrollYProgress } = useScroll();
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 50,
-    damping: 15,
-    mass: 1,
-  });
-  const [progress, setProgress] = useState<number>(0);
-
-  useEffect(() => {
-    const unsubscribe = smoothProgress.on('change', v => {
-      setProgress(Math.round(v * 100));
-    });
-    return unsubscribe;
-  }, [smoothProgress]);
+  const progress = useScrollProgress();
 
   if (progress === 0 || progress === 100) return null;
 
@@ -26,7 +12,7 @@ export default function PageProgressBar() {
       <progress
         value={progress}
         max={100}
-        className='[&::-webkit-progress-bar]:bg-primary-900 [&::-webkit-progress-value]:bg-accent-400 [&::-moz-progress-bar]:bg-accent-400 bg-primary-900 z-1000 h-2 w-full overflow-hidden rounded-full'
+        className='[&::-webkit-progress-bar]:bg-background/50 [&::-webkit-progress-value]:bg-accent-400 [&::-moz-progress-bar]:bg-accent-400 z-1000 h-2 w-full overflow-hidden rounded-full shadow'
         aria-valuenow={progress}
         aria-valuemin={0}
         aria-valuemax={100}

@@ -1,7 +1,5 @@
 import { staffCabinService } from '@/services';
 import { errorHelper, type Cabin } from '@/shared';
-import { CabinModal } from './CabinModal';
-import { CabinOperations } from './CabinOperations';
 import { CabinsTable } from './CabinsTable';
 import type { Query } from './Operations';
 
@@ -13,9 +11,7 @@ export async function CabinsList({ query }: { query: Query }) {
 
   return (
     <>
-      <CabinOperations />
       <CabinsTable cabins={[...cabins]} key={query} />
-      <CabinModal />
     </>
   );
 }

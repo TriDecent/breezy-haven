@@ -104,9 +104,12 @@ const columns: ColumnDef<Cabin>[] = [
             className='py-2'
           />
         ),
+        cell: ({ row }) => `$${row.original.regularPrice.toFixed(2)}`,
       },
       {
-        accessorKey: 'discount',
+        id: 'discount',
+        accessorFn: ({ regularPrice, discount }) =>
+          (discount * regularPrice) / 100,
         header: ({ column }) => (
           <DataTableColumnHeader
             column={column}
@@ -118,7 +121,7 @@ const columns: ColumnDef<Cabin>[] = [
           row.original.discount === 0 ? (
             <span>&mdash;</span>
           ) : (
-            row.original.discount
+            <span className='text-green-500'>{`$${((row.original.discount * row.original.regularPrice) / 100).toFixed(2)}`}</span>
           ),
       },
     ],
@@ -265,41 +268,3 @@ function DuplicateAction({
     </DropdownMenuItem>
   );
 }
-
-// import publicImage from '@/../public/bg.png';
-// const cabins: Array<{
-//   image: string;
-//   name: string;
-//   capacity: number;
-//   regularPrice: number;
-//   discount: number;
-// }> = [
-//   {
-//     image: publicImage as unknown as string,
-//     name: 'Cozy Cabin',
-//     capacity: 4,
-//     regularPrice: 120,
-//     discount: 10,
-//   },
-//   {
-//     image: publicImage as unknown as string,
-//     name: 'Mountain Retreat',
-//     capacity: 6,
-//     regularPrice: 180,
-//     discount: 20,
-//   },
-//   {
-//     image: publicImage as unknown as string,
-//     name: 'Lakeside Lodge',
-//     capacity: 8,
-//     regularPrice: 250,
-//     discount: 15,
-//   },
-//   {
-//     image: publicImage as unknown as string,
-//     name: 'Forest Hideaway',
-//     capacity: 2,
-//     regularPrice: 90,
-//     discount: 5,
-//   },
-// ];

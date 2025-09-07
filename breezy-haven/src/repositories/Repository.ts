@@ -1,10 +1,9 @@
 import { supabase } from '@/lib/supabase';
-import type { DeepReadonly } from '@/shared';
 import { PostgrestError } from '@supabase/supabase-js';
 import { DTORow, DTOToTableName } from './types';
 
 export type RepositoryReturnType<TData, TError> = Promise<
-  DeepReadonly<{ data: TData; error: null } | { data: null; error: TError }>
+  Readonly<{ data: TData; error: null } | { data: null; error: TError }>
 >;
 
 export interface IRepository<T> {

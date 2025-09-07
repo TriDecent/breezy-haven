@@ -1,4 +1,11 @@
-import { CabinsList, QuerySchema, type Query } from '@/features/staff/cabins';
+import {
+  CabinModal,
+  CabinOperations,
+  QuerySchema,
+  type Query,
+} from '@/features/staff/cabins';
+import { CabinsList } from '@/features/staff/cabins/CabinsList';
+
 import { ROUTES, Spinner } from '@/shared';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
@@ -23,8 +30,11 @@ export default async function CabinsPage({
       <h1 className='text-accent-500 mb-4 text-2xl font-semibold tracking-widest'>
         All cabins
       </h1>
+
+      <CabinModal />
+      <CabinOperations />
       <Suspense fallback={<Spinner />}>
-        <CabinsList query={parsedQuery}/>
+        <CabinsList query={parsedQuery} />
       </Suspense>
     </section>
   );
