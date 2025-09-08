@@ -82,7 +82,7 @@ export default function DataTable<TData, TValue>({
 
   return (
     <div className='rounded-sm border px-2 pb-4'>
-      <ScrollArea className='h-96 p-2 lg:h-[36rem] xl:h-[48rem]'>
+      <ScrollArea className='relative h-96 p-2 lg:h-[36rem] xl:h-[48rem]'>
         <Table className='select-none'>
           <TableHeader>
             {table.getHeaderGroups().map(headerGroup => (
@@ -126,7 +126,7 @@ export default function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={table.getAllLeafColumns().length}
                   className='h-24 text-center'
                 >
                   No results.
