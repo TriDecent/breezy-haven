@@ -9,6 +9,7 @@ import {
 import { BaseService } from './BaseService';
 import { BaseStaffService } from './BaseStaffService';
 import BookingService from './BookingService';
+import BookingStaffService from './BookingStaffService';
 import CabinService from './CabinService';
 import CabinStaffService from './CabinStaffService';
 import GuestService from './GuestService';
@@ -63,5 +64,12 @@ export const staffSettingService = new SettingStaffService(
   new BaseStaffService(
     new BaseService(settingRepository, verifyStaffAuthAsync, SettingSchema),
     settingRepository
+  )
+);
+
+export const staffBookingService = new BookingStaffService(
+  new BaseStaffService(
+    new BaseService(bookingRepository, verifyStaffAuthAsync, BookingSchema),
+    bookingRepository
   )
 );

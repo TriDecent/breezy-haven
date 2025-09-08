@@ -15,7 +15,9 @@ export const BookingSchema = z.object({
   numNights: z.coerce.number({ error: 'numNights must be a number' }),
   observations: z.string({ error: 'observations must be a string' }),
   startDate: z.string({ error: 'startDate must be a string' }),
-  status: z.string({ error: 'status must be a string' }),
+  status: z.literal(['unconfirmed', 'checked-out', 'checked-in'], {
+    error: 'Status is invalid',
+  }),
   totalPrice: z.coerce.number({ error: 'totalPrice must be a number' }),
 });
 export const NullableBookingSchema = z.object({
@@ -42,7 +44,11 @@ export const NullableBookingSchema = z.object({
     .nullable(),
   observations: z.string({ error: 'observations must be a string' }).nullable(),
   startDate: z.string({ error: 'startDate must be a string' }).nullable(),
-  status: z.string({ error: 'status must be a string' }).nullable(),
+  status: z
+    .literal(['unconfirmed', 'checked-out', 'checked-in'], {
+      error: 'Status is invalid',
+    })
+    .nullable(),
   totalPrice: z.coerce
     .number({ error: 'totalPrice must be a number' })
     .nullable(),

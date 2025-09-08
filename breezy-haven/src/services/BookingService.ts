@@ -1,21 +1,30 @@
 import { supabase } from '@/lib/supabase';
 import { DTOBooking } from '@/repositories';
-import { BookingSchema, type Booking, type NullableBooking } from '@/shared';
+import {
+  BookingSchema,
+  CabinSchema,
+  type Booking,
+  type NullableBooking,
+} from '@/shared';
 import { PostgrestError } from '@supabase/supabase-js';
 import { eachDayOfInterval } from 'date-fns';
-import z from 'zod';
+import type z from 'zod';
 import { IService } from './BaseService';
-import type { DatabaseError } from './types';
+import type { DatabaseError, GetAllServiceReturnType } from './types';
 
-const CabinInfoSchema = z.object({
-  name: z.string(),
-  image: z.string(),
-  maxCapacity: z.number(),
+const CabinBasicInfoSchema = CabinSchema.pick({
+  name: true,
+  image: true,
+  maxCapacity: true,
 });
 
-const BookingWithCabinSchema = BookingSchema.extend({
-  cabins: CabinInfoSchema,
+const BookingWithCabinInfoSchema = BookingSchema.extend({
+  cabins: CabinBasicInfoSchema,
 });
+
+type BookingWithCabinInfo = Booking & {
+  cabin: z.infer<typeof CabinBasicInfoSchema>;
+};
 
 export default class BookingService<T extends Booking | NullableBooking>
   implements IService<DTOBooking, T>
@@ -50,7 +59,9 @@ export default class BookingService<T extends Booking | NullableBooking>
     return this._service.delete(id);
   }
 
-  async getByGuestId(guestId: number) {
+  async getByGuestId(
+    guestId: number
+  ): Promise<GetAllServiceReturnType<BookingWithCabinInfo>> {
     await this._service.verifyPermission();
 
     const query = supabase
@@ -66,39 +77,46 @@ export default class BookingService<T extends Booking | NullableBooking>
 
     const { data, error } = await query;
 
-    if (error)
-      return { data: null, errors: { type: 'database' as const, db: error } };
-    if (!Array.isArray(data))
+    if (error) return { data: null, errors: { type: 'database', db: error } };
+
+    const validateResult = this.validateItems(data, BookingWithCabinInfoSchema);
+
+    if (validateResult.length === 0 && data.length > 0)
       return {
         data: null,
-        errors: { type: 'unexpected' as const, message: 'Data is not array' },
-      };
-
-    const validItems = [];
-    let corruptedCount = 0;
-    for (const item of data) {
-      const result = BookingWithCabinSchema.safeParse(item);
-      if (result.success) validItems.push(result.data);
-      else corruptedCount++;
-    }
-
-    if (data.length !== 0 && validItems.length === 0)
-      return {
-        data: null,
-        errors: { type: 'unexpected' as const, message: 'All data corrupted' },
+        errors: {
+          type: 'unexpected',
+          message: 'All data corrupted',
+        },
       };
 
     return {
-      data: validItems.map(({ cabins, ...booking }) => ({
-        ...booking,
-        cabin: cabins,
+      data: validateResult.map(item => ({
+        ...item,
+        cabin: item.cabins,
       })),
       errors: null,
       warnings:
-        corruptedCount > 0
-          ? { corrupted: corruptedCount, total: data.length }
+        data.length - validateResult.length > 0
+          ? {
+              corruptedCount: data.length - validateResult.length,
+              total: data.length,
+            }
           : undefined,
     };
+  }
+
+  private validateItems<T>(items: unknown[], schema: z.ZodType<T>): T[] {
+    const validItems: T[] = [];
+
+    for (const item of items) {
+      const parsedResult = schema.safeParse(item);
+      if (!parsedResult.success) continue;
+
+      validItems.push(parsedResult.data);
+    }
+
+    return validItems;
   }
 
   async getByCabinId(

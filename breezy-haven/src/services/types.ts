@@ -22,8 +22,8 @@ export type WarningInfo = {
   total: number;
 };
 
-export type GetAllServiceReturnType<SchemaType> = Promise<
-  | { data: SchemaType[]; errors: null; warnings?: WarningInfo }
+export type GetAllServiceReturnType<DataType> = Promise<
+  | { data: DataType[]; errors: null; warnings?: WarningInfo }
   | { data: null; errors: DatabaseError | UnexpectedError }
 >;
 
