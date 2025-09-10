@@ -10,7 +10,7 @@ import { PostgrestError } from '@supabase/supabase-js';
 import { cache } from 'react';
 
 import { supabase } from '@/lib';
-import type z from 'zod';
+import z from 'zod';
 import type { IStaffService } from './BaseStaffService';
 import type { GetAllServiceReturnType, ServiceReturnType } from './types';
 
@@ -22,6 +22,8 @@ const CabinForBookingSchema = CabinSchema.pick({
 const GuestBasicInfoSchema = GuestSchema.pick({
   fullName: true,
   email: true,
+  countryFlag: true,
+  nationalID: true,
 });
 
 const BookingWithRelationsSchema = BookingSchema.extend({
@@ -29,7 +31,7 @@ const BookingWithRelationsSchema = BookingSchema.extend({
   guests: GuestBasicInfoSchema,
 });
 
-type BookingWithRelations = Booking & {
+export type BookingWithRelations = Booking & {
   cabin: z.infer<typeof CabinForBookingSchema>;
   guest: z.infer<typeof GuestBasicInfoSchema>;
 };
@@ -84,6 +86,52 @@ export default class BookingStaffService<T extends Booking | NullableBooking>
     return this._service.deleteFiles(paths, bucketId);
   }
 
+  async getBookingWithRelationsById(
+    id: Booking['id']
+  ): Promise<ServiceReturnType<BookingWithRelations>> {
+    await this._service.verifyPermission();
+
+    const query = supabase
+      .from('bookings')
+      .select(
+        `
+        *,
+        cabins(id, name, image),
+        guests(fullName, email, countryFlag, nationalID)
+      `
+      )
+      .eq('id', id)
+      .single();
+    const { data, error } = await query;
+
+    if (error)
+      return {
+        data: null,
+        errors: {
+          type: 'database',
+          db: error,
+        },
+      };
+
+    const parsedResult = BookingWithRelationsSchema.safeParse(data);
+    if (!parsedResult.success)
+      return {
+        data: null,
+        errors: {
+          type: 'validation',
+          fields: z.flattenError(parsedResult.error).fieldErrors,
+        },
+      };
+    return {
+      data: {
+        ...parsedResult.data,
+        cabin: parsedResult.data.cabins,
+        guest: parsedResult.data.guests,
+      },
+      errors: null,
+    };
+  }
+
   async getAllBookingsWithRelations(): Promise<
     GetAllServiceReturnType<BookingWithRelations>
   > {
@@ -93,7 +141,7 @@ export default class BookingStaffService<T extends Booking | NullableBooking>
       `
         *,
         cabins(id, name, image),
-        guests(fullName, email)
+        guests(fullName, email, countryFlag, nationalID)
       `
     );
     const { data, error } = await query;

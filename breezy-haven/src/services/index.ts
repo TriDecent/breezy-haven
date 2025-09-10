@@ -15,6 +15,7 @@ import CabinStaffService from './CabinStaffService';
 import GuestService from './GuestService';
 import SettingService from './SettingService';
 import SettingStaffService from './SettingStaffService';
+export type { BookingWithRelations } from './BookingStaffService';
 export * from './countryService';
 export * from './types';
 
