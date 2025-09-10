@@ -1,6 +1,7 @@
 'use client';
 import {
   Button,
+  Checkbox,
   DataTable,
   DataTableColumnHeader,
   DropdownMenu,
@@ -9,6 +10,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  ROUTES,
   type Booking,
 } from '@/shared';
 import type { ColumnDef } from '@tanstack/react-table';
@@ -26,6 +28,7 @@ import {
   PencilIcon,
 } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 export function BookingTable({ bookings }: BookingTableProps) {
@@ -33,17 +36,17 @@ export function BookingTable({ bookings }: BookingTableProps) {
 }
 
 function EditAction({
-  booking,
+  bookingId,
 }: {
-  booking: BookingTableProps['bookings'][number];
+  bookingId: BookingTableProps['bookings'][number]['id'];
 }) {
-  // const dispatch = useDispatch();
+  const router = useRouter();
 
   return (
     <DropdownMenuItem
       onClick={async () => {
         await new Promise(resolve => setTimeout(resolve, 300)); // give some time for DropdownMenu to cleanup aria-hidden, avoid warning accessibility
-        // return dispatch(cabinFormActions.openUpdateForm(cabin));
+        router.push(`${ROUTES.staff.nested.bookings.href}/${bookingId}`);
       }}
     >
       <PencilIcon /> Edit
@@ -67,29 +70,6 @@ function CopyAction({
     </DropdownMenuItem>
   );
 }
-
-// function DeleteAction({ cabinId }: { cabinId: BookingTableProps['bookings'][number] }) {
-//   return (
-//     <DropdownMenuItem
-//       onClick={() =>
-//         toast.warning('Are you sure to delete this cabin?', {
-//           action: {
-//             label: 'Yes',
-//             onClick: () =>
-//               toast.promise(deleteCabinAction(cabinId), {
-//                 loading: 'Deleting...',
-//                 success: `Cabin ${cabinId} has been deleted!`,
-//                 error: 'An error has  occurred!',
-//               }),
-//           },
-//         })
-//       }
-//     >
-//       <Trash2Icon />
-//       Delete
-//     </DropdownMenuItem>
-//   );
-// }
 
 const cabinInfoColumn: ColumnDef<BookingTableProps['bookings'][number]> = {
   header: 'Cabin Info',
@@ -241,8 +221,7 @@ const actionColumn: ColumnDef<BookingTableProps['bookings'][number]> = {
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <CopyAction booking={row.original} />
-            <EditAction booking={row.original} />
-            {/* <DeleteAction cabinId={row.original.id} /> */}
+            <EditAction bookingId={row.original.id} />
           </DropdownMenuContent>
         </DropdownMenu>
       ),
@@ -250,7 +229,29 @@ const actionColumn: ColumnDef<BookingTableProps['bookings'][number]> = {
   ],
 } as const;
 
+const selectAllColumn: ColumnDef<BookingTableProps['bookings'][number]> = {
+  header: 'Select all',
+  columns: [
+    {
+      id: 'select-all',
+      header: ({ table }) => (
+        <Checkbox
+          checked={table.getIsAllRowsSelected()}
+          onCheckedChange={() => table.toggleAllRowsSelected()}
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={() => row.toggleSelected()}
+        />
+      ),
+    },
+  ],
+};
+
 const columns: ColumnDef<BookingTableProps['bookings'][number]>[] = [
+  selectAllColumn,
   cabinInfoColumn,
   guestInfoColumn,
   bookingInfoColumn,

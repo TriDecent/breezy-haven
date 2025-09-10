@@ -15,7 +15,7 @@ export function CabinOperations() {
 
   return (
     <div className='mb-4 flex flex-col items-end justify-end gap-4 md:flex-row'>
-      <div className='order-2 overflow-hidden rounded-md md:order-none'>
+      <div className='order-2 overflow-hidden rounded-md shadow md:order-none'>
         {Operations.map(operation => (
           <QueryButton
             key={operation[0]}

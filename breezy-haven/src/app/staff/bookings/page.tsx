@@ -23,7 +23,7 @@ export default async function BookingsPage({
         Bookings
       </h1>
 
-      <div className='ml-auto w-fit overflow-hidden rounded-full'>
+      <div className='ml-auto w-fit overflow-hidden rounded-full shadow'>
         {BookingQueries.map(query => (
           <QueryButton
             key={query}
