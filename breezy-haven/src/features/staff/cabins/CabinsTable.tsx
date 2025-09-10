@@ -104,7 +104,11 @@ const columns: ColumnDef<Cabin>[] = [
             className='py-2'
           />
         ),
-        cell: ({ row }) => `$${row.original.regularPrice.toFixed(2)}`,
+        cell: ({ row }) =>
+          `$${row.original.regularPrice.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}`,
       },
       {
         id: 'discount',

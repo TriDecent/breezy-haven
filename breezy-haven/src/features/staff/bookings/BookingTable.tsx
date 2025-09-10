@@ -214,7 +214,11 @@ const bookingInfoColumn: ColumnDef<BookingTableProps['bookings'][number]> = {
       ),
       cell: ({ row }) => (
         <span className={'text-lg font-semibold text-emerald-500'}>
-          ${row.original.totalPrice.toFixed(2)}
+          $
+          {row.original.totalPrice.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}
         </span>
       ),
     },

@@ -75,7 +75,7 @@ export default function DataTable<TData, TValue>({
   columns,
   data,
   defaultPageSize = 5,
-  onPageIndexChange = () => {},
+  onPageIndexChange,
   render,
 }: DataTableProps<TData, TValue>) {
   const table = useDataTable(data, columns, defaultPageSize, onPageIndexChange);
@@ -154,7 +154,7 @@ function useDataTable<TData, TValue>(
   data: DataTableProps<TData, TValue>['data'],
   columns: DataTableProps<TData, TValue>['columns'],
   defaultPageSize: number,
-  onPageIndexChange: (currentPageIndex: number) => void
+  onPageIndexChange?: (currentPageIndex: number) => void
 ) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -202,9 +202,10 @@ function useDataTable<TData, TValue>(
           : updater;
 
       setPageSize(next.pageSize);
-      setPageIndex(next.pageIndex);
-      onPageIndexChange(next.pageIndex);
 
+      if (next.pageIndex === pageIndex) return;
+      setPageIndex(next.pageIndex);
+      onPageIndexChange?.(next.pageIndex);
       params.set('tablePageIndex', next.pageIndex.toString());
       history.replaceState(null, '', `?${params.toString()}`);
     },

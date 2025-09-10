@@ -1,21 +1,48 @@
-import { BookingsList } from '@/features/staff/bookings';
-import { ROUTES, Spinner } from '@/shared';
+import {
+  BookingQueries,
+  BookingQuerySchema,
+  BookingsList,
+} from '@/features/staff/bookings';
+import { QueryButton, ROUTES, Spinner } from '@/shared';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 
 export const metadata: Metadata = ROUTES.staff.nested.bookings.metadata;
 
-export default function BookingsPage() {
+export default async function BookingsPage({
+  searchParams,
+}: {
+  searchParams: Promise<unknown>;
+}) {
   // TODO: verify staff authentication
+  const parsedResult = BookingQuerySchema.safeParse(await searchParams);
 
   return (
-    <section>
-      <h1 className='text-accent-500 mb-4 text-2xl font-semibold tracking-widest'>
+    <section className='space-y-4'>
+      <h1 className='text-accent-500 text-2xl font-semibold tracking-widest'>
         Bookings
       </h1>
 
+      <div className='ml-auto w-fit overflow-hidden rounded-full'>
+        {BookingQueries.map(query => (
+          <QueryButton
+            key={query}
+            queries={[{ key: 'query', value: query }]}
+            isActive={
+              parsedResult.success
+                ? query === parsedResult.data.query
+                : query === 'all'
+            }
+          >
+            <span className='uppercase'>{query}</span>
+          </QueryButton>
+        ))}
+      </div>
+
       <Suspense fallback={<Spinner />}>
-        <BookingsList />
+        <BookingsList
+          query={parsedResult.success ? parsedResult.data.query : 'all'}
+        />
       </Suspense>
     </section>
   );
