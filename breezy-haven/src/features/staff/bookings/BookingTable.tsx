@@ -30,6 +30,7 @@ import {
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { StatusBadge } from './StatusBadge';
 
 export function BookingTable({ bookings }: BookingTableProps) {
   return <DataTable columns={columns} data={[...bookings]} />;
@@ -153,17 +154,7 @@ const bookingInfoColumn: ColumnDef<BookingTableProps['bookings'][number]> = {
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title={'Status'} />
       ),
-      cell: ({ row }) => {
-        const status = row.original.status;
-
-        return (
-          <span
-            className={`${StatusStyle[status]} rounded-full px-4 py-2 font-semibold tracking-tighter uppercase`}
-          >
-            {status}
-          </span>
-        );
-      },
+      cell: ({ row }) => <StatusBadge status={row.original.status} />,
     },
     {
       id: 'dates',
@@ -257,12 +248,6 @@ const columns: ColumnDef<BookingTableProps['bookings'][number]>[] = [
   bookingInfoColumn,
   actionColumn,
 ];
-
-const StatusStyle: Record<Booking['status'], string> = {
-  unconfirmed: 'bg-sky-200 text-sky-700',
-  'checked-in': 'bg-emerald-200 text-emerald-700',
-  'checked-out': 'bg-slate-300 text-slate-700',
-};
 
 interface CabinInfo {
   readonly name: string;
