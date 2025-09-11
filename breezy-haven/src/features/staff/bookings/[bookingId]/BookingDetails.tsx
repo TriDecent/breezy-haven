@@ -7,16 +7,23 @@ import {
   CardHeader,
   type Booking,
 } from '@/shared';
-import { HomeModernIcon } from '@heroicons/react/24/solid';
+import {
+  ChatBubbleLeftEllipsisIcon,
+  HomeModernIcon,
+} from '@heroicons/react/24/outline';
 import { format, formatDistanceToNow, isPast } from 'date-fns';
 import {
+  Calendar,
+  Check,
   CircleCheckIcon,
   CircleDollarSignIcon,
+  CircleQuestionMark,
   Contact2Icon,
   TicketsIcon,
 } from 'lucide-react';
 import Image from 'next/image';
 import { createContext, use } from 'react';
+import { Checkin } from './Checkin';
 
 const BookingContext = createContext<BookingDetailsProps['booking'] | null>(
   null
@@ -40,22 +47,29 @@ type BookingDetailsProps = {
 
 export function BookingDetails({ booking }: BookingDetailsProps) {
   return (
-    <Card className='mx-auto max-w-5xl overflow-hidden p-0'>
-      <BookingContext value={booking}>
-        <CardHeader className='bg-accent/30 gap-8 border-b py-4 dark:bg-slate-800'>
-          <SummaryBooking />
-          <CardDescription className='ml-auto'>
-            Booked via website
-          </CardDescription>
-        </CardHeader>
-        <CardContent className='space-y-8'>
-          <DetailBooking />
-        </CardContent>
-        <CardFooter className='text-muted-foreground ml-auto px-8 py-4 text-sm'>
-          {format('2025-05-10T12:31:00Z', 'PPPPpppp')}
-        </CardFooter>
-      </BookingContext>
-    </Card>
+    <>
+      <Card className='mx-auto max-w-5xl overflow-hidden p-0'>
+        <BookingContext value={booking}>
+          <CardHeader className='bg-accent/30 gap-8 border-b py-4 dark:bg-slate-800'>
+            <SummaryBooking />
+            <CardDescription className='ml-auto'>
+              Booked via website
+            </CardDescription>
+          </CardHeader>
+          <CardContent className='space-y-8'>
+            <DetailBooking />
+          </CardContent>
+          <CardFooter className='text-muted-foreground ml-auto px-8 py-4 text-sm'>
+            Booked on {format('2025-05-10T12:31:00Z', 'PPPPpppp')}
+          </CardFooter>
+        </BookingContext>
+      </Card>
+
+      <Checkin
+        bookingId={booking.id}
+        isAlreadyCheckedIn={booking.status === 'checked-in'}
+      />
+    </>
   );
 }
 
@@ -95,7 +109,8 @@ function SummaryBooking() {
           />
         </div>
 
-        <p className='w-fit'>
+        <p className='w-fit flex items-center gap-2'>
+          <Calendar />
           {format(booking.startDate, 'PPPP')} (
           {isPast(booking.startDate)
             ? `${formatDistanceToNow(booking.startDate)} ago`
@@ -116,8 +131,19 @@ function DetailBooking() {
       <ul className='marker:text-accent/50 flex list-inside list-disc flex-col gap-2 md:flex-row md:items-center lg:gap-4 dark:marker:text-slate-400'>
         <OwnerInformation />
       </ul>
+
+      <p className='flex flex-col gap-6 sm:flex-row'>
+        <span className='flex items-center gap-1'>
+          <ChatBubbleLeftEllipsisIcon width={24} />
+          Observations
+        </span>
+        <span className='text-muted-foreground text-pretty'>
+          {booking.observations ? booking.observations : '—'}
+        </span>
+      </p>
+
       <p className='flex gap-8'>
-        <span className='flex gap-1'>
+        <span className='flex items-center gap-1'>
           <CircleCheckIcon />
           Breakfast included?
         </span>
@@ -126,7 +152,19 @@ function DetailBooking() {
 
       <div className='bg-background flex flex-col items-center justify-between gap-y-4 rounded-sm p-4 md:flex-row'>
         <PriceDetails />
-        <p className='uppercase'>will pay at property</p>
+        <p className='uppercase'>
+          {booking.isPaid ? (
+            <span className='flex gap-1 text-emerald-500'>
+              <Check />
+              paid
+            </span>
+          ) : (
+            <span className='text-muted-foreground flex gap-1'>
+              <CircleQuestionMark />
+              will pay at property
+            </span>
+          )}
+        </p>
       </div>
     </>
   );

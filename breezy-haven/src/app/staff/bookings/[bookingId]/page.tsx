@@ -63,7 +63,7 @@ export default async function BookingEditPage({
           <StatusBadge status={'checked-in'} className='px-4 py-1 text-sm' />
         </div>
         <Button variant='link' asChild>
-          <Link href={ROUTES.staff.nested.bookings} className='underline'>
+          <Link href={ROUTES.staff.nested.bookings.href} className='underline'>
             <ArrowLeftCircleIcon />
             Back
           </Link>
