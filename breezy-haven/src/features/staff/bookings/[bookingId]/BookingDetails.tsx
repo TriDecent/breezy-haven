@@ -48,6 +48,12 @@ type BookingDetailsProps = {
 export function BookingDetails({ booking }: BookingDetailsProps) {
   return (
     <>
+      <div
+        className={`mb-6 max-w-5xl shadow ${booking.status !== 'unconfirmed' ? 'hidden' : ''}`}
+      >
+        <Checkin bookingId={booking.id} />
+      </div>
+
       <Card className='mx-auto max-w-5xl overflow-hidden p-0'>
         <BookingContext value={booking}>
           <CardHeader className='bg-accent/30 gap-8 border-b py-4 dark:bg-slate-800'>
@@ -59,16 +65,11 @@ export function BookingDetails({ booking }: BookingDetailsProps) {
           <CardContent className='space-y-8'>
             <DetailBooking />
           </CardContent>
-          <CardFooter className='text-muted-foreground ml-auto px-8 py-4 text-sm'>
+          <CardFooter className='text-muted-foreground ml-auto p-8 text-sm'>
             Booked on {format('2025-05-10T12:31:00Z', 'PPPPpppp')}
           </CardFooter>
         </BookingContext>
       </Card>
-
-      <Checkin
-        bookingId={booking.id}
-        isAlreadyCheckedIn={booking.status === 'checked-in'}
-      />
     </>
   );
 }
@@ -109,7 +110,7 @@ function SummaryBooking() {
           />
         </div>
 
-        <p className='w-fit flex items-center gap-2'>
+        <p className='flex w-fit items-center gap-2'>
           <Calendar />
           {format(booking.startDate, 'PPPP')} (
           {isPast(booking.startDate)

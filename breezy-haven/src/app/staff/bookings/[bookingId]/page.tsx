@@ -60,7 +60,7 @@ export default async function BookingEditPage({
             Booking #{booking.id}
           </h1>
 
-          <StatusBadge status={'checked-in'} className='px-4 py-1 text-sm' />
+          <StatusBadge status={booking.status} className='px-4 py-1 text-sm' />
         </div>
         <Button variant='link' asChild>
           <Link href={ROUTES.staff.nested.bookings.href} className='underline'>
