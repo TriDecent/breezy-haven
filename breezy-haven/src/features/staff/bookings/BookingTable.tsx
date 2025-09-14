@@ -24,13 +24,15 @@ import {
 import {
   ArrowRight,
   CopyIcon,
+  DoorOpen,
+  Eye,
   MoreHorizontalIcon,
-  PencilIcon,
 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { StatusBadge } from './StatusBadge';
+import { checkoutAsync } from './[bookingId]/checkoutAsync';
 
 export function BookingTable({ bookings }: BookingTableProps) {
   return <DataTable columns={columns} data={[...bookings]} />;
@@ -50,7 +52,7 @@ function EditAction({
         router.push(`${ROUTES.staff.nested.bookings.href}/${bookingId}`);
       }}
     >
-      <PencilIcon /> Edit
+      <Eye /> See details
     </DropdownMenuItem>
   );
 }
@@ -68,6 +70,35 @@ function CopyAction({
       }}
     >
       <CopyIcon /> Copy info
+    </DropdownMenuItem>
+  );
+}
+
+function CheckoutAction({
+  bookingId,
+  isCheckedIn,
+}: {
+  bookingId: Booking['id'];
+  isCheckedIn: boolean;
+}) {
+  return (
+    <DropdownMenuItem
+      onClick={() => {
+        if (!isCheckedIn) {
+          toast.error('Checkout failed', {
+            description: 'Guest has not checked in.',
+          });
+          return;
+        }
+
+        toast.promise(checkoutAsync(bookingId), {
+          loading: 'Checking out the guest',
+          error: 'An error has occurred while trying to check out the booking',
+          success: 'Check out the guest successfully!',
+        });
+      }}
+    >
+      <DoorOpen /> Checkout
     </DropdownMenuItem>
   );
 }
@@ -213,6 +244,10 @@ const actionColumn: ColumnDef<BookingTableProps['bookings'][number]> = {
             <DropdownMenuSeparator />
             <CopyAction booking={row.original} />
             <EditAction bookingId={row.original.id} />
+            <CheckoutAction
+              bookingId={row.original.id}
+              isCheckedIn={row.original.status === 'checked-in'}
+            />
           </DropdownMenuContent>
         </DropdownMenu>
       ),

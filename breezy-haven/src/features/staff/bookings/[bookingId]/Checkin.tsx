@@ -10,7 +10,7 @@ import {
 } from 'react';
 import { toast } from 'sonner';
 import { BookingContext } from './BookingDetails';
-import { updateCheckinAsync } from './updateCheckinAsync';
+import { checkinAsync } from './checkinAsync';
 
 export function Checkin() {
   const booking = use(BookingContext);
@@ -36,7 +36,7 @@ export function Checkin() {
         startTransition(() =>
           toast
             .promise(
-              () => updateCheckinAsync(booking.id, formData.has('breakfast')),
+              () => checkinAsync(booking.id, formData.has('breakfast')),
               {
                 loading: 'Check-in is in progress',
                 error: 'Check-in failed',
@@ -85,9 +85,9 @@ export function Checkin() {
                   booking.numNights * booking.setting.breakfastPrice
               )}{' '}
               <span className='text-muted-foreground'>
-                (${priceFormatter.format(booking.totalPrice)} + $$
-                {priceFormatter.format(booking.setting.breakfastPrice)} * $
-                {booking.numNights} day${booking.numNights > 1 ? 's' : ''})
+                (${priceFormatter.format(booking.totalPrice)} + $
+                {priceFormatter.format(booking.setting.breakfastPrice)} x{' '}
+                {booking.numNights} day{booking.numNights > 1 ? 's' : ''})
               </span>
             </span>
           ) : (

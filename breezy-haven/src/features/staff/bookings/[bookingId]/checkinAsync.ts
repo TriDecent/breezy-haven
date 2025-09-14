@@ -4,7 +4,7 @@ import { staffBookingService, staffSettingService } from '@/services';
 import { ROUTES, type Booking } from '@/shared';
 import { revalidatePath } from 'next/cache';
 
-export async function updateCheckinAsync(
+export async function checkinAsync(
   bookingId: Booking['id'],
   hasBreakfast: boolean
 ): Promise<void> {
