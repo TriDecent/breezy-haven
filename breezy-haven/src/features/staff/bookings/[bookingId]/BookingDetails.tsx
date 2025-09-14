@@ -25,9 +25,9 @@ import Image from 'next/image';
 import { createContext, use } from 'react';
 import { Checkin } from './Checkin';
 
-const BookingContext = createContext<BookingDetailsProps['booking'] | null>(
-  null
-);
+export const BookingContext = createContext<
+  BookingDetailsProps['booking'] | null
+>(null);
 
 type BookingDetailsProps = {
   readonly booking: Booking & {
@@ -42,35 +42,37 @@ type BookingDetailsProps = {
       countryFlag: string;
       nationalID: string;
     }>;
+    readonly setting: Readonly<{ breakfastPrice: number }>;
   };
 };
 
 export function BookingDetails({ booking }: BookingDetailsProps) {
   return (
-    <>
-      <div
-        className={`mb-6 max-w-5xl shadow ${booking.status !== 'unconfirmed' ? 'hidden' : ''}`}
-      >
-        <Checkin bookingId={booking.id} />
-      </div>
-
+    <BookingContext value={booking}>
       <Card className='mx-auto max-w-5xl overflow-hidden p-0'>
-        <BookingContext value={booking}>
-          <CardHeader className='bg-accent/30 gap-8 border-b py-4 dark:bg-slate-800'>
-            <SummaryBooking />
-            <CardDescription className='ml-auto'>
-              Booked via website
-            </CardDescription>
-          </CardHeader>
-          <CardContent className='space-y-8'>
-            <DetailBooking />
-          </CardContent>
-          <CardFooter className='text-muted-foreground ml-auto p-8 text-sm'>
-            Booked on {format('2025-05-10T12:31:00Z', 'PPPPpppp')}
-          </CardFooter>
-        </BookingContext>
+        <CardHeader className='bg-accent/30 gap-8 border-b py-4 dark:bg-slate-800'>
+          <SummaryBooking />
+          <CardDescription className='flex justify-between'>
+            <span>
+              {booking.numNights} night{booking.numNights > 1 ? 's' : ''}
+            </span>
+            <span>Booked via website</span>
+          </CardDescription>
+        </CardHeader>
+        <CardContent className='space-y-8'>
+          <DetailBooking />
+        </CardContent>
+        <CardFooter className='text-muted-foreground ml-auto p-8 text-sm'>
+          Booked on {format('2025-05-10T12:31:00Z', 'PPPPpppp')}
+        </CardFooter>
       </Card>
-    </>
+
+      <div
+        className={`mx-auto mt-6 max-w-5xl shadow ${booking.status !== 'unconfirmed' ? 'hidden' : ''}`}
+      >
+        <Checkin />
+      </div>
+    </BookingContext>
   );
 }
 
@@ -90,13 +92,13 @@ function SummaryBooking() {
         </span>
       </p>
 
-      <div className='flex flex-col items-center justify-between gap-4 lg:flex-row'>
+      <div className='items-c enter flex flex-col justify-between gap-4 lg:flex-row'>
         <div className='space-y-4'>
           <span className='flex w-fit items-center gap-1'>
             <HomeModernIcon width={28} className='inline' />
             <span>
               {booking.numNights} nights in Cabin{' '}
-              <strong className=''>{booking.cabin.name}</strong>
+              <strong>{booking.cabin.name}</strong>
             </span>
           </span>
 

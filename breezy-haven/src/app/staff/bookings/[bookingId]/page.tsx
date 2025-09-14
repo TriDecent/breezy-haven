@@ -1,6 +1,10 @@
 import { StatusBadge } from '@/features/staff/bookings';
 import { BookingDetails } from '@/features/staff/bookings/[bookingId]';
-import { staffBookingService, type BookingWithRelations } from '@/services';
+import {
+  staffBookingService,
+  staffSettingService,
+  type BookingWithRelations,
+} from '@/services';
 import { Button, errorHelper, ROUTES } from '@/shared';
 import { ArrowLeftCircleIcon } from 'lucide-react';
 import type { Metadata } from 'next';
@@ -51,6 +55,10 @@ export default async function BookingEditPage({
 }) {
   // TODO: verify staff authentication
   const booking = await retrieveBookingAsync(params);
+  const { data: setting, errors: settingErrors } =
+    await staffSettingService.getAll();
+
+  if (settingErrors) throw errorHelper.handleError(settingErrors);
 
   return (
     <section>
@@ -70,7 +78,7 @@ export default async function BookingEditPage({
         </Button>
       </div>
 
-      <BookingDetails booking={booking} />
+      <BookingDetails booking={{ ...booking, setting: setting[0] }} />
     </section>
   );
 }

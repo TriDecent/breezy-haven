@@ -57,3 +57,4 @@ export { cabinFormActions } from './store/cabinFormSlice';
 export type { RootState } from './store/store';
 export { dateHelper } from './utils/DateHelper';
 export { errorHelper } from './utils/ErrorHelper';
+export { priceFormatter } from './utils/PriceFormatter';
