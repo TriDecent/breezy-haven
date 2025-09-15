@@ -27,80 +27,17 @@ import {
   DoorOpen,
   Eye,
   MoreHorizontalIcon,
+  Trash2,
 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { StatusBadge } from './StatusBadge';
 import { checkoutAsync } from './[bookingId]/checkoutAsync';
+import { deleteBookingAction } from './deleteBookingAction';
 
 export function BookingTable({ bookings }: BookingTableProps) {
   return <DataTable columns={columns} data={[...bookings]} />;
-}
-
-function EditAction({
-  bookingId,
-}: {
-  bookingId: BookingTableProps['bookings'][number]['id'];
-}) {
-  const router = useRouter();
-
-  return (
-    <DropdownMenuItem
-      onClick={async () => {
-        await new Promise(resolve => setTimeout(resolve, 300)); // give some time for DropdownMenu to cleanup aria-hidden, avoid warning accessibility
-        router.push(`${ROUTES.staff.nested.bookings.href}/${bookingId}`);
-      }}
-    >
-      <Eye /> See details
-    </DropdownMenuItem>
-  );
-}
-
-function CopyAction({
-  booking,
-}: {
-  booking: BookingTableProps['bookings'][number];
-}) {
-  return (
-    <DropdownMenuItem
-      onClick={async () => {
-        await navigator.clipboard.writeText(JSON.stringify(booking));
-        toast.success('Copy successfully!');
-      }}
-    >
-      <CopyIcon /> Copy info
-    </DropdownMenuItem>
-  );
-}
-
-function CheckoutAction({
-  bookingId,
-  isCheckedIn,
-}: {
-  bookingId: Booking['id'];
-  isCheckedIn: boolean;
-}) {
-  return (
-    <DropdownMenuItem
-      onClick={() => {
-        if (!isCheckedIn) {
-          toast.error('Checkout failed', {
-            description: 'Guest has not checked in.',
-          });
-          return;
-        }
-
-        toast.promise(checkoutAsync(bookingId), {
-          loading: 'Checking out the guest',
-          error: 'An error has occurred while trying to check out the booking',
-          success: 'Check out the guest successfully!',
-        });
-      }}
-    >
-      <DoorOpen /> Checkout
-    </DropdownMenuItem>
-  );
 }
 
 const cabinInfoColumn: ColumnDef<BookingTableProps['bookings'][number]> = {
@@ -248,6 +185,7 @@ const actionColumn: ColumnDef<BookingTableProps['bookings'][number]> = {
               bookingId={row.original.id}
               isCheckedIn={row.original.status === 'checked-in'}
             />
+            <DeleteAction bookingId={row.original.id} />
           </DropdownMenuContent>
         </DropdownMenu>
       ),
@@ -283,6 +221,97 @@ const columns: ColumnDef<BookingTableProps['bookings'][number]>[] = [
   bookingInfoColumn,
   actionColumn,
 ];
+
+function EditAction({
+  bookingId,
+}: {
+  bookingId: BookingTableProps['bookings'][number]['id'];
+}) {
+  const router = useRouter();
+
+  return (
+    <DropdownMenuItem
+      onClick={async () => {
+        await new Promise(resolve => setTimeout(resolve, 300)); // give some time for DropdownMenu to cleanup aria-hidden, avoid warning accessibility
+        router.push(`${ROUTES.staff.nested.bookings.href}/${bookingId}`);
+      }}
+    >
+      <Eye /> See details
+    </DropdownMenuItem>
+  );
+}
+
+function CopyAction({
+  booking,
+}: {
+  booking: BookingTableProps['bookings'][number];
+}) {
+  return (
+    <DropdownMenuItem
+      onClick={async () => {
+        await navigator.clipboard.writeText(JSON.stringify(booking));
+        toast.success('Copy successfully!');
+      }}
+    >
+      <CopyIcon /> Copy info
+    </DropdownMenuItem>
+  );
+}
+
+function CheckoutAction({
+  bookingId,
+  isCheckedIn,
+}: {
+  bookingId: Booking['id'];
+  isCheckedIn: boolean;
+}) {
+  return (
+    <DropdownMenuItem
+      onClick={() => {
+        if (!isCheckedIn) {
+          toast.error('Checkout failed', {
+            description: 'Guest has not checked in.',
+          });
+          return;
+        }
+
+        toast.promise(checkoutAsync(bookingId), {
+          loading: 'Checking out the guest',
+          error: 'An error has occurred while trying to check out the booking',
+          success: 'Check out the guest successfully!',
+        });
+      }}
+    >
+      <DoorOpen /> Checkout
+    </DropdownMenuItem>
+  );
+}
+
+function DeleteAction({ bookingId }: { bookingId: Booking['id'] }) {
+  return (
+    <DropdownMenuItem
+      onClick={() =>
+        toast.warning(
+          `Are you sure that you want to delete the booking - ${bookingId}`,
+          {
+            description: 'This action cannot be undone',
+            action: {
+              label: 'Yes',
+              onClick: () =>
+                toast.promise(deleteBookingAction(bookingId), {
+                  loading: 'Deleting the booking',
+                  error: () => `Delete the booking ${bookingId} failed!`,
+                  success: `The booking ${bookingId} has been deleted`,
+                }),
+            },
+          }
+        )
+      }
+    >
+      <Trash2 /> Delete
+    </DropdownMenuItem>
+  );
+}
 
 interface CabinInfo {
   readonly name: string;
