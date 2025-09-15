@@ -5,6 +5,8 @@ export const BookingQueries = [
   'checked-in',
   'checked-out',
   'unconfirmed',
+  'today-checkin',
+  'today-checkout'
 ] as const;
 
 export const BookingQuerySchema = z.object({

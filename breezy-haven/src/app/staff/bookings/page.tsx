@@ -23,7 +23,7 @@ export default async function BookingsPage({
         Bookings
       </h1>
 
-      <div className='ml-auto grid w-fit grid-cols-2 overflow-hidden rounded shadow sm:grid-cols-4'>
+      <div className='ml-auto grid w-fit grid-cols-2 overflow-hidden rounded shadow sm:grid-cols-4 xl:grid-cols-6'>
         {BookingQueries.map(query => (
           <QueryButton
             key={query}
