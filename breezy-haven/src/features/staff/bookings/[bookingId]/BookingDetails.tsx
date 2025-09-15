@@ -5,7 +5,6 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  type Booking,
 } from '@/shared';
 import {
   ChatBubbleLeftEllipsisIcon,
@@ -22,29 +21,13 @@ import {
   TicketsIcon,
 } from 'lucide-react';
 import Image from 'next/image';
-import { createContext, use } from 'react';
+import { use } from 'react';
 import { Checkin } from './Checkin';
-
-export const BookingContext = createContext<
-  BookingDetailsProps['booking'] | null
->(null);
-
-type BookingDetailsProps = {
-  readonly booking: Booking & {
-    readonly cabin: Readonly<{
-      image: string;
-      id: number;
-      name: string;
-    }>;
-    readonly guest: Readonly<{
-      email: string;
-      fullName: string;
-      countryFlag: string;
-      nationalID: string;
-    }>;
-    readonly setting: Readonly<{ breakfastPrice: number }>;
-  };
-};
+import {
+  BookingContext,
+  type BookingDetailsProps,
+} from './context/BookingContext';
+import { DeleteBookingButton } from './DeleteBookingButton';
 
 export function BookingDetails({ booking }: BookingDetailsProps) {
   return (
@@ -68,9 +51,12 @@ export function BookingDetails({ booking }: BookingDetailsProps) {
       </Card>
 
       <div
-        className={`mx-auto mt-6 max-w-5xl shadow ${booking.status !== 'unconfirmed' ? 'hidden' : ''}`}
+        className={`mx-auto mt-6 max-w-5xl space-y-6 ${booking.status !== 'unconfirmed' ? 'hidden' : ''}`}
       >
         <Checkin />
+        <div className='flex justify-end'>
+          <DeleteBookingButton bookingId={booking.id} />
+        </div>
       </div>
     </BookingContext>
   );
