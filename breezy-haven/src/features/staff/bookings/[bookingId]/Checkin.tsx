@@ -9,8 +9,9 @@ import {
   type ReactNode,
 } from 'react';
 import { toast } from 'sonner';
-import { BookingContext } from './BookingDetails';
+
 import { checkinAsync } from './checkinAsync';
+import { BookingContext } from './context/BookingContext';
 
 export function Checkin() {
   const booking = use(BookingContext);
