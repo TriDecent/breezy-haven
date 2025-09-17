@@ -69,12 +69,12 @@ export async function loginAction(
   cookieStore.set(
     CookieConfig.keys.staff.token.access,
     tokens.accessToken,
-    CookieConfig.option
+    CookieConfig.option.short
   );
   cookieStore.set(
     CookieConfig.keys.staff.token.refresh,
     tokens.refreshToken,
-    CookieConfig.option
+    CookieConfig.option.long
   );
 
   redirect(`${ROUTES.staff.nested.dashboard.href}`); // * will be replaced with callbackUrl later

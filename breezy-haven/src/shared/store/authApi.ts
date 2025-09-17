@@ -21,7 +21,7 @@ const authApi = createApi({
   endpoints: builder => ({
     getAuth: builder.query<Response, void>({
       query: () => ({
-        url: '/session',
+        url: '/session/guest',
         method: 'GET',
       }),
       keepUnusedDataFor: 300,

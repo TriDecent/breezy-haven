@@ -1,6 +1,6 @@
 import { MiddlewareConfig, NextRequest, NextResponse } from 'next/server';
 import { Auth } from './lib/auth';
-import { ROUTES } from './shared';
+import { ROUTES } from './shared/constants';
 
 export const config: MiddlewareConfig = {
   matcher: [
