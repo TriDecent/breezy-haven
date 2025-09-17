@@ -138,7 +138,6 @@ export class RsaJwtManager<
 }
 
 interface UserPayload {
-  readonly id: string;
   readonly email: string;
   readonly avatarUrl: string;
   readonly [key: string]: unknown;
