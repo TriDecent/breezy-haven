@@ -10,7 +10,7 @@ export async function updateProfile(
   _currentState: UpdateProfileResponse,
   formData: FormData
 ): Promise<UpdateProfileResponse> {
-  const { main } = await Auth.getFullSessionAsync();
+  const { main } = await Auth.guest.getFullSessionAsync();
   if (!main)
     return {
       userEntered: null,

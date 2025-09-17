@@ -14,7 +14,7 @@ export async function updateBookingAction(
   _currentState: BookingActionResponse,
   formData: FormData
 ): Promise<BookingActionResponse> {
-  const session = await Auth.verifySession();
+  const session = await Auth.guest.verifySession();
   const input = Object.fromEntries(formData.entries());
 
   const [parsedUpdateBookingInput, failedInput] = validateInput(input);
@@ -94,7 +94,7 @@ function validateInput(
 async function validateBookingsFromDB(
   input: SafeBookingInput,
   session: NonNullableObject<
-    Awaited<ReturnType<typeof Auth.getFullSessionAsync>>
+    Awaited<ReturnType<typeof Auth.guest.getFullSessionAsync>>
   >
 ): Promise<
   | [success: SafeBookingArray, failed: null]

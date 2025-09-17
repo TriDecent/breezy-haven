@@ -8,7 +8,7 @@ export function generateMetadata(): Metadata {
 }
 
 export default async function AccountPage() {
-  const session = await Auth.verifySession();
+  const session = await Auth.guest.verifySession();
 
   return (
     <>

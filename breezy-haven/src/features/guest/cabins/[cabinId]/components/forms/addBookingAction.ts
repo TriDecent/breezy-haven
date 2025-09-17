@@ -52,7 +52,7 @@ export async function addBookingAction(
   _currentState: AddBookingResponse,
   formData: FormData
 ): Promise<AddBookingResponse> {
-  const { id: guestId } = (await Auth.verifySession()).main;
+  const { id: guestId } = (await Auth.guest.verifySession()).main;
   const input = Object.fromEntries(formData.entries());
 
   const parsedInput = SafeInputSchema.safeParse(input);

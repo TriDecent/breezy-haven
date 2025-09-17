@@ -7,7 +7,7 @@ import { errorHelper } from '@/shared/utils';
 import { revalidatePath } from 'next/cache';
 
 export async function deleteBooking(bookingId: number) {
-  const session = await Auth.getFullSessionAsync();
+  const session = await Auth.guest.getFullSessionAsync();
   if (!session.main)
     throw new Error('You are not authorized to perform this action');
 

@@ -7,7 +7,7 @@ class AuthError {
 
 export async function GET() {
   try {
-    const { main, thirdParty } = await Auth.getFullSessionAsync();
+    const { main, thirdParty } = await Auth.guest.getFullSessionAsync();
     if (!main) throw new AuthError('You are not authenticated');
 
     return NextResponse.json({

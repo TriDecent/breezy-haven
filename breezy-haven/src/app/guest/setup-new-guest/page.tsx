@@ -39,7 +39,7 @@ export default async function SettingUpGuestPage({
 // * Solution: Create a dedicated `setup-error` route to handle this edge case gracefully.
 
 async function SetupGuest({ callbackUrl }: { callbackUrl: string }) {
-  const session = await Auth.getFullSessionAsync();
+  const session = await Auth.guest.getFullSessionAsync();
   if (!session.thirdParty?.user) redirect(ROUTES.login.href);
   if (session.main) redirect(callbackUrl);
 

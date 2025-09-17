@@ -1,3 +1,3 @@
 import { Auth } from '@/lib';
 
-export const { GET, POST } = Auth.nextAuth.handlers;
+export const { GET, POST } = Auth.guest.nextAuth.handlers;

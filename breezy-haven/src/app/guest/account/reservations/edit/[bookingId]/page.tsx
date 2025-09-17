@@ -31,7 +31,7 @@ export default async function BookingEditPage({ params }: PageParams) {
   if (!paramsResult.success) throw new Error('Invalid booking id');
   const { bookingId } = paramsResult.data;
 
-  const session = await Auth.verifySession();
+  const session = await Auth.guest.verifySession();
 
   const { data: bookings, errors: bookingsErrors } =
     await bookingService.getByGuestId(session.main.id);

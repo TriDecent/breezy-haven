@@ -1,6 +1,6 @@
 'use client';
 
-import { PrimaryButton } from '@/shared/components';
+import { Input, PrimaryButton } from '@/shared/components';
 import { InputHTMLAttributes, useActionState, type ReactElement } from 'react';
 import type { GuestForm } from './GuestFormSchema';
 import { updateProfile } from './updateProfileAction';

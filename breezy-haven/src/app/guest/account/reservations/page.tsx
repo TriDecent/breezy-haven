@@ -9,7 +9,7 @@ import { Metadata } from 'next';
 export const metadata: Metadata = ROUTES.account.nested.reservations.metadata;
 
 export default async function ReservationsPage() {
-  const session = await Auth.verifySession();
+  const session = await Auth.guest.verifySession();
 
   const { data: bookings, errors: bookingsError } =
     await bookingService.getByGuestId(session.main.id);

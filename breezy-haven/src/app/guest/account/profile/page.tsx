@@ -12,7 +12,7 @@ import { Metadata } from 'next';
 export const metadata: Metadata = ROUTES.account.nested.profile.metadata;
 
 export default async function Page() {
-  const session = await Auth.verifySession();
+  const session = await Auth.guest.verifySession();
 
   const { data: countries, error } = await getCountries();
 

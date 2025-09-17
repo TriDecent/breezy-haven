@@ -72,7 +72,7 @@ async function handleGoogleCallback(request: NextRequest) {
 async function handleLoginRouteAsync(
   request: NextRequest
 ): Promise<NextResponse> {
-  const session = await Auth.getThirdPartySessionAsync();
+  const session = await Auth.guest.getThirdPartySessionAsync();
 
   if (session) {
     return NextResponse.redirect(
@@ -89,7 +89,7 @@ async function handleLoginRouteAsync(
 async function handleAccountRouteAsync(
   request: NextRequest
 ): Promise<NextResponse> {
-  const session = await Auth.getThirdPartySessionAsync();
+  const session = await Auth.guest.getThirdPartySessionAsync();
 
   if (!session) {
     const params = new URLSearchParams({
