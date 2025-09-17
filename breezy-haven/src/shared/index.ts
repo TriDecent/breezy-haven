@@ -5,6 +5,7 @@ export * from './components/ui/calendar';
 export * from './components/ui/card';
 export * from './components/ui/checkbox';
 export * from './components/ui/input';
+export * from './components/ui/label';
 export * from './components/ui/popover';
 export * from './components/ui/scroll-area';
 export * from './components/ui/select';
@@ -46,7 +47,6 @@ export { default as Textarea } from './components/Textarea';
 export { default as TextExpander } from './components/TextExpander';
 export { default as ThemeToggle } from './components/ThemeToggle';
 export * from './components/ui/dropdown-menu';
-export { LoginForm } from './components/ui/login-form';
 export { ROUTES } from './constants/ROUTES';
 export { default as useScrollDirection } from './hooks/useScrollDirection';
 export {

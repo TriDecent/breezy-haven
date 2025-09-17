@@ -24,11 +24,7 @@ export function DeleteBookingButton({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button
-          onClick={() => {}}
-          variant='destructive'
-          className='w-full md:w-fit'
-        >
+        <Button variant='destructive' className='w-full md:w-fit'>
           Delete this booking
         </Button>
       </AlertDialogTrigger>
