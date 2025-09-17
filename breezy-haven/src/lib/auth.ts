@@ -1,13 +1,15 @@
 import NextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
 
-import { unauthGuestService } from '@/services';
+import { unauthGuestService, unauthStaffService } from '@/services';
 import { cache } from 'react';
 
 import type { NonNullableObject } from '@/repositories';
 
+import { CookieConfig, ROUTES } from '@/shared/constants';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { ROUTES } from '@/shared/constants';
+import { jwtManager } from './RsaJwtManager';
 
 const nextAuth = NextAuth({
   providers: [Google],
@@ -45,9 +47,60 @@ const verifySession = cache(async () => {
   return session as NonNullableObject<typeof session>; // main exists means third also exists
 });
 
+const verifyAccessTokenAsync = cache(async () => {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get(
+    CookieConfig.keys.staff.token.access
+  )?.value;
+
+  if (!accessToken) return null;
+  return await jwtManager.verifyAccessTokenAsync(accessToken);
+});
+
+const verifyRefreshTokenAsync = cache(async () => {
+  const cookieStore = await cookies();
+  const refreshToken = cookieStore.get(
+    CookieConfig.keys.staff.token.refresh
+  )?.value;
+
+  if (!refreshToken) return null;
+  return await jwtManager.verifyRefreshTokenAsync(refreshToken);
+});
+
+const refreshAccessTokenAsync = cache(async () => {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get(
+    CookieConfig.keys.staff.token.access
+  )?.value;
+  const refreshToken = cookieStore.get(
+    CookieConfig.keys.staff.token.refresh
+  )?.value;
+
+  if (!accessToken || !refreshToken) return null;
+
+  const refreshPayload = await verifyRefreshTokenAsync();
+  if (!refreshPayload) return null;
+  const { data, errors } = await unauthStaffService.getByEmail(
+    refreshPayload.userEmail
+  );
+  if (errors) return null;
+
+  return await jwtManager.refreshAccessTokenAsync(
+    { accessToken, refreshToken },
+    data
+  );
+});
+
 export const Auth = {
-  nextAuth,
-  getThirdPartySessionAsync,
-  getFullSessionAsync,
-  verifySession,
+  guest: {
+    nextAuth,
+    getThirdPartySessionAsync,
+    getFullSessionAsync,
+    verifySession,
+  },
+  staff: {
+    verifyAccessTokenAsync,
+    verifyRefreshTokenAsync,
+    refreshAccessTokenAsync,
+  },
 } as const;
