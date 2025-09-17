@@ -5,8 +5,9 @@ import {
   type Query,
 } from '@/features/staff/cabins';
 import { CabinsList } from '@/features/staff/cabins/CabinsList';
+import { Spinner } from '@/shared/components';
+import { ROUTES } from '@/shared/constants';
 
-import { ROUTES, Spinner } from '@/shared';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 

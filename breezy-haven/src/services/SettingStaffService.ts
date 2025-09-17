@@ -1,8 +1,9 @@
 import { type DTOSetting } from '@/repositories';
-import type { NullableSetting, Setting } from '@/shared';
+
 import { PostgrestError } from '@supabase/supabase-js';
 import { cache } from 'react';
 
+import type { NullableSetting, Setting } from '@/shared/schemas';
 import type { IStaffService } from './BaseStaffService';
 import type { ServiceReturnType } from './types';
 

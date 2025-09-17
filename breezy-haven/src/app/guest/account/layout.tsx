@@ -1,5 +1,7 @@
 import { SideNavigation } from '@/features/guest/account';
-import { MiniSidebar, ROUTES } from '@/shared';
+import { MiniSidebar } from '@/shared/components';
+import { ROUTES } from '@/shared/constants';
+
 import { Metadata } from 'next';
 
 export const metadata: Metadata = ROUTES.account.metadata;

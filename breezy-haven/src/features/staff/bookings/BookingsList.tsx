@@ -1,5 +1,6 @@
 import { staffBookingService, type BookingWithRelations } from '@/services';
-import { errorHelper } from '@/shared';
+
+import { errorHelper } from '@/shared/utils';
 import { isSameDay, parseISO } from 'date-fns';
 import { BookingTable } from './BookingTable';
 import type { BookingQuery } from './QuerySchema';

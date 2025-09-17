@@ -5,7 +5,8 @@ import {
 } from '@/features/guest/account/profile';
 import { Auth } from '@/lib';
 import { getCountries } from '@/services';
-import { ROUTES } from '@/shared';
+import { ROUTES } from '@/shared/constants';
+
 import { Metadata } from 'next';
 
 export const metadata: Metadata = ROUTES.account.nested.profile.metadata;

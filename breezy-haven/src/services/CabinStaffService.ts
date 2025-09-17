@@ -1,8 +1,9 @@
 import { DTOCabin } from '@/repositories';
-import type { Cabin, NullableCabin } from '@/shared';
+
 import { PostgrestError } from '@supabase/supabase-js';
 import { cache } from 'react';
 
+import type { Cabin, NullableCabin } from '@/shared/schemas';
 import type { IStaffService } from './BaseStaffService';
 import type { ServiceReturnType } from './types';
 

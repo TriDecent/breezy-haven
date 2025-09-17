@@ -1,5 +1,5 @@
 'use client';
-import { Button, Checkbox, priceFormatter } from '@/shared';
+
 import { UserRoundCheck } from 'lucide-react';
 import {
   use,
@@ -10,6 +10,8 @@ import {
 } from 'react';
 import { toast } from 'sonner';
 
+import { Button, Checkbox } from '@/shared/components';
+import { priceFormatter } from '@/shared/utils';
 import { checkinAsync } from './checkinAsync';
 import { BookingContext } from './context/BookingContext';
 

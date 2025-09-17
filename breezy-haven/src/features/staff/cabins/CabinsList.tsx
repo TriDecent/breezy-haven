@@ -1,5 +1,7 @@
 import { staffCabinService } from '@/services';
-import { errorHelper, type Cabin } from '@/shared';
+
+import type { Cabin } from '@/shared/schemas';
+import { errorHelper } from '@/shared/utils';
 import { CabinsTable } from './CabinsTable';
 import type { Query } from './Operations';
 

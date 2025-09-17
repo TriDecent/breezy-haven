@@ -11,9 +11,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
   MiniSpinner,
-  ROUTES,
-} from '@/shared';
-
+} from '@/shared/components';
+import { ROUTES } from '@/shared/constants';
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import { useTransition } from 'react';

@@ -1,6 +1,6 @@
 'use client';
 
-import { ROUTES } from '@/shared';
+import { ROUTES } from '@/shared/constants';
 import {
   CalendarDaysIcon,
   HomeIcon,

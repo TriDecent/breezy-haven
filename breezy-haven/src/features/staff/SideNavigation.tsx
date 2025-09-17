@@ -1,6 +1,6 @@
 'use client';
 import breezyHavenLogo from '@/../public/logo.png';
-import { ROUTES } from '@/shared';
+
 import {
   CalendarIcon,
   HomeIcon,
@@ -12,6 +12,7 @@ import { SettingsIcon } from 'lucide-react';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { NavItem } from './NavItem';
+import { ROUTES } from '@/shared/constants';
 
 const Icons = {
   [ROUTES.staff.nested.dashboard.metadata.title]: <HomeIcon width={24} />,

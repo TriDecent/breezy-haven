@@ -1,11 +1,8 @@
 'use client';
-import {
-  fromISOToDateRange,
-  RootState,
-  slideVariantKeys,
-  useScrollDirection,
-  Variants,
-} from '@/shared';
+
+import { slideVariantKeys, Variants } from '@/shared/animations';
+import { useScrollDirection } from '@/shared/hooks';
+import { fromISOToDateRange, type RootState } from '@/shared/store';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import { format } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';

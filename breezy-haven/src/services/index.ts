@@ -1,12 +1,13 @@
 import { Auth } from '@/lib';
 import { Repository } from '@/repositories';
+
 import {
   BookingSchema,
   CabinSchema,
   GuestSchema,
   SettingSchema,
   StaffSchema,
-} from '@/shared';
+} from '@/shared/schemas';
 import { cache } from 'react';
 import { BaseService } from './BaseService';
 import { BaseStaffService } from './BaseStaffService';

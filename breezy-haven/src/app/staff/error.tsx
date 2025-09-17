@@ -1,6 +1,6 @@
 'use client';
 
-import { Error } from '@/shared';
+import { Error } from '@/shared/components';
 
 export default function StaffError({
   error,

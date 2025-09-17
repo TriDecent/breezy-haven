@@ -5,8 +5,9 @@ import { unauthGuestService } from '@/services';
 import { cache } from 'react';
 
 import type { NonNullableObject } from '@/repositories';
-import { ROUTES } from '@/shared';
+
 import { redirect } from 'next/navigation';
+import { ROUTES } from '@/shared/constants';
 
 const nextAuth = NextAuth({
   providers: [Google],

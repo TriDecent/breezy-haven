@@ -1,5 +1,6 @@
 import { Auth } from '@/lib';
-import { ROUTES } from '@/shared';
+import { ROUTES } from '@/shared/constants';
+
 import { Metadata } from 'next';
 
 export function generateMetadata(): Metadata {

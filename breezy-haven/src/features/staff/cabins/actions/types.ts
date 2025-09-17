@@ -1,4 +1,4 @@
-import { CabinSchema, type Cabin } from '@/shared';
+import { CabinSchema, type Cabin } from '@/shared/schemas';
 import z from 'zod';
 
 export type Result<S, F> =

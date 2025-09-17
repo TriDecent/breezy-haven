@@ -4,7 +4,8 @@ import {
   Filter,
   ReservationReminder,
 } from '@/features/guest/cabins';
-import { ROUTES, ScrollTo } from '@/shared';
+import { ScrollTo } from '@/shared/components';
+import { ROUTES } from '@/shared/constants';
 
 import { Metadata } from 'next';
 import { Suspense } from 'react';

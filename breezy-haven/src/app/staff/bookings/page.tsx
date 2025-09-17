@@ -3,7 +3,9 @@ import {
   BookingQuerySchema,
   BookingsList,
 } from '@/features/staff/bookings';
-import { QueryButton, ROUTES, Spinner } from '@/shared';
+import { QueryButton, Spinner } from '@/shared/components';
+import { ROUTES } from '@/shared/constants';
+
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 

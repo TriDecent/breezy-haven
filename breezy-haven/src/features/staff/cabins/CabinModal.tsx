@@ -1,6 +1,6 @@
 'use client';
+
 import {
-  cabinFormActions,
   Card,
   CardContent,
   CardDescription,
@@ -8,8 +8,8 @@ import {
   CardTitle,
   Modal,
   type ModalHandle,
-  type RootState,
-} from '@/shared';
+} from '@/shared/components';
+import { cabinFormActions, type RootState } from '@/shared/store';
 import { SquarePenIcon } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';

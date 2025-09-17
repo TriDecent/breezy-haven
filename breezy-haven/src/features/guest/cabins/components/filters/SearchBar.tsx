@@ -1,15 +1,10 @@
 'use client';
 
-import {
-  Button,
-  Input,
-  ROUTES,
-  slideVariantKeys,
-  uiActions,
-  useScrollDirection,
-  Variants,
-  type RootState,
-} from '@/shared';
+import { slideVariantKeys, Variants } from '@/shared/animations';
+import { Button, Input } from '@/shared/components';
+import { ROUTES } from '@/shared/constants';
+import { useScrollDirection } from '@/shared/hooks';
+import { uiActions, type RootState } from '@/shared/store';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Search } from 'lucide-react';
 import Form from 'next/form';

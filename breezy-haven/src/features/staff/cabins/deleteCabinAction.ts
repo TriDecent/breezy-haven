@@ -1,7 +1,9 @@
 'use server';
 
 import { staffCabinService } from '@/services';
-import { ROUTES, type Cabin } from '@/shared';
+import { ROUTES } from '@/shared/constants';
+import type { Cabin } from '@/shared/schemas';
+
 import { revalidatePath } from 'next/cache';
 
 export async function deleteCabinAction(cabinId: Cabin['id']) {

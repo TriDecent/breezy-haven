@@ -1,4 +1,6 @@
-import { PageProgressBar, RootProvider, ROUTES, ThemeProvider } from '@/shared';
+import { PageProgressBar } from '@/shared/components';
+import { ROUTES } from '@/shared/constants';
+import { RootProvider, ThemeProvider } from '@/shared/providers';
 import '@/styles/globals.css';
 
 import { SpeedInsights } from '@vercel/speed-insights/next';

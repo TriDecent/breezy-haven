@@ -1,7 +1,9 @@
 'use client';
 import { default as PreviewImage } from '@/features/guest/cabins/components/ui/PreviewImage';
 import { DTOBooking, type NonNullableObject } from '@/repositories';
-import { PriorityContext, ROUTES } from '@/shared';
+
+import { ROUTES } from '@/shared/constants';
+import { PriorityContext } from '@/shared/providers';
 import { format, formatDistance, isPast, isToday, parseISO } from 'date-fns';
 import Link from 'next/link';
 import { use } from 'react';

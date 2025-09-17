@@ -1,4 +1,4 @@
-import { ROUTES } from '@/shared';
+import { ROUTES } from '@/shared/constants';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = ROUTES.staff.nested.dashboard.metadata;

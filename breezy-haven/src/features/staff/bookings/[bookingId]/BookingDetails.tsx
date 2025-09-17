@@ -1,11 +1,12 @@
 'use client';
+
 import {
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
-} from '@/shared';
+} from '@/shared/components';
 import {
   ChatBubbleLeftEllipsisIcon,
   HomeModernIcon,

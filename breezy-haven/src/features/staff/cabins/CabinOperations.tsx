@@ -1,5 +1,7 @@
 'use client';
-import { Button, cabinFormActions, QueryButton } from '@/shared';
+
+import { Button, QueryButton } from '@/shared/components';
+import { cabinFormActions } from '@/shared/store';
 import { SquarePenIcon } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { useDispatch } from 'react-redux';

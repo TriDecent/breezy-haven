@@ -1,7 +1,8 @@
 'use server';
 import { Auth } from '@/lib';
 import { getCountries, guestService } from '@/services';
-import { ROUTES } from '@/shared';
+import { ROUTES } from '@/shared/constants';
+
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 

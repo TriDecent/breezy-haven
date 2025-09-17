@@ -1,14 +1,14 @@
 'use client';
+
 import {
   Button,
-  cabinFormActions,
   CardAction,
   Input,
   ScrollArea,
   Textarea,
   Toaster,
-  type RootState,
-} from '@/shared';
+} from '@/shared/components';
+import { cabinFormActions, type RootState } from '@/shared/store';
 import { CirclePlus } from 'lucide-react';
 import Image from 'next/image';
 import {

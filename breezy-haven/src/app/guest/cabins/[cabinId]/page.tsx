@@ -1,7 +1,8 @@
 import { CabinDetail, Reservation } from '@/features/guest/cabins';
 import { unauthCabinService } from '@/services';
 
-import { CabinSchema, errorHelper } from '@/shared';
+import { CabinSchema } from '@/shared/schemas';
+import { errorHelper } from '@/shared/utils';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';

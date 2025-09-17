@@ -1,9 +1,10 @@
 import { type DTOStaff } from '@/repositories';
-import type { NullableStaff, Staff } from '@/shared';
+
 import { PostgrestError } from '@supabase/supabase-js';
 import { cache } from 'react';
 
 import { supabase } from '@/lib';
+import type { NullableStaff, Staff } from '@/shared/schemas';
 import type { IStaffService } from './BaseStaffService';
 import type { ServiceReturnType } from './types';
 

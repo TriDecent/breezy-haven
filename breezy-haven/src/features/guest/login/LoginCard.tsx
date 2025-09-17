@@ -5,7 +5,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/shared';
+} from '@/shared/components';
+
 import { type JSX } from 'react';
 
 export function LoginCard({

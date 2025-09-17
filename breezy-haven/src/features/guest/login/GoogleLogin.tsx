@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/shared';
+import { Button } from '@/shared/components';
 import { signinAsync } from './signinAction';
 
 export default function GoogleLogin() {

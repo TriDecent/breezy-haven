@@ -1,7 +1,7 @@
 import { unauthCabinService } from '@/services';
 // import { connection } from 'next/server';
 
-import { errorHelper } from '@/shared';
+import { errorHelper } from '@/shared/utils';
 import QueryCabins from './QueryCabins';
 
 export default async function CabinsList() {

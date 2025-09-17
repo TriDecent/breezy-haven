@@ -2,7 +2,9 @@
 
 import { jwtManager } from '@/lib';
 import { staffService } from '@/services';
-import { CookieConfig, ROUTES, type ActionResponse } from '@/shared';
+import type { ActionResponse } from '@/shared/actions';
+import { CookieConfig, ROUTES } from '@/shared/constants';
+
 import { compare } from 'bcrypt';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';

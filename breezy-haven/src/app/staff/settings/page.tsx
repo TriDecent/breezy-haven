@@ -5,9 +5,10 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  ROUTES,
   Spinner,
-} from '@/shared';
+} from '@/shared/components';
+import { ROUTES } from '@/shared/constants';
+
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 

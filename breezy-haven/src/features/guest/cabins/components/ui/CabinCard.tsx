@@ -1,6 +1,7 @@
 'use client';
 import { DTOCabin, NonNullableObject } from '@/repositories';
-import { PriorityContext, ROUTES } from '@/shared';
+import { ROUTES } from '@/shared/constants';
+import { PriorityContext } from '@/shared/providers';
 import { UsersIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import { use } from 'react';

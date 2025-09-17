@@ -1,15 +1,16 @@
 import { type DTOBooking, type DTOSetting } from '@/repositories';
+
+import { PostgrestError } from '@supabase/supabase-js';
+import { cache } from 'react';
+
+import { supabase } from '@/lib';
 import {
   BookingSchema,
   CabinSchema,
   GuestSchema,
   type Booking,
   type NullableBooking,
-} from '@/shared';
-import { PostgrestError } from '@supabase/supabase-js';
-import { cache } from 'react';
-
-import { supabase } from '@/lib';
+} from '@/shared/schemas';
 import z from 'zod';
 import type { IStaffService } from './BaseStaffService';
 import type { GetAllServiceReturnType, ServiceReturnType } from './types';

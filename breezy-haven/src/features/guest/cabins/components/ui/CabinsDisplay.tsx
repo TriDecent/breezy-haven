@@ -1,5 +1,7 @@
 'use client';
-import { PriorityProvider, type Cabin } from '@/shared';
+
+import { PriorityProvider } from '@/shared/providers';
+import type { Cabin } from '@/shared/schemas';
 import { motion, stagger, type Variant } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import CabinCard from './CabinCard';

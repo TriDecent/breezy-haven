@@ -1,11 +1,12 @@
 import { supabase } from '@/lib/supabase';
 import { DTOBooking } from '@/repositories';
+
 import {
   BookingSchema,
   CabinSchema,
   type Booking,
   type NullableBooking,
-} from '@/shared';
+} from '@/shared/schemas';
 import { PostgrestError } from '@supabase/supabase-js';
 import { eachDayOfInterval } from 'date-fns';
 import type z from 'zod';

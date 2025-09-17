@@ -1,6 +1,8 @@
 import { Auth } from '@/lib';
 import { unauthGuestService } from '@/services';
-import { ROUTES, Spinner } from '@/shared';
+import { Spinner } from '@/shared/components';
+import { ROUTES } from '@/shared/constants';
+
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';

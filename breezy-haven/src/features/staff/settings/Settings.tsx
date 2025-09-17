@@ -1,5 +1,6 @@
 import { staffSettingService } from '@/services';
-import { errorHelper } from '@/shared';
+
+import { errorHelper } from '@/shared/utils';
 import { SettingForm } from './SettingForm';
 
 export async function Settings() {

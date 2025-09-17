@@ -2,7 +2,6 @@
 
 import {
   Button,
-  cabinFormActions,
   Checkbox,
   DataTable,
   DataTableColumnHeader,
@@ -12,8 +11,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   Input,
-  type Cabin,
-} from '@/shared';
+} from '@/shared/components';
+import type { Cabin } from '@/shared/schemas';
+import { cabinFormActions } from '@/shared/store';
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import type { ColumnDef } from '@tanstack/react-table';
 import {

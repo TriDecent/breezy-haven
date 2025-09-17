@@ -7,7 +7,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/shared';
+} from '@/shared/components';
+
 import Image from 'next/image';
 import { useState } from 'react';
 

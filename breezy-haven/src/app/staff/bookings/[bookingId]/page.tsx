@@ -5,7 +5,10 @@ import {
   staffSettingService,
   type BookingWithRelations,
 } from '@/services';
-import { Button, errorHelper, ROUTES } from '@/shared';
+import { Button } from '@/shared/components';
+import { ROUTES } from '@/shared/constants';
+import { errorHelper } from '@/shared/utils';
+
 import { ArrowLeftCircleIcon } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';

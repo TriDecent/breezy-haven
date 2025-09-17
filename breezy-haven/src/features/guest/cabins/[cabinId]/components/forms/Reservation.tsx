@@ -1,5 +1,7 @@
 import { unauthBookingService, unauthSettingService } from '@/services';
-import { errorHelper, type Cabin } from '@/shared';
+
+import type { Cabin } from '@/shared/schemas';
+import { errorHelper } from '@/shared/utils';
 import ReservationForm from './ReservationForm';
 import ReservationSummary from './ReservationSummary';
 

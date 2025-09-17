@@ -1,4 +1,4 @@
-import type { Booking } from '@/shared';
+import type { Booking } from '@/shared/schemas';
 import { createContext } from 'react';
 
 export const BookingContext = createContext<

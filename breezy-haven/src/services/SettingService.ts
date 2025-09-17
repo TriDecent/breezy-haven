@@ -1,6 +1,7 @@
 import { supabase } from '@/lib/supabase';
 import { DTOSetting } from '@/repositories';
-import type { NullableSetting, Setting } from '@/shared';
+
+import type { NullableSetting, Setting } from '@/shared/schemas';
 import { PostgrestError } from '@supabase/supabase-js';
 import { IService } from './BaseService';
 

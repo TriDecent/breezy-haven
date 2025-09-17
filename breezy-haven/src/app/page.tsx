@@ -1,5 +1,8 @@
 import backgroundImage from '@/../public/bg.png';
-import { Logo, Navigation, PageLayout, ROUTES, ThemeToggle } from '@/shared';
+import { Logo, PageLayout, ThemeToggle } from '@/shared/components';
+import { ROUTES } from '@/shared/constants';
+import { Navigation } from 'lucide-react';
+
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';

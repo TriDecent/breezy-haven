@@ -1,4 +1,5 @@
 'use client';
+
 import {
   Button,
   Checkbox,
@@ -10,9 +11,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  ROUTES,
-  type Booking,
-} from '@/shared';
+} from '@/shared/components';
+import { ROUTES } from '@/shared/constants';
+import type { Booking } from '@/shared/schemas';
 import type { ColumnDef } from '@tanstack/react-table';
 import {
   format,

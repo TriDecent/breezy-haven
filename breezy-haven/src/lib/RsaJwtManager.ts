@@ -137,10 +137,14 @@ export class RsaJwtManager<
   }
 }
 
-interface UserPayload {
+interface UserPayload extends JWTPayload {
   readonly email: string;
   readonly avatarUrl: string;
-  readonly [key: string]: unknown;
+}
+
+interface RefreshPayload extends JWTPayload {
+  readonly tokenId: string;
+  readonly userEmail: string;
 }
 
 const BASE64_PRIVATE_KEY = process.env.JWT_PRIVATE_KEY!;
@@ -156,7 +160,7 @@ const PUBLIC_KEY = (await importJWK(
   'RS256'
 )) as CryptoKey;
 
-export const jwtManager = new RsaJwtManager<UserPayload>(
+export const jwtManager = new RsaJwtManager<UserPayload, RefreshPayload>(
   { privateKey: PRIVATE_KEY, publicKey: PUBLIC_KEY },
   'RS256',
   'The Breezy Haven',

@@ -1,11 +1,13 @@
 'use client';
-import { Button, CardAction, FormRow, type Setting } from '@/shared';
+
 import { useActionState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import {
   updateSettingAction,
   type UpdateSettingResponse,
 } from './updateSettingAction';
+import { Button, CardAction, FormRow } from '@/shared/components';
+import type { Setting } from '@/shared/schemas';
 
 export function SettingForm({ defaultSetting }: { defaultSetting: Setting }) {
   const { state, dispatch, isPending } = useFormState();

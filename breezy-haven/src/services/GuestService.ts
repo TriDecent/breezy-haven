@@ -1,5 +1,6 @@
 import { DTOGuest } from '@/repositories';
-import type { Guest, NullableGuest } from '@/shared';
+
+import type { Guest, NullableGuest } from '@/shared/schemas';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { IService } from './BaseService';
 

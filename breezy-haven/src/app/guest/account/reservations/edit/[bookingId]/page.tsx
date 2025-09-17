@@ -1,7 +1,8 @@
 import { BookingEditForm } from '@/features/guest/account/profile';
 import { Auth } from '@/lib';
 import { bookingService, unauthSettingService } from '@/services';
-import { errorHelper } from '@/shared';
+import { errorHelper } from '@/shared/utils';
+
 import { parseISO } from 'date-fns';
 import type { Metadata } from 'next';
 import z from 'zod';

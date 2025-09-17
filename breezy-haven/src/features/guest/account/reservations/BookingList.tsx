@@ -1,12 +1,9 @@
 'use client';
 
-import {
-  GetByGuestIdBookingSchema,
-  PriorityProvider,
-  ROUTES,
-  slideVariantKeys,
-  Variants,
-} from '@/shared';
+import Variants, { slideVariantKeys } from '@/shared/animations/Variants';
+import { ROUTES } from '@/shared/constants';
+import { PriorityProvider } from '@/shared/providers';
+import { GetByGuestIdBookingSchema } from '@/shared/schemas';
 import { differenceInDays, isPast, parseISO } from 'date-fns';
 import { AnimatePresence, motion, stagger } from 'framer-motion';
 import Link from 'next/link';

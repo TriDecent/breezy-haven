@@ -11,8 +11,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
   Button,
-  type Booking,
-} from '@/shared';
+} from '@/shared/components';
+import type { Booking } from '@/shared/schemas';
 import { toast } from 'sonner';
 import { deleteBookingAction } from '../deleteBookingAction';
 

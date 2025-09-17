@@ -2,10 +2,11 @@ import { SideNavigation } from '@/features/staff';
 import {
   MiniSidebar,
   PageLayout,
-  ROUTES,
   ThemeToggle,
   Toaster,
-} from '@/shared';
+} from '@/shared/components';
+import { ROUTES } from '@/shared/constants';
+
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 

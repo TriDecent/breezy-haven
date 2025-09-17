@@ -1,7 +1,8 @@
 import about1Image from '@/../public/about-1.jpg';
 import about2Image from '@/../public/about-2.jpeg';
 import { unauthCabinService } from '@/services';
-import { ROUTES, Spinner } from '@/shared';
+import { Spinner } from '@/shared/components';
+import { ROUTES } from '@/shared/constants';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';

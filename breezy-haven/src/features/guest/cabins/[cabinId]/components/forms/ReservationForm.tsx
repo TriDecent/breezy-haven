@@ -1,25 +1,23 @@
 'use client';
 
+import Form from 'next/form';
+import Link from 'next/link';
+
 import {
   Badge,
-  dateHelper,
   MiniSpinner,
   PrimaryButton,
-  ROUTES,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
   Textarea,
-  uiActions,
-  useGetAuthQuery,
-  type Cabin,
-  type RootState,
-} from '@/shared';
-import Form from 'next/form';
-import Link from 'next/link';
-
+} from '@/shared/components';
+import { ROUTES } from '@/shared/constants';
+import type { Cabin } from '@/shared/schemas';
+import { uiActions, useGetAuthQuery, type RootState } from '@/shared/store';
+import { dateHelper } from '@/shared/utils';
 import { parseISO } from 'date-fns';
 import { useActionState, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

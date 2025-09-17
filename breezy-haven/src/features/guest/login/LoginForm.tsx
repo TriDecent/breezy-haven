@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Input, Label } from '@/shared';
+import { Button, Input, Label } from '@/shared/components';
 import Form from 'next/form';
 import { useActionState, useEffect } from 'react';
 import { toast } from 'sonner';

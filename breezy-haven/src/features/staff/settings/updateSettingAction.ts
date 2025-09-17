@@ -1,12 +1,10 @@
 'use server';
 
 import { staffSettingService } from '@/services';
-import {
-  ROUTES,
-  SettingSchema,
-  type ActionResponse,
-  type Setting,
-} from '@/shared';
+import type { ActionResponse } from '@/shared/actions';
+import { ROUTES } from '@/shared/constants';
+import { SettingSchema, type Setting } from '@/shared/schemas';
+
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 

@@ -7,7 +7,8 @@ import {
   ViewSizeClassifier,
 } from '../constants/SizeClassifier';
 
-import type { Cabin, RootState } from '@/shared';
+import type { Cabin } from '@/shared/schemas';
+import type { RootState } from '@/shared/store';
 import { useCallback, useEffect, useState, useTransition } from 'react';
 import { useSelector } from 'react-redux';
 import CabinLoading from './CabinLoading';

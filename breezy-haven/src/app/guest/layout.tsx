@@ -1,6 +1,13 @@
-import { PageLayout, Toaster } from '@/shared';
+import {
+  Logo,
+  Navigation,
+  NavTrail,
+  PageLayout,
+  ThemeToggle,
+  Toaster,
+} from '@/shared/components';
+import { ROUTES } from '@/shared/constants';
 
-import { Logo, Navigation, NavTrail, ROUTES, ThemeToggle } from '@/shared';
 import '@/styles/globals.css';
 import { Metadata } from 'next';
 

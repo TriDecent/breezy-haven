@@ -1,5 +1,6 @@
 import { GoogleLogin, LoginCard, LoginForm } from '@/features/guest/login';
-import { ROUTES } from '@/shared';
+import { ROUTES } from '@/shared/constants';
+
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 

@@ -1,9 +1,10 @@
 'use client';
 
+import { ChevronDownIcon } from '@heroicons/react/24/solid';
+
 import {
   Button,
   Calendar,
-  dateHelper,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -14,10 +15,9 @@ import {
   SelectTrigger,
   SelectValue,
   Textarea,
-  type BookingActionResponse,
-} from '@/shared';
-import { ChevronDownIcon } from '@heroicons/react/24/solid';
-
+} from '@/shared/components';
+import type { BookingActionResponse } from '@/shared/schemas';
+import { dateHelper } from '@/shared/utils';
 import {
   useActionState,
   useEffect,
@@ -224,7 +224,7 @@ function StayingInput({
             required
             className='mx-auto'
           />
-          <p className='text-foreground p-1 text-xs text-center'>
+          <p className='text-foreground p-1 text-center text-xs'>
             Your staying days must be between ${minBookingDaysCount} and $
             {maxBookingDaysCount}
           </p>
