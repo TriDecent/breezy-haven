@@ -5,7 +5,9 @@ import {
   CabinSchema,
   GuestSchema,
   SettingSchema,
+  StaffSchema,
 } from '@/shared';
+import { cache } from 'react';
 import { BaseService } from './BaseService';
 import { BaseStaffService } from './BaseStaffService';
 import BookingService from './BookingService';
@@ -15,6 +17,7 @@ import CabinStaffService from './CabinStaffService';
 import GuestService from './GuestService';
 import SettingService from './SettingService';
 import SettingStaffService from './SettingStaffService';
+import StaffService from './StaffService';
 export type { BookingWithRelations } from './BookingStaffService';
 export * from './countryService';
 export * from './types';
@@ -23,12 +26,13 @@ const cabinRepository = new Repository('cabins');
 const bookingRepository = new Repository('bookings');
 const guestRepository = new Repository('guests');
 const settingRepository = new Repository('settings');
+const staffRepository = new Repository('staff');
 
 const verifyUnauthAsync = () => Promise.resolve();
-const verifyAuthAsync = async () => {
+const verifyAuthAsync = cache(async () => {
   await Auth.verifySession();
-};
-const verifyStaffAuthAsync = () => Promise.resolve();
+});
+const verifyStaffAuthAsync = cache(() => Promise.resolve());
 
 export const unauthCabinService = new CabinService(
   new BaseService(cabinRepository, verifyUnauthAsync, CabinSchema)
@@ -72,5 +76,19 @@ export const staffBookingService = new BookingStaffService(
   new BaseStaffService(
     new BaseService(bookingRepository, verifyStaffAuthAsync, BookingSchema),
     bookingRepository
+  )
+);
+
+export const unauthStaffService = new StaffService(
+  new BaseStaffService(
+    new BaseService(staffRepository, verifyUnauthAsync, StaffSchema),
+    staffRepository
+  )
+);
+
+export const staffService = new StaffService(
+  new BaseStaffService(
+    new BaseService(staffRepository, verifyStaffAuthAsync, StaffSchema),
+    staffRepository
   )
 );

@@ -3,6 +3,7 @@ import type { NullableStaff, Staff } from '@/shared';
 import { PostgrestError } from '@supabase/supabase-js';
 import { cache } from 'react';
 
+import { supabase } from '@/lib';
 import type { IStaffService } from './BaseStaffService';
 import type { ServiceReturnType } from './types';
 
@@ -54,5 +55,21 @@ export default class StaffService<T extends Staff | NullableStaff>
     bucketId: string
   ): ServiceReturnType<null, Error> {
     return this._service.deleteFiles(paths, bucketId);
+  }
+
+  async getByEmail(email: Staff['email']): ServiceReturnType<T> {
+    await this._service.verifyPermission();
+    const { data, error } = await supabase
+      .from('staff')
+      .select()
+      .eq('email', email)
+      .single();
+
+    if (error) return { data: null, errors: { type: 'database', db: error } };
+
+    return {
+      data: data as unknown as T, // should use schema to check instead
+      errors: null,
+    };
   }
 }

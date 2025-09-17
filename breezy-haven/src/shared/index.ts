@@ -47,6 +47,7 @@ export { default as Textarea } from './components/Textarea';
 export { default as TextExpander } from './components/TextExpander';
 export { default as ThemeToggle } from './components/ThemeToggle';
 export * from './components/ui/dropdown-menu';
+export { CookieConfig } from './constants/Cookies';
 export { ROUTES } from './constants/ROUTES';
 export { default as useScrollDirection } from './hooks/useScrollDirection';
 export {
