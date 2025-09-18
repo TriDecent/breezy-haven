@@ -1,6 +1,6 @@
 'use server';
 
-import { jwtManager } from '@/lib';
+import { Auth } from '@/lib';
 import { staffService } from '@/services';
 import type { ActionResponse } from '@/shared/actions';
 import { CookieConfig, ROUTES } from '@/shared/constants';
@@ -59,10 +59,13 @@ export async function loginAction(
   if (!(await compare(safeInput.password, data.hash_password)))
     return createUnexpectedResponse(safeInput);
 
-  const tokens = await jwtManager.createTokensAsync({
+  const tokens = await Auth.staff.createTokensAsync({
+    userId: data.email,
     email: data.email,
     avatarUrl: data.avatarUrl,
   });
+
+  if (!tokens) return createUnexpectedResponse(safeInput);
 
   const cookieStore = await cookies();
 
