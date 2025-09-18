@@ -8,13 +8,13 @@ export interface IRefreshTokenRepository {
 
 class RefreshTokenRepository implements IRefreshTokenRepository {
   async addAsync(tokenId: string): Promise<void> {
-    const { data } = await supabase
+    const { error } = await supabase
       .from('refresh_token')
       .insert({ tokenId })
       .select()
       .single();
 
-    if (!data)
+    if (error)
       throw new Error('An error has occurred while trying to add the token');
   }
 
@@ -29,13 +29,13 @@ class RefreshTokenRepository implements IRefreshTokenRepository {
   }
 
   async revokeAsync(tokenId: string): Promise<void> {
-    const { data } = await supabase
+    const { error } = await supabase
       .from('refresh_token')
       .delete()
       .eq('tokenId', tokenId)
       .single();
 
-    if (!data)
+    if (error)
       throw new Error('An error has occurred while trying to revoke the token');
   }
 }
