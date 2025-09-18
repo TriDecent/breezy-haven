@@ -1,45 +1,55 @@
-import {
-  refreshTokenRepository,
-  type IRefreshTokenRepository,
-} from '@/repositories';
+import { type IRefreshTokenRepository } from '@/repositories';
 import { isPast } from 'date-fns';
-import { importJWK, jwtVerify, SignJWT, type JWTPayload } from 'jose';
+import { jwtVerify, SignJWT, type JWTPayload } from 'jose';
+import z from 'zod';
 
-interface TokenPair {
+export interface TokenPair {
   readonly accessToken: string;
   readonly refreshToken: string;
 }
 
-export interface IRsaJwtManager<AccessT, RefreshT> {
-  createTokensAsync(payload: AccessT): Promise<TokenPair>;
-  verifyAccessTokenAsync(
-    token: TokenPair['accessToken']
-  ): Promise<AccessT | null>;
-  verifyRefreshTokenAsync(
-    token: TokenPair['refreshToken']
-  ): Promise<RefreshT | null>;
-  refreshAccessTokenAsync(
-    tokens: TokenPair,
-    accessPayload: AccessT
-  ): Promise<TokenPair | null>;
+export interface AccessTokenPayload extends JWTPayload {
+  readonly userId: string;
 }
 
-type TokenPayload = Readonly<JWTPayload & { tokenId: string }>;
-type TokenPayloadWithoutTokenId = Omit<TokenPayload, 'tokenId'>;
+export interface RefreshTokenPayload extends JWTPayload {
+  readonly userId: string;
+  readonly refreshTokenId: string;
+  readonly absoluteExp: number;
+}
 
-export class RsaJwtManager<
-  AccessT extends TokenPayloadWithoutTokenId,
-  RefreshT extends TokenPayload = TokenPayload,
-> implements IRsaJwtManager<AccessT, RefreshT>
+export interface IRsaJwtManager<AccessT> {
+  createTokensAsync(payload: AccessT): Promise<TokenPair>;
+  verifyAccessTokenAsync(token: TokenPair['accessToken']): Promise<AccessT>;
+  verifyRefreshTokenAsync(
+    token: TokenPair['refreshToken']
+  ): Promise<RefreshTokenPayload>;
+  refreshAccessTokenAsync(
+    refreshToken: TokenPair['refreshToken'],
+    accessPayload: AccessT
+  ): Promise<TokenPair>;
+}
+
+export class RsaJwtManager<AccessT extends AccessTokenPayload>
+  implements IRsaJwtManager<AccessT>
 {
+  private readonly _refreshPayloadSchema = z.looseObject({
+    userId: z.string().readonly(),
+    refreshTokenId: z.string().readonly(),
+    absoluteExp: z.coerce.number().readonly(),
+  });
+
   constructor(
     private readonly _keyPair: CryptoKeyPair,
-    private readonly _algorithm: 'RS256' | 'RS384' | 'RS512',
-    private readonly _issuer: string,
-    private readonly _audience: string[],
+    private readonly _options: {
+      readonly algorithm: 'RS256' | 'RS384' | 'RS512';
+      readonly issuer: string;
+      readonly audience: string[];
+      readonly accessExpiresIn: string;
+      readonly refreshExpireIn: string;
+    },
     private readonly _refreshTokenRepo: IRefreshTokenRepository,
-    private readonly _accessExpiresIn: string = '1 hour',
-    private readonly _refreshExpiresIn: string = '1 weeks'
+    private readonly _accessSchema: z.ZodType<AccessT>
   ) {}
 
   async createTokensAsync(payload: AccessT): Promise<TokenPair> {
@@ -49,7 +59,11 @@ export class RsaJwtManager<
 
     const [accessToken, refreshToken] = await Promise.all([
       this.createAccessTokenAsync(payload),
-      this.createRefreshTokenAsync(tokenId),
+      this.createRefreshTokenAsync({
+        userId: payload.userId,
+        refreshTokenId: tokenId,
+        absoluteExp: Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60,
+      }),
     ]);
 
     return {
@@ -60,110 +74,86 @@ export class RsaJwtManager<
 
   async verifyAccessTokenAsync(
     token: TokenPair['accessToken']
-  ): Promise<AccessT | null> {
-    try {
-      const { payload } = await jwtVerify(token, this._keyPair.publicKey, {
-        issuer: [this._issuer],
-        audience: this._audience,
-      });
+  ): Promise<AccessT> {
+    const { payload } = await jwtVerify(token, this._keyPair.publicKey, {
+      issuer: [this._options.issuer],
+      audience: this._options.audience,
+    });
 
-      return payload as AccessT;
-    } catch {
-      return null;
-    }
+    const result = this._accessSchema.safeParse(payload);
+    if (!result.success) throw new Error('Invalid access token payload');
+
+    return result.data;
   }
 
   async verifyRefreshTokenAsync(
     token: TokenPair['refreshToken']
-  ): Promise<RefreshT | null> {
-    try {
-      const { payload } = await jwtVerify(token, this._keyPair.publicKey, {
-        issuer: [this._issuer],
-        audience: this._audience,
-      });
+  ): Promise<RefreshTokenPayload> {
+    const { payload } = await jwtVerify(token, this._keyPair.publicKey, {
+      issuer: [this._options.issuer],
+      audience: this._options.audience,
+    });
 
-      return payload as RefreshT;
-    } catch {
-      return null;
-    }
+    const result = this._refreshPayloadSchema.safeParse(payload);
+    if (!result.success) throw new Error('Invalid refresh token payload');
+
+    return result.data;
   }
 
   async refreshAccessTokenAsync(
-    tokens: TokenPair,
+    refreshToken: TokenPair['refreshToken'],
     accessPayload: AccessT
-  ): Promise<TokenPair | null> {
-    const refreshPayload = await this.verifyRefreshTokenAsync(
-      tokens.refreshToken
-    );
+  ): Promise<TokenPair> {
+    const refreshPayload = await this.verifyRefreshTokenAsync(refreshToken);
+
+    console.log('refreshPayload', refreshPayload);
+
     if (
       !refreshPayload?.exp ||
       isPast(refreshPayload.exp * 1000) ||
-      !(await this._refreshTokenRepo.getIsExistAsync(refreshPayload.tokenId))
+      isPast(refreshPayload.absoluteExp * 1000) ||
+      !(await this._refreshTokenRepo.getIsExistAsync(
+        refreshPayload.refreshTokenId
+      ))
     )
-      return null;
+      throw new Error('Invalid, expired or revoked refresh token');
 
-    await this._refreshTokenRepo.revokeAsync(refreshPayload.tokenId);
-    const tokenId = crypto.randomUUID();
-    await this._refreshTokenRepo.addAsync(tokenId);
+    await this._refreshTokenRepo.revokeAsync(refreshPayload.refreshTokenId);
+    const newRefreshTokenId = crypto.randomUUID();
+    await this._refreshTokenRepo.addAsync(newRefreshTokenId);
 
     return {
       accessToken: await this.createAccessTokenAsync(accessPayload),
-      refreshToken: await this.createRefreshTokenAsync(tokenId),
+      refreshToken: await this.createRefreshTokenAsync({
+        ...refreshPayload,
+        refreshTokenId: newRefreshTokenId,
+      }),
     };
   }
 
   private createAccessTokenAsync(payload: AccessT): Promise<string> {
     return new SignJWT(payload)
       .setProtectedHeader({
-        alg: this._algorithm,
+        alg: this._options.algorithm,
       })
       .setIssuedAt()
-      .setIssuer(this._issuer)
-      .setAudience(this._audience)
-      .setExpirationTime(this._accessExpiresIn)
+      .setIssuer(this._options.issuer)
+      .setAudience(this._options.audience)
+      .setExpirationTime(this._options.accessExpiresIn)
       .sign(this._keyPair.privateKey);
   }
 
-  private createRefreshTokenAsync(tokenId: string): Promise<string> {
-    return new SignJWT({ tokenId })
+  private createRefreshTokenAsync(
+    payload: RefreshTokenPayload
+  ): Promise<string> {
+    return new SignJWT(payload)
       .setProtectedHeader({
-        alg: this._algorithm,
+        alg: this._options.algorithm,
       })
       .setIssuedAt()
-      .setIssuer(this._issuer)
-      .setAudience(this._audience)
-      .setExpirationTime(this._refreshExpiresIn)
+      .setIssuer(this._options.issuer)
+      .setAudience(this._options.audience)
+      .setExpirationTime(this._options.refreshExpireIn)
       .sign(this._keyPair.privateKey);
   }
 }
-
-interface UserPayload extends JWTPayload {
-  readonly email: string;
-  readonly avatarUrl: string;
-}
-
-interface RefreshPayload extends JWTPayload {
-  readonly tokenId: string;
-  readonly userEmail: string;
-}
-
-const BASE64_PRIVATE_KEY = process.env.JWT_PRIVATE_KEY!;
-const BASE64_PUBLIC_KEY = process.env.JWT_PUBLIC_KEY!;
-
-const PRIVATE_KEY = (await importJWK(
-  JSON.parse(Buffer.from(BASE64_PRIVATE_KEY, 'base64').toString('utf-8')),
-  'RS256'
-)) as CryptoKey;
-
-const PUBLIC_KEY = (await importJWK(
-  JSON.parse(Buffer.from(BASE64_PUBLIC_KEY, 'base64').toString('utf-8')),
-  'RS256'
-)) as CryptoKey;
-
-export const jwtManager = new RsaJwtManager<UserPayload, RefreshPayload>(
-  { privateKey: PRIVATE_KEY, publicKey: PUBLIC_KEY },
-  'RS256',
-  'The Breezy Haven',
-  ['staff'],
-  refreshTokenRepository
-);
