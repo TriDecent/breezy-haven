@@ -1,12 +1,11 @@
-import { jwtManager } from '@/lib';
-import { unauthStaffService } from '@/services';
+import { Auth } from '@/lib';
 import { CookieConfig } from '@/shared/constants';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const [accessPayload, refreshPayload] = await Promise.all([
-    verifyAccessTokenAsyncFromRequest(request),
-    verifyRefreshTokenAsyncFromRequest(request),
+    Auth.staff.verifyAccessTokenAsyncFromRequest(request),
+    Auth.staff.verifyRefreshTokenAsyncFromRequest(request),
   ]);
 
   if (accessPayload)
@@ -16,7 +15,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     });
 
   if (refreshPayload) {
-    const tokens = await refreshAccessTokenAsyncFromRequest(request);
+    const tokens = await Auth.staff.refreshAccessTokenAsyncFromRequest(request);
+
     if (!tokens)
       return NextResponse.json(
         {
@@ -28,11 +28,13 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const response = NextResponse.json({ isAuthenticated: true });
     response.cookies.set(
       CookieConfig.keys.staff.token.access,
-      tokens.accessToken
+      tokens.accessToken,
+      CookieConfig.option.short
     );
     response.cookies.set(
       CookieConfig.keys.staff.token.refresh,
-      tokens.refreshToken
+      tokens.refreshToken,
+      CookieConfig.option.long
     );
 
     return response;
@@ -43,46 +45,5 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       isAuthenticated: false,
     },
     { status: 401 }
-  );
-}
-
-async function verifyAccessTokenAsyncFromRequest(request: NextRequest) {
-  const accessToken = request.cookies.get(
-    CookieConfig.keys.staff.token.access
-  )?.value;
-
-  if (!accessToken) return null;
-  return jwtManager.verifyAccessTokenAsync(accessToken);
-}
-
-async function verifyRefreshTokenAsyncFromRequest(request: NextRequest) {
-  const refreshToken = request.cookies.get(
-    CookieConfig.keys.staff.token.refresh
-  )?.value;
-
-  if (!refreshToken) return null;
-  return jwtManager.verifyRefreshTokenAsync(refreshToken);
-}
-
-async function refreshAccessTokenAsyncFromRequest(request: NextRequest) {
-  const accessToken = request.cookies.get(
-    CookieConfig.keys.staff.token.access
-  )?.value;
-  const refreshToken = request.cookies.get(
-    CookieConfig.keys.staff.token.refresh
-  )?.value;
-
-  if (!accessToken || !refreshToken) return null;
-
-  const refreshPayload = await verifyRefreshTokenAsyncFromRequest(request);
-  if (!refreshPayload) return null;
-  const { data, errors } = await unauthStaffService.getByEmail(
-    refreshPayload.userEmail
-  );
-  if (errors) return null;
-
-  return await jwtManager.refreshAccessTokenAsync(
-    { accessToken, refreshToken },
-    data
   );
 }
