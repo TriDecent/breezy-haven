@@ -1,6 +1,7 @@
 'use server';
 import { staffCabinService } from '@/services';
 
+import { Auth } from '@/lib';
 import { ROUTES } from '@/shared/constants';
 import { revalidatePath } from 'next/cache';
 import z from 'zod';
@@ -12,7 +13,8 @@ const DuplicateCabinSchema = AddCabinSchema.omit({ image: true }).extend({
 type SafeDuplicateCabinSchema = z.infer<typeof DuplicateCabinSchema>;
 
 export async function duplicateCabinAction(input: SafeDuplicateCabinSchema) {
-  // TODO: verify staff authentication
+  await Auth.staff.ensureStaffIsAuthenticatedAsync();
+
   const parsedResult = DuplicateCabinSchema.safeParse(input);
 
   if (!parsedResult.success)

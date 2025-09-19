@@ -7,12 +7,14 @@ import { revalidatePath } from 'next/cache';
 import path from 'path';
 import z from 'zod';
 import { AddCabinSchema, type AddActionResponse } from './types';
+import { Auth } from '@/lib';
 
 export async function addCabinAction(
   _currentState: AddActionResponse,
   formData: FormData
 ): Promise<AddActionResponse> {
-  // TODO: verify staff authentication
+  await Auth.staff.ensureStaffIsAuthenticatedAsync();
+
   const input = Object.fromEntries(formData.entries());
 
   const parsedInput = AddCabinSchema.safeParse(input);

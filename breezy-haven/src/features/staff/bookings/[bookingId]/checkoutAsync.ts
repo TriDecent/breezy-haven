@@ -1,4 +1,5 @@
 'use server';
+import { Auth } from '@/lib';
 import { staffBookingService } from '@/services';
 import { ROUTES } from '@/shared/constants';
 import type { Booking } from '@/shared/schemas';
@@ -6,7 +7,7 @@ import type { Booking } from '@/shared/schemas';
 import { revalidatePath } from 'next/cache';
 
 export async function checkoutAsync(bookingId: Booking['id']) {
-  // TODO: verify staff authentication
+  await Auth.staff.ensureStaffIsAuthenticatedAsync();
 
   const { errors } = await staffBookingService.update(bookingId, {
     status: 'checked-out',

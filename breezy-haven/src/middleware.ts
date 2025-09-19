@@ -11,6 +11,11 @@ export const config: MiddlewareConfig = {
     '/guest',
 
     '/staff',
+    '/staff/dashboard',
+    '/staff/bookings',
+    '/staff/cabins',
+    '/staff/guests',
+    '/staff/settings',
   ],
 };
 
@@ -33,7 +38,7 @@ async function handleStaffRouteAsync(request: NextRequest) {
       new URL(ROUTES.staff.nested.dashboard.href, request.nextUrl)
     );
 
-  return NextResponse.next();
+  return await Auth.staff.ensureStaffIsAuthenticatedFromRequestAsync(request);
 }
 
 async function handleGuestRouteAsync(request: NextRequest) {

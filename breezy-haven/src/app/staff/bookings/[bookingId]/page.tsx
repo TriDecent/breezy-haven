@@ -56,7 +56,6 @@ export default async function BookingEditPage({
 }: {
   params: Promise<{ bookingId: string }>;
 }) {
-  // TODO: verify staff authentication
   const booking = await retrieveBookingAsync(params);
   const { data: setting, errors: settingErrors } =
     await staffSettingService.getAll();

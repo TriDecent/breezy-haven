@@ -4,8 +4,8 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const [accessPayload, refreshPayload] = await Promise.all([
-    Auth.staff.verifyAccessTokenAsyncFromRequest(request),
-    Auth.staff.verifyRefreshTokenAsyncFromRequest(request),
+    Auth.staff.session.verifyAccessTokenAsyncFromRequest(request),
+    Auth.staff.session.verifyRefreshTokenAsyncFromRequest(request),
   ]);
 
   if (accessPayload)
@@ -15,7 +15,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     });
 
   if (refreshPayload) {
-    const tokens = await Auth.staff.refreshAccessTokenAsyncFromRequest(request);
+    const tokens =
+      await Auth.staff.session.refreshAccessTokenAsyncFromRequest(request);
 
     if (!tokens)
       return NextResponse.json(

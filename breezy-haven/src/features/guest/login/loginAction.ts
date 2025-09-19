@@ -1,7 +1,7 @@
 'use server';
 
 import { Auth } from '@/lib';
-import { staffService } from '@/services';
+import { unauthStaffService } from '@/services';
 import type { ActionResponse } from '@/shared/actions';
 import { CookieConfig, ROUTES } from '@/shared/constants';
 
@@ -52,14 +52,14 @@ export async function loginAction(
 
   const safeInput = validateResult.parsed;
 
-  const { data, errors } = await staffService.getByEmail(safeInput.email);
+  const { data, errors } = await unauthStaffService.getByEmail(safeInput.email);
 
   if (errors) return createUnexpectedResponse(safeInput);
 
   if (!(await compare(safeInput.password, data.hash_password)))
     return createUnexpectedResponse(safeInput);
 
-  const tokens = await Auth.staff.createTokensAsync({
+  const tokens = await Auth.staff.session.createTokensAsync({
     userId: data.email,
     email: data.email,
     avatarUrl: data.avatarUrl,

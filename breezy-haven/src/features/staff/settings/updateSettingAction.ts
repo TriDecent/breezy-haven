@@ -1,5 +1,6 @@
 'use server';
 
+import { Auth } from '@/lib';
 import { staffSettingService } from '@/services';
 import type { ActionResponse } from '@/shared/actions';
 import { ROUTES } from '@/shared/constants';
@@ -26,7 +27,7 @@ export async function updateSettingAction(
   state: UpdateSettingResponse,
   formData: FormData
 ): Promise<UpdateSettingResponse> {
-  // TODO: verify staff permission here
+  await Auth.staff.ensureStaffIsAuthenticatedAsync();
 
   const input = Object.fromEntries(formData.entries());
 

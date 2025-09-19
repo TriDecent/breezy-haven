@@ -1,4 +1,5 @@
 'use server';
+import { Auth } from '@/lib';
 import { staffCabinService } from '@/services';
 import { ROUTES } from '@/shared/constants';
 import type { Cabin } from '@/shared/schemas';
@@ -17,7 +18,7 @@ export async function updateCabinAction(
   _currentState: UpdateActionResponse,
   formData: FormData
 ): Promise<UpdateActionResponse> {
-  // TODO: verify staff authentication
+  await Auth.staff.ensureStaffIsAuthenticatedAsync();
 
   const input = Object.fromEntries(formData.entries());
 

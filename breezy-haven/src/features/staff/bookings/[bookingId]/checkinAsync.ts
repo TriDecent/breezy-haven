@@ -1,5 +1,6 @@
 'use server';
 
+import { Auth } from '@/lib';
 import { staffBookingService, staffSettingService } from '@/services';
 import { ROUTES } from '@/shared/constants';
 import type { Booking } from '@/shared/schemas';
@@ -10,7 +11,7 @@ export async function checkinAsync(
   bookingId: Booking['id'],
   hasBreakfast: boolean
 ): Promise<void> {
-  // TODO: verify staff authentication
+  await Auth.staff.ensureStaffIsAuthenticatedAsync();
 
   const { data: booking, errors: bookingErrors } =
     await staffBookingService.getById(bookingId);

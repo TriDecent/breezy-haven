@@ -1,5 +1,6 @@
 'use server';
 
+import { Auth } from '@/lib';
 import { staffCabinService } from '@/services';
 import { ROUTES } from '@/shared/constants';
 import type { Cabin } from '@/shared/schemas';
@@ -7,7 +8,8 @@ import type { Cabin } from '@/shared/schemas';
 import { revalidatePath } from 'next/cache';
 
 export async function deleteCabinAction(cabinId: Cabin['id']) {
-  // TODO: verify staff authentication
+  await Auth.staff.ensureStaffIsAuthenticatedAsync();
+
   const { errors } = await staffCabinService.delete(cabinId);
   if (errors)
     throw Error(

@@ -19,6 +19,7 @@ import GuestService from './GuestService';
 import SettingService from './SettingService';
 import SettingStaffService from './SettingStaffService';
 import StaffService from './StaffService';
+
 export type { BookingWithRelations } from './BookingStaffService';
 export * from './countryService';
 export * from './types';
@@ -30,17 +31,23 @@ const settingRepository = new Repository('settings');
 const staffRepository = new Repository('staff');
 
 const verifyUnauthAsync = () => Promise.resolve();
-const verifyAuthAsync = cache(async () => {
-  await Auth.verifySession();
+const verifyGuestAuthAsync = cache(async () => {
+  await Auth.guest.verifySession();
 });
-const verifyStaffAuthAsync = cache(() => Promise.resolve());
+
+// ** Helps staff refresh the access token if the refresh token is still valid.
+// ** However, if the refresh token is revoked or invalid, the client may not be redirected
+// ** because toast.promise swallows the error from the server action.
+const verifyStaffAuthAsync = cache(() =>
+  Auth.staff.ensureStaffIsAuthenticatedAsync()
+);
 
 export const unauthCabinService = new CabinService(
   new BaseService(cabinRepository, verifyUnauthAsync, CabinSchema)
 );
 
 export const bookingService = new BookingService(
-  new BaseService(bookingRepository, verifyAuthAsync, BookingSchema)
+  new BaseService(bookingRepository, verifyGuestAuthAsync, BookingSchema)
 );
 
 export const unauthBookingService = new BookingService(
@@ -48,7 +55,7 @@ export const unauthBookingService = new BookingService(
 );
 
 export const guestService = new GuestService(
-  new BaseService(guestRepository, verifyAuthAsync, GuestSchema)
+  new BaseService(guestRepository, verifyGuestAuthAsync, GuestSchema)
 );
 
 export const unauthSettingService = new SettingService(

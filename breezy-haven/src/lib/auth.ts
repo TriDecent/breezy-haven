@@ -6,6 +6,8 @@ import {
 } from './guestAuth';
 import {
   createTokensAsync,
+  ensureStaffIsAuthenticatedAsync,
+  ensureStaffIsAuthenticatedFromRequestAsync,
   refreshAccessTokenAsync,
   refreshAccessTokenAsyncFromRequest,
   verifyAccessTokenAsync,
@@ -22,14 +24,20 @@ export const Auth = {
     verifySession,
   },
   staff: {
-    createTokensAsync,
+    ensureStaffIsAuthenticatedFromRequestAsync,
+    ensureStaffIsAuthenticatedAsync,
 
-    verifyAccessTokenAsync,
-    verifyRefreshTokenAsync,
-    refreshAccessTokenAsync,
+    session: {
+      createTokensAsync,
 
-    verifyAccessTokenAsyncFromRequest,
-    verifyRefreshTokenAsyncFromRequest,
-    refreshAccessTokenAsyncFromRequest,
+      verifyAccessTokenAsync,
+      verifyAccessTokenAsyncFromRequest,
+
+      verifyRefreshTokenAsync,
+      verifyRefreshTokenAsyncFromRequest,
+
+      refreshAccessTokenAsync,
+      refreshAccessTokenAsyncFromRequest,
+    },
   },
 } as const;

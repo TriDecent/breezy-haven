@@ -14,8 +14,7 @@ import { Suspense } from 'react';
 
 export const metadata: Metadata = ROUTES.staff.nested.settings.metadata;
 
-export default function SettingsPage() {
-  // TODO: Verify Staff Authentication
+export default async function SettingsPage() {
   return (
     <>
       <h1 className='text-accent-500 mb-4 text-2xl font-semibold tracking-widest'>

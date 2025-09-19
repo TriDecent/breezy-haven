@@ -16,7 +16,6 @@ export default async function BookingsPage({
 }: {
   searchParams: Promise<unknown>;
 }) {
-  // TODO: verify staff authentication
   const parsedResult = BookingQuerySchema.safeParse(await searchParams);
 
   return (

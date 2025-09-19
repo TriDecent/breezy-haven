@@ -18,7 +18,6 @@ export default async function CabinsPage({
 }: {
   searchParams: Promise<Record<'query', Query>>;
 }) {
-  // TODO: verify staff authentication
   const query = (await searchParams).query;
 
   const parsedQueryResult = QuerySchema.safeParse(query);
