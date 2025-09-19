@@ -14,6 +14,7 @@ export { default as NavTrail } from './NavTrail';
 export { default as NotFound } from './NotFound';
 export { default as PageLayout } from './PageLayout';
 export { default as PageProgressBar } from './PageProgressBar';
+export { default as PreviewImage } from './PreviewImage';
 export { default as PrimaryButton } from './PrimaryButton';
 export { QueryButton } from './QueryButton';
 export { ScrollTo } from './ScrollTo';

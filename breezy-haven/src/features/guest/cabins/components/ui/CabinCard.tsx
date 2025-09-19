@@ -1,11 +1,11 @@
 'use client';
 import { DTOCabin, NonNullableObject } from '@/repositories';
+import { PreviewImage } from '@/shared/components';
 import { ROUTES } from '@/shared/constants';
 import { PriorityContext } from '@/shared/providers';
 import { UsersIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import { use } from 'react';
-import PreviewImage from './PreviewImage';
 
 export default function CabinCard({
   cabin,

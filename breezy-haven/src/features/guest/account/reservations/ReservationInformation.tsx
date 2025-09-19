@@ -1,5 +1,6 @@
 'use client';
-import { PreviewImage } from '@/features/guest/cabins';
+
+import { PreviewImage } from '@/shared/components';
 import { ROUTES } from '@/shared/constants';
 import { PriorityContext } from '@/shared/providers';
 import type { Booking } from '@/shared/schemas';

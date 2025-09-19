@@ -7,5 +7,4 @@ export { default as CabinCard } from './components/ui/CabinCard';
 export { default as CabinCardSkeleton } from './components/ui/CabinCardSkeleton';
 export { default as CabinLoading } from './components/ui/CabinLoading';
 export { default as CabinsList } from './components/ui/CabinsList';
-export { default as PreviewImage } from './components/ui/PreviewImage';
 export { default as ReservationReminder } from './components/ui/ReservationReminder';
