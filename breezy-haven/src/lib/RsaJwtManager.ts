@@ -106,8 +106,6 @@ export class RsaJwtManager<AccessT extends AccessTokenPayload>
   ): Promise<TokenPair> {
     const refreshPayload = await this.verifyRefreshTokenAsync(refreshToken);
 
-    console.log('refreshPayload', refreshPayload);
-
     if (
       !refreshPayload?.exp ||
       isPast(refreshPayload.exp * 1000) ||

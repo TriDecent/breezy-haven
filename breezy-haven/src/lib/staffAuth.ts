@@ -3,25 +3,36 @@ import { cache } from 'react';
 
 import { refreshTokenRepository } from '@/repositories';
 
-import { CookieConfig } from '@/shared/constants';
+import { CookieConfig, ROUTES } from '@/shared/constants';
 import { importJWK } from 'jose';
+
 import { cookies } from 'next/headers';
-import type { NextRequest } from 'next/server';
+import { redirect } from 'next/navigation';
+import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { RsaJwtManager, type AccessTokenPayload } from './RsaJwtManager';
 
-const BASE64_PRIVATE_KEY = process.env.JWT_PRIVATE_KEY!;
-const BASE64_PUBLIC_KEY = process.env.JWT_PUBLIC_KEY!;
+const getKeysAsync = cache(
+  async (): Promise<{
+    privateKey: CryptoKey;
+    publicKey: CryptoKey;
+  }> => {
+    const BASE64_PRIVATE_KEY = process.env.JWT_PRIVATE_KEY!;
+    const BASE64_PUBLIC_KEY = process.env.JWT_PUBLIC_KEY!;
 
-const PRIVATE_KEY = (await importJWK(
-  JSON.parse(Buffer.from(BASE64_PRIVATE_KEY, 'base64').toString('utf-8')),
-  'RS256'
-)) as CryptoKey;
+    const privateKey = (await importJWK(
+      JSON.parse(Buffer.from(BASE64_PRIVATE_KEY, 'base64').toString('utf-8')),
+      'RS256'
+    )) as CryptoKey;
 
-const PUBLIC_KEY = (await importJWK(
-  JSON.parse(Buffer.from(BASE64_PUBLIC_KEY, 'base64').toString('utf-8')),
-  'RS256'
-)) as CryptoKey;
+    const publicKey = (await importJWK(
+      JSON.parse(Buffer.from(BASE64_PUBLIC_KEY, 'base64').toString('utf-8')),
+      'RS256'
+    )) as CryptoKey;
+
+    return { privateKey, publicKey };
+  }
+);
 
 const UserPayloadSchema = z.looseObject({
   userId: z.string().readonly(),
@@ -31,18 +42,22 @@ const UserPayloadSchema = z.looseObject({
 
 type UserPayload = z.infer<typeof UserPayloadSchema> & AccessTokenPayload;
 
-const jwtManager = new RsaJwtManager<UserPayload>(
-  { privateKey: PRIVATE_KEY, publicKey: PUBLIC_KEY },
-  {
-    algorithm: 'RS256',
-    issuer: 'The Breezy Haven',
-    audience: ['staff'],
-    accessExpiresIn: process.env.NODE_ENV === 'development' ? '30d' : '1h',
-    refreshExpireIn: process.env.NODE_ENV === 'development' ? '30d' : '7d',
-  },
-  refreshTokenRepository,
-  UserPayloadSchema
-);
+const getJwtManagerAsync = cache(async () => {
+  const { privateKey, publicKey } = await getKeysAsync();
+
+  return new RsaJwtManager<UserPayload>(
+    { privateKey, publicKey },
+    {
+      algorithm: 'RS256',
+      issuer: 'The Breezy Haven',
+      audience: ['staff'],
+      accessExpiresIn: process.env.NODE_ENV === 'development' ? '30d' : '1h',
+      refreshExpireIn: process.env.NODE_ENV === 'development' ? '30d' : '7d',
+    },
+    refreshTokenRepository,
+    UserPayloadSchema
+  );
+});
 
 export const verifyAccessTokenAsync = cache(async () => {
   const cookieStore = await cookies();
@@ -53,7 +68,9 @@ export const verifyAccessTokenAsync = cache(async () => {
 
   if (!accessToken) return null;
   try {
-    return await jwtManager.verifyAccessTokenAsync(accessToken);
+    return await (
+      await getJwtManagerAsync()
+    ).verifyAccessTokenAsync(accessToken);
   } catch (e: unknown) {
     console.log(e);
     return null;
@@ -70,7 +87,9 @@ export const verifyRefreshTokenAsync = cache(async () => {
   if (!refreshToken) return null;
 
   try {
-    return await jwtManager.verifyRefreshTokenAsync(refreshToken);
+    return await (
+      await getJwtManagerAsync()
+    ).verifyRefreshTokenAsync(refreshToken);
   } catch (e: unknown) {
     console.log(e);
     return null;
@@ -95,7 +114,9 @@ export const refreshAccessTokenAsync = cache(async () => {
   if (errors) return null;
 
   try {
-    return await jwtManager.refreshAccessTokenAsync(refreshToken, {
+    return await (
+      await getJwtManagerAsync()
+    ).refreshAccessTokenAsync(refreshToken, {
       userId: data.email,
       ...data,
     });
@@ -115,7 +136,9 @@ export const verifyAccessTokenAsyncFromRequest = cache(
     if (!accessToken) return null;
 
     try {
-      return await jwtManager.verifyAccessTokenAsync(accessToken);
+      return await (
+        await getJwtManagerAsync()
+      ).verifyAccessTokenAsync(accessToken);
     } catch (e: unknown) {
       console.log(e);
       return null;
@@ -133,7 +156,9 @@ export const verifyRefreshTokenAsyncFromRequest = cache(
     if (!refreshToken) return null;
 
     try {
-      return await jwtManager.verifyRefreshTokenAsync(refreshToken);
+      return await (
+        await getJwtManagerAsync()
+      ).verifyRefreshTokenAsync(refreshToken);
     } catch (e: unknown) {
       console.log(e);
       return null;
@@ -160,7 +185,9 @@ export const refreshAccessTokenAsyncFromRequest = cache(
     if (errors) return null;
 
     try {
-      return await jwtManager.refreshAccessTokenAsync(refreshToken, {
+      return await (
+        await getJwtManagerAsync()
+      ).refreshAccessTokenAsync(refreshToken, {
         userId: data.email,
         ...data,
       });
@@ -173,11 +200,70 @@ export const refreshAccessTokenAsyncFromRequest = cache(
 
 export const createTokensAsync = cache(async (payload: UserPayload) => {
   try {
-    return await jwtManager.createTokensAsync(payload);
+    return await (await getJwtManagerAsync()).createTokensAsync(payload);
   } catch (e: unknown) {
     console.log(e);
     return null;
   }
+});
+
+export const ensureStaffIsAuthenticatedFromRequestAsync = cache(
+  async (request: NextRequest): Promise<NextResponse> => {
+    const [accessPayload, refreshPayload] = await Promise.all([
+      verifyAccessTokenAsyncFromRequest(request),
+      verifyRefreshTokenAsyncFromRequest(request),
+    ]);
+
+    if (accessPayload) return NextResponse.next();
+
+    if (!refreshPayload)
+      return NextResponse.redirect(new URL(ROUTES.login.href, request.nextUrl));
+
+    const tokens = await refreshAccessTokenAsyncFromRequest(request);
+    if (!tokens)
+      return NextResponse.redirect(new URL(ROUTES.login.href, request.nextUrl));
+
+    const response = NextResponse.next();
+    response.cookies.set(
+      CookieConfig.keys.staff.token.access,
+      tokens.accessToken,
+      CookieConfig.option.short
+    );
+    response.cookies.set(
+      CookieConfig.keys.staff.token.refresh,
+      tokens.refreshToken,
+      CookieConfig.option.long
+    );
+
+    return response;
+  }
+);
+
+export const ensureStaffIsAuthenticatedAsync = cache(async () => {
+  const [accessPayload, refreshPayload] = await Promise.all([
+    verifyAccessTokenAsync(),
+    verifyRefreshTokenAsync(),
+  ]);
+
+  if (accessPayload) return;
+  if (!refreshPayload) redirect(ROUTES.login.href);
+
+  const tokens = await refreshAccessTokenAsync();
+  if (!tokens) redirect(ROUTES.login.href);
+
+  console.log('có xuống không')
+
+  const cookieStore = await cookies();
+  cookieStore.set(
+    CookieConfig.keys.staff.token.access,
+    tokens.accessToken,
+    CookieConfig.option.short
+  );
+  cookieStore.set(
+    CookieConfig.keys.staff.token.refresh,
+    tokens.refreshToken,
+    CookieConfig.option.long
+  );
 });
 
 function getTokenFromCookies(
