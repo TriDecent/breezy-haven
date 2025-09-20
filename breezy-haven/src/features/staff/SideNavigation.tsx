@@ -8,11 +8,11 @@ import {
   UserIcon,
 } from '@heroicons/react/24/solid';
 
+import { ROUTES } from '@/shared/constants';
 import { SettingsIcon } from 'lucide-react';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { NavItem } from './NavItem';
-import { ROUTES } from '@/shared/constants';
 
 const Icons = {
   [ROUTES.staff.nested.dashboard.metadata.title]: <HomeIcon width={24} />,
@@ -29,7 +29,7 @@ export function SideNavigation() {
     segments.length === 2 && segments.pop()?.trim().toLowerCase();
 
   return (
-    <div className='sticky top-0 h-fit py-4'>
+    <div className='sticky top-0 flex h-full flex-col gap-4 py-4'>
       <div className='flex flex-col items-center gap-1'>
         <Image
           src={breezyHavenLogo}
@@ -40,8 +40,8 @@ export function SideNavigation() {
         />
         <p>The Breezy Haven</p>
       </div>
-      <nav className='mt-4 p-4'>
-        <ul className='flex flex-col gap-6'>
+      <ul className='px-4'>
+        <nav className='flex flex-col gap-6'>
           {Object.values(ROUTES.staff.nested).map(route => (
             <li key={route.href}>
               <NavItem
@@ -54,8 +54,8 @@ export function SideNavigation() {
               />
             </li>
           ))}
-        </ul>
-      </nav>
+        </nav>
+      </ul>
     </div>
   );
 }

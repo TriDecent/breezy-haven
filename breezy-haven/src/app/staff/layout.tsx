@@ -1,10 +1,5 @@
-import { SideNavigation } from '@/features/staff';
-import {
-  MiniSidebar,
-  PageLayout,
-  ThemeToggle,
-  Toaster,
-} from '@/shared/components';
+import { Header, SideNavigation } from '@/features/staff';
+import { MiniSidebar, PageLayout, Toaster } from '@/shared/components';
 import { ROUTES } from '@/shared/constants';
 
 import type { Metadata } from 'next';
@@ -23,10 +18,7 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
 
           <div className='flex grow flex-col overflow-hidden'>
             <PageLayout.Header>
-              <div className='flex justify-between px-4 py-4 md:py-8'>
-                <p>Header</p>
-                <ThemeToggle />
-              </div>
+              <Header />
             </PageLayout.Header>
             <PageLayout.Main>{children}</PageLayout.Main>
           </div>
