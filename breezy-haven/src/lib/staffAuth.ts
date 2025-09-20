@@ -10,15 +10,20 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { RsaJwtManager, type AccessTokenPayload } from './RsaJwtManager';
+import {
+  RsaJwtAuthenticator,
+  type AccessTokenPayload,
+} from './RsaJwtAuthenticator';
+import { RsaJwtCipher } from './RsaJwtCipher';
+import { RsaJwtProtector } from './RsaJwtProtector';
 
-const getKeysAsync = cache(
+const getSignKeyPairAsync = cache(
   async (): Promise<{
     privateKey: CryptoKey;
     publicKey: CryptoKey;
   }> => {
-    const BASE64_PRIVATE_KEY = process.env.JWT_PRIVATE_KEY!;
-    const BASE64_PUBLIC_KEY = process.env.JWT_PUBLIC_KEY!;
+    const BASE64_PRIVATE_KEY = process.env.JWT_PRIVATE_SIGN_KEY!;
+    const BASE64_PUBLIC_KEY = process.env.JWT_PUBLIC_SIGN_KEY!;
 
     const privateKey = (await importJWK(
       JSON.parse(Buffer.from(BASE64_PRIVATE_KEY, 'base64').toString('utf-8')),
@@ -34,6 +39,28 @@ const getKeysAsync = cache(
   }
 );
 
+const getCipherKeyPairAsync = cache(
+  async (): Promise<{
+    privateKey: CryptoKey;
+    publicKey: CryptoKey;
+  }> => {
+    const BASE64_PRIVATE_KEY = process.env.JWT_PRIVATE_CIPHER_KEY!;
+    const BASE64_PUBLIC_KEY = process.env.JWT_PUBLIC_CIPHER_KEY!;
+
+    const privateKey = (await importJWK(
+      JSON.parse(Buffer.from(BASE64_PRIVATE_KEY, 'base64').toString('utf-8')),
+      'RSA-OAEP-256'
+    )) as CryptoKey;
+
+    const publicKey = (await importJWK(
+      JSON.parse(Buffer.from(BASE64_PUBLIC_KEY, 'base64').toString('utf-8')),
+      'RSA-OAEP-256'
+    )) as CryptoKey;
+
+    return { privateKey, publicKey };
+  }
+);
+
 const UserPayloadSchema = z.looseObject({
   userId: z.string().readonly(),
   email: z.email().readonly(),
@@ -43,10 +70,13 @@ const UserPayloadSchema = z.looseObject({
 type UserPayload = z.infer<typeof UserPayloadSchema> & AccessTokenPayload;
 
 const getJwtManagerAsync = cache(async () => {
-  const { privateKey, publicKey } = await getKeysAsync();
+  const { privateKey: privateSignKey, publicKey: publicSignKey } =
+    await getSignKeyPairAsync();
+  const { privateKey: privateCipherKey, publicKey: publicCipherKey } =
+    await getCipherKeyPairAsync();
 
-  return new RsaJwtManager<UserPayload>(
-    { privateKey, publicKey },
+  const authenticator = new RsaJwtAuthenticator<UserPayload>(
+    { privateKey: privateSignKey, publicKey: publicSignKey },
     {
       algorithm: 'RS256',
       issuer: 'The Breezy Haven',
@@ -57,6 +87,26 @@ const getJwtManagerAsync = cache(async () => {
     refreshTokenRepository,
     UserPayloadSchema
   );
+
+  const cipher = new RsaJwtCipher(
+    {
+      privateKey: privateCipherKey,
+      publicKey: publicCipherKey,
+    },
+    {
+      algorithm: 'RSA-OAEP-256',
+      enc: 'A256GCM',
+      issuer: 'The Breezy Haven',
+      audience: ['staff'],
+      accessExpiresIn: process.env.NODE_ENV === 'development' ? '30d' : '1h',
+      refreshExpireIn: process.env.NODE_ENV === 'development' ? '30d' : '7d',
+    },
+    z.looseObject({
+      token: z.string(),
+    })
+  );
+
+  return new RsaJwtProtector(authenticator, cipher);
 });
 
 export const verifyAccessTokenAsync = cache(async () => {
@@ -250,8 +300,6 @@ export const ensureStaffIsAuthenticatedAsync = cache(async () => {
 
   const tokens = await refreshAccessTokenAsync();
   if (!tokens) redirect(ROUTES.login.href);
-
-  console.log('có xuống không')
 
   const cookieStore = await cookies();
   cookieStore.set(
