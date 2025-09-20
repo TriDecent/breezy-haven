@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "prod": "next build && next start",
     "postinstall": "npm rebuild sharp --platform=linux --arch=x64 || true"
   },

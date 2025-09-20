@@ -18,7 +18,7 @@ export interface RefreshTokenPayload extends JWTPayload {
   readonly absoluteExp: number;
 }
 
-export interface IRsaJwtManager<AccessT> {
+export interface IRsaJwtAuthenticator<AccessT> {
   createTokensAsync(payload: AccessT): Promise<TokenPair>;
   verifyAccessTokenAsync(token: TokenPair['accessToken']): Promise<AccessT>;
   verifyRefreshTokenAsync(
@@ -30,8 +30,8 @@ export interface IRsaJwtManager<AccessT> {
   ): Promise<TokenPair>;
 }
 
-export class RsaJwtManager<AccessT extends AccessTokenPayload>
-  implements IRsaJwtManager<AccessT>
+export class RsaJwtAuthenticator<AccessT extends AccessTokenPayload>
+  implements IRsaJwtAuthenticator<AccessT>
 {
   private readonly _refreshPayloadSchema = z.looseObject({
     userId: z.string().readonly(),
