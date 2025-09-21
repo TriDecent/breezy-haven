@@ -1,13 +1,13 @@
 'use client';
 
+import { Button, CardAction, FormRow } from '@/shared/components';
+import type { Setting } from '@/shared/schemas';
 import { useActionState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import {
   updateSettingAction,
   type UpdateSettingResponse,
 } from './updateSettingAction';
-import { Button, CardAction, FormRow } from '@/shared/components';
-import type { Setting } from '@/shared/schemas';
 
 export function SettingForm({ defaultSetting }: { defaultSetting: Setting }) {
   const { state, dispatch, isPending } = useFormState();
@@ -18,7 +18,7 @@ export function SettingForm({ defaultSetting }: { defaultSetting: Setting }) {
     <form action={dispatch} className='flex flex-col gap-y-4'>
       <input type='hidden' name='id' value={defaultSetting.id} />
       <FormRow
-        type='input'
+        kind='input'
         id='maxBookingLength'
         name='maxBookingLength'
         labelText='Max nights per booking'
@@ -31,7 +31,7 @@ export function SettingForm({ defaultSetting }: { defaultSetting: Setting }) {
         className='max-w-2xs'
       />
       <FormRow
-        type='input'
+        kind='input'
         id='minBookingLength'
         name='minBookingLength'
         labelText='Min nights per booking'
@@ -44,7 +44,7 @@ export function SettingForm({ defaultSetting }: { defaultSetting: Setting }) {
         className='max-w-2xs'
       />
       <FormRow
-        type='input'
+        kind='input'
         id='maxGuestPerBooking'
         name='maxGuestPerBooking'
         labelText='Max guests per booking'
@@ -58,7 +58,7 @@ export function SettingForm({ defaultSetting }: { defaultSetting: Setting }) {
         className='max-w-2xs'
       />
       <FormRow
-        type='input'
+        kind='input'
         id='breakfastPrice'
         name='breakfastPrice'
         labelText='Breakfast price'

@@ -9,16 +9,16 @@ import { Textarea } from './ui/textarea';
 
 type FormRowProps =
   | ({
-      type: 'input';
+      kind: 'input';
     } & ComponentProps<typeof InputField>)
   | ({
-      type: 'textarea';
+      kind: 'textarea';
     } & ComponentProps<typeof TextareaField>);
 
 export function FormRow(props: FormRowProps) {
-  const { type, ...rest } = props;
+  const { kind, ...rest } = props;
 
-  switch (type) {
+  switch (kind) {
     case 'input':
       return <InputField {...(rest as ComponentProps<typeof InputField>)} />; // Ts cannot infer
     case 'textarea':
