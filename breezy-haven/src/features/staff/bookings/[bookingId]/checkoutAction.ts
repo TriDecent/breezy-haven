@@ -6,7 +6,7 @@ import type { Booking } from '@/shared/schemas';
 
 import { revalidatePath } from 'next/cache';
 
-export async function checkoutAsync(bookingId: Booking['id']) {
+export async function checkoutAction(bookingId: Booking['id']) {
   await Auth.staff.ensureStaffIsAuthenticatedAsync();
 
   const { errors } = await staffBookingService.update(bookingId, {

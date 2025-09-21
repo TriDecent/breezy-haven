@@ -1,6 +1,7 @@
 import { IRepository } from '@/repositories';
 import type { DTORow } from '@/repositories/types';
-import type { Schemas } from '@/shared';
+
+import type { Schemas } from '@/shared/schemas';
 import { PostgrestError } from '@supabase/supabase-js';
 import { z } from 'zod';
 import type {

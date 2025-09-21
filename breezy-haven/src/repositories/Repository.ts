@@ -15,18 +15,6 @@ export interface IRepository<T> {
     updatedFields: Partial<T>
   ): RepositoryReturnType<T, PostgrestError>;
   delete(id: number): RepositoryReturnType<T, PostgrestError>;
-  uploadFile(
-    file: File,
-    path: string,
-    bucketId: string
-  ): RepositoryReturnType<
-    { id: string; path: string; fullPath: string },
-    Error
-  >;
-  deleteFiles(
-    paths: readonly string[],
-    bucketId: string
-  ): Promise<Error | null>;
 }
 
 export class Repository<T extends DTORow> implements IRepository<T> {
@@ -34,28 +22,6 @@ export class Repository<T extends DTORow> implements IRepository<T> {
 
   constructor(tableName: DTOToTableName<T>) {
     this._tableName = tableName;
-  }
-
-  async uploadFile(
-    file: File,
-    path: string,
-    bucketId: string
-  ): RepositoryReturnType<
-    { id: string; path: string; fullPath: string },
-    Error
-  > {
-    return await supabase.storage.from(bucketId).upload(path, file, {
-      cacheControl: '3600',
-      upsert: false,
-    });
-  }
-
-  async deleteFiles(
-    paths: readonly string[],
-    bucketId: string
-  ): Promise<Error | null> {
-    const { error } = await supabase.storage.from(bucketId).remove([...paths]);
-    return error;
   }
 
   private get table() {

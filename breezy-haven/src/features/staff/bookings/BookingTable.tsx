@@ -34,7 +34,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { StatusBadge } from './StatusBadge';
-import { checkoutAsync } from './[bookingId]/checkoutAsync';
+import { checkoutAction } from './[bookingId]/checkoutAction';
 import { deleteBookingAction } from './deleteBookingAction';
 
 export function BookingTable({ bookings }: BookingTableProps) {
@@ -276,7 +276,7 @@ function CheckoutAction({
           return;
         }
 
-        toast.promise(checkoutAsync(bookingId), {
+        toast.promise(checkoutAction(bookingId), {
           loading: 'Checking out the guest',
           error: 'An error has occurred while trying to check out the booking',
           success: 'Check out the guest successfully!',

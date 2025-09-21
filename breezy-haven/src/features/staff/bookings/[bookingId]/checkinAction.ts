@@ -7,7 +7,7 @@ import type { Booking } from '@/shared/schemas';
 
 import { revalidatePath } from 'next/cache';
 
-export async function checkinAsync(
+export async function checkinAction(
   bookingId: Booking['id'],
   hasBreakfast: boolean
 ): Promise<void> {

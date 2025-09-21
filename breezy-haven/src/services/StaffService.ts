@@ -5,13 +5,14 @@ import { cache } from 'react';
 
 import { supabase } from '@/lib';
 import type { NullableStaff, Staff } from '@/shared/schemas';
-import type { IStaffService } from './BaseStaffService';
+
+import type { IService } from './BaseService';
 import type { ServiceReturnType } from './types';
 
 export default class StaffService<T extends Staff | NullableStaff>
-  implements IStaffService<DTOStaff, T>
+  implements IService<DTOStaff, T>
 {
-  constructor(private readonly _service: IStaffService<DTOStaff, T>) {
+  constructor(private readonly _service: IService<DTOStaff, T>) {
     this.getAll = cache(this.getAll.bind(this));
     this.getById = cache(this.getById.bind(this));
   }
@@ -42,20 +43,6 @@ export default class StaffService<T extends Staff | NullableStaff>
   }
   delete(id: number) {
     return this._service.delete(id);
-  }
-  async uploadFile(
-    file: File,
-    path: string,
-    bucketId: string
-  ): ServiceReturnType<{ id: string; path: string; fullPath: string }, Error> {
-    return this._service.uploadFile(file, path, bucketId);
-  }
-
-  async deleteFiles(
-    paths: readonly string[],
-    bucketId: string
-  ): ServiceReturnType<null, Error> {
-    return this._service.deleteFiles(paths, bucketId);
   }
 
   async getByEmail(email: Staff['email']): ServiceReturnType<T> {
