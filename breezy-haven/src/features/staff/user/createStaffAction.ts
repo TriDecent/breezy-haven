@@ -75,7 +75,7 @@ export async function createStaffAction(
   const credential = parsed.payload;
 
   const uniqueAvatarName = `${credential.avatar.name}-${crypto.randomUUID()}`;
-  const uploadResult = await fileService.uploadFileAsync(
+  const uploadResult = await fileService.uploadAsync(
     credential.avatar,
     uniqueAvatarName,
     bucketId
@@ -113,14 +113,14 @@ export async function createStaffAction(
 }
 
 async function tryDeleteImageAsync(path: string) {
-  const deleteResult = await fileService.deleteFilesAsync([path], bucketId);
+  const deleteResult = await fileService.deleteAsync([path], bucketId);
   if (deleteResult.type === 'success') return;
 
   let retryCount = 0;
   const maxRetryCount = 3;
 
   while (retryCount < maxRetryCount) {
-    const deleteResult = await fileService.deleteFilesAsync([path], bucketId);
+    const deleteResult = await fileService.deleteAsync([path], bucketId);
     if (deleteResult.type === 'success') break;
     ++retryCount;
   }

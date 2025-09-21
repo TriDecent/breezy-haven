@@ -164,7 +164,7 @@ async function uploadImageAsync(
 ): Promise<
   [success: { id: string; path: string; fullPath: string }] | [success: null]
 > {
-  const uploadResult = await fileService.uploadFileAsync(
+  const uploadResult = await fileService.uploadAsync(
     image,
     path,
     'cabin-images'
@@ -194,10 +194,7 @@ async function deleteCabinImageAsync(path: string): Promise<void> {
   let hasError = true;
 
   do {
-    const deleteResult = await fileService.deleteFilesAsync(
-      [path],
-      'cabin-images'
-    );
+    const deleteResult = await fileService.deleteAsync([path], 'cabin-images');
     hasError = deleteResult.type === 'error';
     deleteRetryCount++;
   } while (hasError && deleteRetryCount < 3);

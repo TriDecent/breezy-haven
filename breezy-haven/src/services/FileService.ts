@@ -2,13 +2,13 @@ import type { IFileRepository } from '@/repositories';
 import type { Result } from '@/shared/types';
 
 interface IFileService {
-  uploadFileAsync(
+  uploadAsync(
     file: File,
     path: string,
     bucketId: string
   ): Promise<Result<{ id: string; path: string; fullPath: string }, undefined>>;
 
-  deleteFilesAsync(
+  deleteAsync(
     paths: readonly string[],
     bucketId: string
   ): Promise<Result<undefined, undefined>>;
@@ -20,7 +20,7 @@ export class FileService implements IFileService {
     private readonly _fileRepo: IFileRepository
   ) {}
 
-  async uploadFileAsync(
+  async uploadAsync(
     file: File,
     path: string,
     bucketId: string
@@ -32,7 +32,7 @@ export class FileService implements IFileService {
     return this._fileRepo.uploadFile(file, path, bucketId);
   }
 
-  async deleteFilesAsync(
+  async deleteAsync(
     paths: readonly string[],
     bucketId: string
   ): Promise<Result<undefined, undefined>> {

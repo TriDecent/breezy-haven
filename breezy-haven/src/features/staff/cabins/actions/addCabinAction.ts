@@ -76,7 +76,7 @@ async function uploadImageAsync(
 ): Promise<
   [success: { id: string; path: string; fullPath: string }] | [success: null]
 > {
-  const uploadResult = await fileService.uploadFileAsync(
+  const uploadResult = await fileService.uploadAsync(
     image,
     path,
     'cabin-images'
@@ -96,7 +96,7 @@ async function createCabinAsync(
     let doesDeleteImageErrorExist = true;
     let deleteRetryCount = 0;
     do {
-      const deleteResult = await fileService.deleteFilesAsync(
+      const deleteResult = await fileService.deleteAsync(
         [cabin.image.split('/').pop()!],
         'cabin-images'
       );
