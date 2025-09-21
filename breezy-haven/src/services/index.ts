@@ -1,6 +1,5 @@
 import { Auth } from '@/lib';
-import { Repository } from '@/repositories';
-
+import { FileRepository, Repository } from '@/repositories';
 import {
   BookingSchema,
   CabinSchema,
@@ -10,17 +9,13 @@ import {
 } from '@/shared/schemas';
 import { cache } from 'react';
 import { BaseService } from './BaseService';
-import { BaseStaffService } from './BaseStaffService';
 import BookingService from './BookingService';
-import BookingStaffService from './BookingStaffService';
 import CabinService from './CabinService';
-import CabinStaffService from './CabinStaffService';
+import { FileService } from './FileService';
 import GuestService from './GuestService';
 import SettingService from './SettingService';
-import SettingStaffService from './SettingStaffService';
 import StaffService from './StaffService';
-
-export type { BookingWithRelations } from './BookingStaffService';
+export { type BookingWithRelations } from './BookingService';
 export * from './countryService';
 export * from './types';
 
@@ -29,6 +24,8 @@ const bookingRepository = new Repository('bookings');
 const guestRepository = new Repository('guests');
 const settingRepository = new Repository('settings');
 const staffRepository = new Repository('staff');
+
+const fileRepository = new FileRepository();
 
 const verifyUnauthAsync = () => Promise.resolve();
 const verifyGuestAuthAsync = cache(async () => {
@@ -66,37 +63,27 @@ export const unauthGuestService = new GuestService(
   new BaseService(guestRepository, verifyUnauthAsync, GuestSchema)
 );
 
-export const staffCabinService = new CabinStaffService(
-  new BaseStaffService(
-    new BaseService(cabinRepository, verifyStaffAuthAsync, CabinSchema),
-    cabinRepository
-  )
+export const staffCabinService = new CabinService(
+  new BaseService(cabinRepository, verifyStaffAuthAsync, CabinSchema)
 );
 
-export const staffSettingService = new SettingStaffService(
-  new BaseStaffService(
-    new BaseService(settingRepository, verifyStaffAuthAsync, SettingSchema),
-    settingRepository
-  )
+export const staffSettingService = new SettingService(
+  new BaseService(settingRepository, verifyStaffAuthAsync, SettingSchema)
 );
 
-export const staffBookingService = new BookingStaffService(
-  new BaseStaffService(
-    new BaseService(bookingRepository, verifyStaffAuthAsync, BookingSchema),
-    bookingRepository
-  )
+export const staffBookingService = new BookingService(
+  new BaseService(bookingRepository, verifyStaffAuthAsync, BookingSchema)
 );
 
 export const unauthStaffService = new StaffService(
-  new BaseStaffService(
-    new BaseService(staffRepository, verifyUnauthAsync, StaffSchema),
-    staffRepository
-  )
+  new BaseService(staffRepository, verifyUnauthAsync, StaffSchema)
 );
 
 export const staffService = new StaffService(
-  new BaseStaffService(
-    new BaseService(staffRepository, verifyStaffAuthAsync, StaffSchema),
-    staffRepository
-  )
+  new BaseService(staffRepository, verifyStaffAuthAsync, StaffSchema)
+);
+
+export const fileService = new FileService(
+  verifyStaffAuthAsync,
+  fileRepository
 );
