@@ -1,6 +1,6 @@
 'use server';
 import { Auth } from '@/lib';
-import { staffCabinService } from '@/services';
+import { fileService, staffCabinService } from '@/services';
 import { ROUTES } from '@/shared/constants';
 import type { Cabin } from '@/shared/schemas';
 import { revalidatePath } from 'next/cache';
@@ -164,15 +164,15 @@ async function uploadImageAsync(
 ): Promise<
   [success: { id: string; path: string; fullPath: string }] | [success: null]
 > {
-  const { data, errors } = await staffCabinService.uploadFile(
+  const uploadResult = await fileService.uploadFileAsync(
     image,
     path,
     'cabin-images'
   );
 
-  if (errors) return [null];
+  if (uploadResult.type === 'error') return [null];
 
-  return [data];
+  return [uploadResult.payload];
 }
 
 async function updateCabinAsync(
@@ -194,11 +194,11 @@ async function deleteCabinImageAsync(path: string): Promise<void> {
   let hasError = true;
 
   do {
-    const { errors } = await staffCabinService.deleteFiles(
+    const deleteResult = await fileService.deleteFilesAsync(
       [path],
       'cabin-images'
     );
-    hasError = !!errors;
+    hasError = deleteResult.type === 'error';
     deleteRetryCount++;
   } while (hasError && deleteRetryCount < 3);
 }

@@ -1,13 +1,13 @@
 'use server';
-import { staffCabinService } from '@/services';
+import { fileService, staffCabinService } from '@/services';
 
+import { Auth } from '@/lib';
 import { ROUTES } from '@/shared/constants';
 import type { Cabin } from '@/shared/schemas';
 import { revalidatePath } from 'next/cache';
 import path from 'path';
 import z from 'zod';
 import { AddCabinSchema, type AddActionResponse } from './types';
-import { Auth } from '@/lib';
 
 export async function addCabinAction(
   _currentState: AddActionResponse,
@@ -76,15 +76,15 @@ async function uploadImageAsync(
 ): Promise<
   [success: { id: string; path: string; fullPath: string }] | [success: null]
 > {
-  const { data, errors } = await staffCabinService.uploadFile(
+  const uploadResult = await fileService.uploadFileAsync(
     image,
     path,
     'cabin-images'
   );
 
-  if (errors) return [null];
+  if (uploadResult.type === 'error') return [null];
 
-  return [data];
+  return [uploadResult.payload];
 }
 
 async function createCabinAsync(
@@ -96,11 +96,11 @@ async function createCabinAsync(
     let doesDeleteImageErrorExist = true;
     let deleteRetryCount = 0;
     do {
-      const { errors: deleteImageError } = await staffCabinService.deleteFiles(
+      const deleteResult = await fileService.deleteFilesAsync(
         [cabin.image.split('/').pop()!],
         'cabin-images'
       );
-      if (deleteImageError) doesDeleteImageErrorExist = !!errors;
+      if (deleteResult.type === 'error') doesDeleteImageErrorExist = !!errors;
       ++deleteRetryCount;
     } while (doesDeleteImageErrorExist && deleteRetryCount < 3);
 
