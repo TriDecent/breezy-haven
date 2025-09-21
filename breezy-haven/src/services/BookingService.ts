@@ -4,28 +4,19 @@ import { DTOBooking } from '@/repositories';
 import {
   BookingSchema,
   CabinSchema,
+  GuestSchema,
   type Booking,
   type NullableBooking,
 } from '@/shared/schemas';
 import { PostgrestError } from '@supabase/supabase-js';
 import { eachDayOfInterval } from 'date-fns';
-import type z from 'zod';
+import z from 'zod';
 import { IService } from './BaseService';
-import type { DatabaseError, GetAllServiceReturnType } from './types';
-
-const CabinBasicInfoSchema = CabinSchema.pick({
-  name: true,
-  image: true,
-  maxCapacity: true,
-});
-
-const BookingWithCabinInfoSchema = BookingSchema.extend({
-  cabins: CabinBasicInfoSchema,
-});
-
-type BookingWithCabinInfo = Booking & {
-  cabin: z.infer<typeof CabinBasicInfoSchema>;
-};
+import type {
+  DatabaseError,
+  GetAllServiceReturnType,
+  ServiceReturnType,
+} from './types';
 
 export default class BookingService<T extends Booking | NullableBooking>
   implements IService<DTOBooking, T>
@@ -107,19 +98,6 @@ export default class BookingService<T extends Booking | NullableBooking>
     };
   }
 
-  private validateItems<T>(items: unknown[], schema: z.ZodType<T>): T[] {
-    const validItems: T[] = [];
-
-    for (const item of items) {
-      const parsedResult = schema.safeParse(item);
-      if (!parsedResult.success) continue;
-
-      validItems.push(parsedResult.data);
-    }
-
-    return validItems;
-  }
-
   async getByCabinId(
     cabinId: number
   ): Promise<{ data: DTOBooking[]; error: PostgrestError | null }> {
@@ -133,6 +111,103 @@ export default class BookingService<T extends Booking | NullableBooking>
     return {
       data: data ?? [],
       error: error,
+    };
+  }
+
+  async getBookingWithRelationsById(
+    id: Booking['id']
+  ): Promise<ServiceReturnType<BookingWithRelations>> {
+    await this._service.verifyPermission();
+
+    const query = supabase
+      .from('bookings')
+      .select(
+        `
+        *,
+        cabins(id, name, image),
+        guests(fullName, email, countryFlag, nationalID)
+      `
+      )
+      .eq('id', id)
+      .single();
+    const { data, error } = await query;
+
+    if (error)
+      return {
+        data: null,
+        errors: {
+          type: 'database',
+          db: error,
+        },
+      };
+
+    const parsedResult = BookingWithRelationsSchema.safeParse(data);
+    if (!parsedResult.success)
+      return {
+        data: null,
+        errors: {
+          type: 'validation',
+          fields: z.flattenError(parsedResult.error).fieldErrors,
+        },
+      };
+    return {
+      data: {
+        ...parsedResult.data,
+        cabin: parsedResult.data.cabins,
+        guest: parsedResult.data.guests,
+      },
+      errors: null,
+    };
+  }
+
+  async getAllBookingsWithRelations(): Promise<
+    GetAllServiceReturnType<BookingWithRelations>
+  > {
+    await this._service.verifyPermission();
+
+    const query = supabase.from('bookings').select(
+      `
+        *,
+        cabins(id, name, image),
+        guests(fullName, email, countryFlag, nationalID)
+      `
+    );
+    const { data, error } = await query;
+
+    if (error)
+      return {
+        data: null,
+        errors: {
+          type: 'database',
+          db: error,
+        },
+      };
+
+    const validateResult = this.validateItems(data, BookingWithRelationsSchema);
+
+    if (validateResult.length === 0 && data.length > 0)
+      return {
+        data: null,
+        errors: {
+          type: 'unexpected',
+          message: 'All data corrupted',
+        },
+      };
+
+    return {
+      data: validateResult.map(item => ({
+        ...item,
+        cabin: item.cabins,
+        guest: item.guests,
+      })),
+      errors: null,
+      warnings:
+        data.length - validateResult.length > 0
+          ? {
+              corruptedCount: data.length - validateResult.length,
+              total: data.length,
+            }
+          : undefined,
     };
   }
 
@@ -153,6 +228,19 @@ export default class BookingService<T extends Booking | NullableBooking>
     return { data: this.getBookedDates(data), errors: null };
   }
 
+  private validateItems<T>(items: unknown[], schema: z.ZodType<T>): T[] {
+    const validItems: T[] = [];
+
+    for (const item of items) {
+      const parsedResult = schema.safeParse(item);
+      if (!parsedResult.success) continue;
+
+      validItems.push(parsedResult.data);
+    }
+
+    return validItems;
+  }
+
   private getBookedDates(bookings: DTOBooking[]): readonly Date[] {
     return bookings
       .map(booking => {
@@ -167,3 +255,39 @@ export default class BookingService<T extends Booking | NullableBooking>
       .flat();
   }
 }
+
+const CabinBasicInfoSchema = CabinSchema.pick({
+  name: true,
+  image: true,
+  maxCapacity: true,
+});
+
+const BookingWithCabinInfoSchema = BookingSchema.extend({
+  cabins: CabinBasicInfoSchema,
+});
+
+type BookingWithCabinInfo = Booking & {
+  cabin: z.infer<typeof CabinBasicInfoSchema>;
+};
+
+const CabinForBookingSchema = CabinSchema.pick({
+  id: true,
+  name: true,
+  image: true,
+});
+const GuestBasicInfoSchema = GuestSchema.pick({
+  fullName: true,
+  email: true,
+  countryFlag: true,
+  nationalID: true,
+});
+
+const BookingWithRelationsSchema = BookingSchema.extend({
+  cabins: CabinForBookingSchema,
+  guests: GuestBasicInfoSchema,
+});
+
+export type BookingWithRelations = Booking & {
+  cabin: z.infer<typeof CabinForBookingSchema>;
+  guest: z.infer<typeof GuestBasicInfoSchema>;
+};
