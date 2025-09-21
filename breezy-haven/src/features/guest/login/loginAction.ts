@@ -12,23 +12,7 @@ import z from 'zod';
 
 const LoginInputSchema = z.object({
   email: z.email({ message: 'Email must be a valid email' }).trim(),
-  password: z
-    .string()
-    /*  Save this for signup later
-    .min(8, { message: 'Password must be at least 8 characters' })
-    .max(64, { message: 'Password must be at most 64 characters' })
-    .regex(/[A-Z]/, {
-      message: 'Password must contain at least one uppercase letter',
-    })
-    .regex(/[a-z]/, {
-      message: 'Password must contain at least one lowercase letter',
-    })
-    .regex(/[0-9]/, { message: 'Password must contain at least one number' })
-    .regex(/[^A-Za-z0-9]/, {
-      message: 'Password must contain at least one special character',
-    })
-    */
-    .trim(),
+  password: z.string().trim(),
 });
 
 type SafeLoginInput = z.infer<typeof LoginInputSchema>;
