@@ -3,8 +3,10 @@ import { BookingDetails } from '@/features/staff/bookings/[bookingId]';
 import {
   staffBookingService,
   staffSettingService,
+  unauthBookingService,
   type BookingWithRelations,
 } from '@/services';
+
 import { Button } from '@/shared/components';
 import { ROUTES } from '@/shared/constants';
 import { errorHelper } from '@/shared/utils';
@@ -27,7 +29,7 @@ export async function generateMetadata({
     };
 
   const { data, errors } =
-    await staffBookingService.getBookingWithRelationsById(bookingId);
+    await unauthBookingService.getBookingWithRelationsById(bookingId);
 
   if (!errors) return { title: `Booking ${data.id}` };
 
@@ -44,7 +46,7 @@ export async function generateMetadata({
 export async function generateStaticParams(): Promise<
   readonly { readonly bookingId: string }[]
 > {
-  const { data, errors } = await staffBookingService.getAll();
+  const { data, errors } = await unauthBookingService.getAll();
 
   if (errors) return [];
 
