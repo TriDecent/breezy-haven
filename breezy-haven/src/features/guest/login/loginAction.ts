@@ -3,11 +3,10 @@
 import { Auth } from '@/lib';
 import { unauthStaffService } from '@/services';
 import type { ActionResponse } from '@/shared/actions';
-import { CookieConfig, ROUTES } from '@/shared/constants';
+import { CookieConfig } from '@/shared/constants';
 
 import { compare } from 'bcrypt';
 import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 import z from 'zod';
 
 const LoginInputSchema = z.object({
@@ -63,8 +62,6 @@ export async function loginAction(
     tokens.refreshToken,
     CookieConfig.option.long
   );
-
-  redirect(`${ROUTES.staff.nested.dashboard.href}`); // * will be replaced with callbackUrl later
 
   return {
     userEntered: null,

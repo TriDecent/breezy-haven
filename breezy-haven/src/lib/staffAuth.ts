@@ -266,8 +266,11 @@ export const ensureStaffIsAuthenticatedFromRequestAsync = cache(
 
     if (accessPayload) return NextResponse.next();
 
-    if (!refreshPayload)
-      return NextResponse.redirect(new URL(ROUTES.login.href, request.nextUrl));
+    if (!refreshPayload) {
+      const url = new URL(ROUTES.login.href, request.nextUrl);
+      url.searchParams.set('callbackUrl', request.nextUrl.pathname);
+      return NextResponse.redirect(url);
+    }
 
     const tokens = await refreshAccessTokenAsyncFromRequest(request);
     if (!tokens)

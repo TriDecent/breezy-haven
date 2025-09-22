@@ -1,7 +1,9 @@
 'use client';
 
 import { Button, Input, Label } from '@/shared/components';
+import { ROUTES } from '@/shared/constants';
 import Form from 'next/form';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useActionState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { loginAction, type LoginActionResponse } from './loginAction';
@@ -14,11 +16,16 @@ export function LoginForm() {
     userEntered: null,
     errors: null,
   });
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     if (!state.isSuccess) return;
     toast.success('Login successfully!');
-  }, [state]);
+    const callbackUrl =
+      searchParams.get('callbackUrl') ?? ROUTES.staff.nested.dashboard.href;
+    router.replace(callbackUrl);
+  }, [router, searchParams, state]);
 
   useEffect(() => {
     if (!state.errors) return;
