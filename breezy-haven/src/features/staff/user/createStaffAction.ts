@@ -3,55 +3,24 @@
 import { Auth } from '@/lib';
 import { fileService, staffService } from '@/services';
 import type { ActionResponse } from '@/shared/actions';
+import { SignUpSchema } from '@/shared/schemas';
 import type { Result } from '@/shared/types';
 import { hash } from 'bcrypt';
 import path from 'path';
 import z from 'zod';
 
-const SignUpSchema = z
-  .object({
-    email: z.email({ error: 'Email must be a valid email' }).trim(),
-    password: z
-      .string()
-      .min(8, { error: 'Password must be at least 8 characters' })
-      .max(64, { error: 'Password must be at most 64 characters' })
-      .regex(/[A-Z]/, {
-        error: 'Password must contain at least one uppercase letter',
-      })
-      .regex(/[a-z]/, {
-        error: 'Password must contain at least one lowercase letter',
-      })
-      .regex(/[0-9]/, { error: 'Password must contain at least one number' })
-      .regex(/[^A-Za-z0-9]/, {
-        error: 'Password must contain at least one special character',
-      })
-      .trim(),
-    confirmedPassword: z.string().trim(),
-    fullName: z
-      .string()
-      .min(2, { error: 'Full name must be at least 2 characters' })
-      .max(64, { error: 'Full name must be at most 64 characters' })
-      .trim(),
-    avatar: z
-      .file({ error: 'Avatar must be an image' })
-      .refine(
-        file => ['image/jpg', 'image/jpeg', 'image/png'].includes(file.type),
-        {
-          error: 'Only JPG, PNG and JPEG images are allowed',
-        }
-      ),
-  })
-  .refine(data => data.password === data.confirmedPassword, {
-    message: "Passwords don't match",
-    path: ['confirmedPassword'],
-  })
-  .refine(data => data.password === data.confirmedPassword, {
-    message: "Passwords don't match",
-    path: ['password'],
-  })
-  .readonly();
+const StaffSignUpSchema = SignUpSchema.extend({
+  avatar: z
+    .file({ error: 'Avatar must be an image' })
+    .refine(
+      file => ['image/jpg', 'image/jpeg', 'image/png'].includes(file.type),
+      {
+        error: 'Only JPG, PNG and JPEG images are allowed',
+      }
+    ),
+}).readonly();
 
-type SafeSignUpInput = z.infer<typeof SignUpSchema>;
+type SafeSignUpInput = z.infer<typeof StaffSignUpSchema>;
 type PartialSignUpInput = Partial<SafeSignUpInput>;
 type CreateStaffError = Partial<
   Record<keyof SafeSignUpInput, string[]> & { unexpected?: string }
@@ -129,7 +98,7 @@ async function tryDeleteImageAsync(path: string) {
 function validateInput(
   input: Record<PropertyKey, unknown>
 ): Result<SafeSignUpInput, CreateStaffResponse> {
-  const parsed = SignUpSchema.safeParse(input);
+  const parsed = StaffSignUpSchema.safeParse(input);
   if (!parsed.success)
     return {
       type: 'error',
