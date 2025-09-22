@@ -1,4 +1,4 @@
-import { GoogleLogin, LoginCard, LoginForm } from '@/features/guest/login';
+import { Authentication } from '@/features/guest/login';
 import { ROUTES } from '@/shared/constants';
 
 import { Metadata } from 'next';
@@ -17,11 +17,7 @@ export default async function LoginPage({
         Sign in to access your guest area
       </h2>
 
-      <LoginCard
-        renderLoginByProviders={<GoogleLogin />}
-        renderLoginByEmailPassword={<LoginForm />}
-        className='w-full max-w-3xl'
-      />
+      <Authentication />
 
       <Suspense>
         <ErrorDisplay searchParams={searchParams} />
