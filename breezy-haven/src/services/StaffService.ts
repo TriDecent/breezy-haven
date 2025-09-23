@@ -15,6 +15,7 @@ export default class StaffService<T extends Staff | NullableStaff>
   constructor(private readonly _service: IService<DTOStaff, T>) {
     this.getAll = cache(this.getAll.bind(this));
     this.getById = cache(this.getById.bind(this));
+    this.getByEmail = cache(this.getByEmail.bind(this));
   }
   handleRepositoryResultArray(
     action: () => Promise<{ data: unknown; error: PostgrestError | null }>

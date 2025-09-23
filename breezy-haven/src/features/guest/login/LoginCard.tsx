@@ -47,7 +47,7 @@ export function LoginCard({
           </span>
           <Button
             variant='link'
-            className='dark:underline'
+            className='dark:underline animate-pulse'
             onClick={onSignupClick}
           >
             Sign up

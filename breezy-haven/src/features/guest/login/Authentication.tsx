@@ -73,7 +73,11 @@ export function SignupCard({ onGoBackAction }: { onGoBackAction: () => void }) {
           <UserPen /> Sign up
         </span>
         <CardAction>
-          <Button onClick={onGoBackAction} variant='gradient'>
+          <Button
+            onClick={onGoBackAction}
+            variant='gradient'
+            className='animate-pulse'
+          >
             <ArrowLeft /> Log in
           </Button>
         </CardAction>

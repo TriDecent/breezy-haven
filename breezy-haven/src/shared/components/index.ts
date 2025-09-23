@@ -23,6 +23,7 @@ export { default as Textarea } from './Textarea';
 export { default as TextExpander } from './TextExpander';
 export { default as ThemeToggle } from './ThemeToggle';
 
+export * from './ui/avatar';
 export * from './ui/alert-dialog';
 export * from './ui/button';
 export * from './ui/calendar';
