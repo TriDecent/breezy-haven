@@ -1,4 +1,5 @@
 import { Auth } from '@/lib';
+import { staffService } from '@/services';
 import { CookieConfig } from '@/shared/constants';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -8,11 +9,20 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     Auth.staff.session.verifyRefreshTokenAsyncFromRequest(request),
   ]);
 
-  if (accessPayload)
+  if (accessPayload) {
+    const { data } = await staffService.getByEmail(accessPayload.email);
+
+    if (!data)
+      return NextResponse.json({
+        user: accessPayload,
+        isAuthenticated: true,
+      });
+
     return NextResponse.json({
-      user: accessPayload,
+      user: { ...accessPayload, fullName: data.fullName },
       isAuthenticated: true,
     });
+  }
 
   if (refreshPayload) {
     const tokens =

@@ -299,6 +299,12 @@ export const ROUTES = {
           title: 'Settings',
         },
       }),
+      profile: defineRoute({
+        href: '/staff/profile',
+        metadata: {
+          title: 'My profile',
+        },
+      }),
     },
   }),
 } as const;

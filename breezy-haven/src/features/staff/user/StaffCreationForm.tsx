@@ -14,6 +14,7 @@ export function StaffCreationForm() {
 
   const handleSignupSuccess = useCallback(() => {
     toast.success('Create new staff successfully!');
+    setPreviewImageUrl(null);
   }, []);
 
   const handleSignupFailed = useCallback(() => {

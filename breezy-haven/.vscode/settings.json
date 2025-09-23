@@ -1,3 +1,4 @@
 {
-  "cSpell.words": ["Checkin", "Postgrest"]
+  "cSpell.words": ["Checkin", "Postgrest"],
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }
