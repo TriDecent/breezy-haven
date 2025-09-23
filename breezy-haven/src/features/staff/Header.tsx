@@ -6,13 +6,17 @@ import {
   ThemeToggle,
 } from '@/shared/components';
 
-import { LogOut, Menu } from 'lucide-react';
+import { ROUTES } from '@/shared/constants';
+import { LogOut, Menu, UserCircle } from 'lucide-react';
+import Link from 'next/link';
 import { logoutAction } from './logoutAction';
+import { StaffBadge } from './StaffBadge';
 
 export function Header() {
   return (
     <div className='flex justify-between px-4 py-4 md:py-8'>
-      <p>Avatar and badge here</p>
+      <StaffBadge />
+
       <div className='flex items-center gap-4'>
         <SubMenu />
         <ThemeToggle />
@@ -28,9 +32,13 @@ export function SubMenu() {
         <Menu size={32} />
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end'>
-        <DropdownMenuItem asChild></DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href={ROUTES.staff.nested.profile.href}>
+            <UserCircle /> My Profile
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={logoutAction}>
-          <LogOut /> Logout
+          <LogOut /> Log out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
