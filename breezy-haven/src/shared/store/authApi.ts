@@ -21,7 +21,7 @@ const StaffAuthResponseSchema = z.object({
     .object({
       userId: z.string(),
       email: z.email(),
-      fullName: z.string().optional(),
+      fullName: z.string(),
       avatarUrl: z.url(),
     })
     .readonly(),

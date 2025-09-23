@@ -16,6 +16,8 @@ export const config: MiddlewareConfig = {
     '/staff/cabins',
     '/staff/guests',
     '/staff/settings',
+    '/staff/user',
+    '/staff/profile'
   ],
 };
 

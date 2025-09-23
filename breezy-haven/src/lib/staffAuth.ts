@@ -65,6 +65,7 @@ const UserPayloadSchema = z.looseObject({
   userId: z.string().readonly(),
   email: z.email().readonly(),
   avatarUrl: z.url().readonly(),
+  fullName: z.string().readonly(),
 });
 
 type UserPayload = z.infer<typeof UserPayloadSchema> & AccessTokenPayload;

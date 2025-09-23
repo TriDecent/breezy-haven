@@ -46,6 +46,7 @@ export async function loginAction(
     userId: data.email,
     email: data.email,
     avatarUrl: data.avatarUrl,
+    fullName: data.fullName,
   });
 
   if (!tokens) return createUnexpectedResponse(safeInput);
