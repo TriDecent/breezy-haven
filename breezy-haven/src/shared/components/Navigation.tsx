@@ -1,7 +1,7 @@
 'use client';
 
 import { ROUTES } from '../constants/ROUTES';
-import { useGetAuthQuery } from '../store/authApi';
+import { useGetGuestAuthQuery } from '../store/authApi';
 import NavItem from './NavItem';
 
 interface Route {
@@ -16,7 +16,8 @@ const routes: readonly Route[] = [
 ];
 
 export default function Navigation() {
-  const { data, isError, isFetching, isLoading } = useGetAuthQuery(undefined);
+  const { data, isError, isFetching, isLoading } =
+    useGetGuestAuthQuery(undefined);
 
   return isError ? (
     <nav className='z-10 md:text-xl'>

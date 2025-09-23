@@ -29,7 +29,7 @@ export function SideNavigation() {
     segments.length === 2 && segments.pop()?.trim().toLowerCase();
 
   return (
-    <div className='sticky top-0 flex h-full flex-col gap-4 py-4'>
+    <div className='sticky top-0 flex h-full flex-col gap-8 py-4'>
       <div className='flex flex-col items-center gap-1'>
         <Image
           src={breezyHavenLogo}
@@ -42,18 +42,20 @@ export function SideNavigation() {
       </div>
       <ul className='px-4'>
         <nav className='flex flex-col gap-6'>
-          {Object.values(ROUTES.staff.nested).map(route => (
-            <li key={route.href}>
-              <NavItem
-                href={route.href}
-                icon={Icons[route.metadata.title]}
-                title={route.metadata.title}
-                isSelected={
-                  currentSegment === route.metadata.title.toLowerCase().trim()
-                }
-              />
-            </li>
-          ))}
+          {Object.values(ROUTES.staff.nested).map(route =>
+            !route.href.includes('profile') ? (
+              <li key={route.href}>
+                <NavItem
+                  href={route.href}
+                  icon={Icons[route.metadata.title]}
+                  title={route.metadata.title}
+                  isSelected={
+                    currentSegment === route.metadata.title.toLowerCase().trim()
+                  }
+                />
+              </li>
+            ) : null
+          )}
         </nav>
       </ul>
     </div>
