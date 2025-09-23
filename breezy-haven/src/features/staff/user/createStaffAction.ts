@@ -43,6 +43,17 @@ export async function createStaffAction(
   if (parsed.type === 'error') return parsed.payload;
   const credential = parsed.payload;
 
+  const doesEmailExistResult = await getDoesEmailExistAsync(credential.email);
+  if (doesEmailExistResult.type === 'error')
+    return createErrorResponse(credential, {
+      unexpected: 'Something is wrong, please try again!',
+    });
+
+  if (doesEmailExistResult.payload)
+    return createErrorResponse(credential, {
+      email: ['This email address is already in use'],
+    });
+
   const uniqueAvatarName = `${credential.avatar.name}-${crypto.randomUUID()}`;
   const uploadResult = await fileService.uploadAsync(
     credential.avatar,
@@ -78,6 +89,28 @@ export async function createStaffAction(
     userEntered: null,
     errors: null,
     isSuccess: true,
+  };
+}
+
+async function getDoesEmailExistAsync(
+  email: string
+): Promise<Result<boolean, undefined>> {
+  const { data, errors } = await staffService.getByEmail(email);
+
+  if (data)
+    return {
+      type: 'success',
+      payload: true,
+    };
+
+  if (errors && errors.type === 'database' && errors.db.code === 'PGRST116')
+    return {
+      type: 'success',
+      payload: false,
+    };
+  return {
+    type: 'error',
+    payload: undefined,
   };
 }
 

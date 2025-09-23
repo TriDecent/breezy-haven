@@ -1,7 +1,7 @@
 'use client';
 import { SignupForm } from '@/shared/components/auth';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import GoogleLogin from './GoogleLogin';
 import { LoginCard } from './LoginCard';
@@ -55,6 +55,17 @@ import {
 import { ArrowLeft, UserPen } from 'lucide-react';
 
 export function SignupCard({ onGoBackAction }: { onGoBackAction: () => void }) {
+  const handleSignupSuccess = useCallback(
+    () => toast.success('Sign up successfully'),
+    []
+  );
+  const handleSignupFailed = useCallback(
+    () =>
+      //  TODO: change this after implementation
+      toast.error("This feature isn't available yet. Please check back later"),
+    []
+  );
+
   return (
     <Card className='mx-auto max-w-5xl'>
       <CardHeader>
@@ -72,13 +83,8 @@ export function SignupCard({ onGoBackAction }: { onGoBackAction: () => void }) {
           action={signupAction}
           initialState={{ userEntered: null, errors: null }}
           signUpText={'Sign up'}
-          onSignupSuccessAction={() => toast.success('Sign up successfully')}
-          onSignupFailedAction={() =>
-            //  TODO: change this if after implement
-            toast.error(
-              "This feature isn't available yet. Please check back later"
-            )
-          }
+          onSignupSuccessAction={handleSignupSuccess}
+          onSignupFailedAction={handleSignupFailed}
         />
       </CardContent>
     </Card>
