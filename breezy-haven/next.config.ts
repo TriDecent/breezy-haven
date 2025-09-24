@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
         'https://aljspbbvlhvassukqbyt.supabase.co/storage/v1/object/public/cabin-images/**'
       ),
       new URL('https://lh3.googleusercontent.com/**'),
+      new URL(
+        'https://aljspbbvlhvassukqbyt.supabase.co/storage/v1/object/public/avatars/**'
+      ),
     ],
   },
   // output: 'export',

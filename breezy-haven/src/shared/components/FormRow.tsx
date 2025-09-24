@@ -55,7 +55,7 @@ function InputField({
         id={id}
         name={name}
         {...props}
-        className={cn('flex-2', className)}
+        className={cn('flex-2 read-only:cursor-not-allowed', className)}
       />
       {error ? (
         <p className='flex-1 text-red-500 first-letter:capitalize'>{error}</p>
@@ -88,7 +88,7 @@ function TextareaField({
       <Textarea
         id={id}
         name={name}
-        className={cn('flex-2', className)}
+        className={cn('flex-2 read-only:cursor-not-allowed', className)}
         {...props}
       />
       {error ? (

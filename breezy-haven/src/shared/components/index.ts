@@ -4,6 +4,7 @@ export * from './DataTable';
 export { default as DataTable } from './DataTable';
 export { default as DateSelector } from './DateSelector';
 export { default as Error } from './Error';
+export { Form } from './Form';
 export { FormRow } from './FormRow';
 export { default as Logo } from './Logo';
 export { default as MiniSidebar } from './MiniSidebar';
@@ -23,8 +24,8 @@ export { default as Textarea } from './Textarea';
 export { default as TextExpander } from './TextExpander';
 export { default as ThemeToggle } from './ThemeToggle';
 
-export * from './ui/avatar';
 export * from './ui/alert-dialog';
+export * from './ui/avatar';
 export * from './ui/button';
 export * from './ui/calendar';
 export * from './ui/card';
