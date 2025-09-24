@@ -66,10 +66,10 @@ const useForm = <T extends FormResponse>(
   useEffect(() => {
     if (!state.isSuccess) return;
     onFormSuccess();
-  }, [onFormSuccess, state.isSuccess]);
+  }, [onFormSuccess, state]);
 
   useEffect(() => {
     if (!state.errors) return;
     onFormFail();
-  }, [onFormFail, state.errors]);
+  }, [onFormFail, state]);
 };

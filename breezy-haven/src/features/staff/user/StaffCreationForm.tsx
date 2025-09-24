@@ -57,7 +57,7 @@ export function StaffCreationForm() {
           labelText='Avatar'
           kind='input'
           type='file'
-          readOnly={isPending}
+          disabled={isPending}
           labelClassname='min-w-36'
           accept='.png, .jpg, .jpeg'
           error={state.errors?.avatar?.[0]}

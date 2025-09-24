@@ -44,7 +44,7 @@ export function SignupForm<TResponse extends SignupResponse>({
         labelText='Full name'
         kind='input'
         type='text'
-        readOnly={isPending}
+        disabled={isPending}
         autoComplete='name webauthn'
         labelClassname='min-w-36'
         defaultValue={state.userEntered?.fullName}
@@ -56,7 +56,7 @@ export function SignupForm<TResponse extends SignupResponse>({
         labelText='Email'
         kind='input'
         type='email'
-        readOnly={isPending}
+        disabled={isPending}
         autoComplete='email webauthn'
         labelClassname='min-w-36'
         defaultValue={state.userEntered?.email}
@@ -68,7 +68,7 @@ export function SignupForm<TResponse extends SignupResponse>({
         labelText='Password'
         kind='input'
         type='password'
-        readOnly={isPending}
+        disabled={isPending}
         autoComplete='new-password webauthn'
         labelClassname='min-w-36'
         defaultValue={state.userEntered?.password}
@@ -80,7 +80,7 @@ export function SignupForm<TResponse extends SignupResponse>({
         labelText='Repeat password'
         kind='input'
         type='password'
-        readOnly={isPending}
+        disabled={isPending}
         labelClassname='min-w-36'
         defaultValue={state.userEntered?.confirmedPassword}
         error={state.errors?.confirmedPassword?.[0]}

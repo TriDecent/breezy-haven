@@ -43,7 +43,7 @@ export function LoginForm() {
           placeholder='m@example.com'
           autoComplete='email webauthn'
           defaultValue={state.userEntered?.email}
-          readOnly={isPending}
+          disabled={isPending}
         />
         {state.errors?.email ? (
           <p className='text-red-500'>{state.errors.email}</p>
@@ -55,7 +55,7 @@ export function LoginForm() {
           id='password'
           type='password'
           name='password'
-          readOnly={isPending}
+          disabled={isPending}
         />
         {state.errors?.password ? (
           <p className='text-red-500'>
