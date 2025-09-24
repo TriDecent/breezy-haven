@@ -25,7 +25,7 @@ export function ProfileForm({ defaultProfile }: ProfileFormProps) {
   );
 
   const handleFormError = useCallback(
-    () => toast.success('Update profile failed'),
+    () => toast.error('Update profile failed'),
     []
   );
 
@@ -110,7 +110,11 @@ export function ProfileForm({ defaultProfile }: ProfileFormProps) {
           </div>
         </>
       )}
-      renderUnexpectedErrors={() => <></>}
+      renderUnexpectedErrors={state =>
+        state.errors?.unexpected ? (
+          <p className='text-red-500'>{state.errors.unexpected}</p>
+        ) : null
+      }
     />
   );
 }

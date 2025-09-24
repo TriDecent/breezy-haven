@@ -1,6 +1,6 @@
 'use client';
 import NextForm from 'next/form';
-import { useActionState, useEffect, type JSX, type ReactNode } from 'react';
+import { useActionState, useEffect, type ReactNode } from 'react';
 import type { ActionResponse } from '../actions';
 import { Button } from './ui/button';
 import { CardAction } from './ui/card';
@@ -8,8 +8,8 @@ import { CardAction } from './ui/card';
 interface FormProps<T> {
   readonly action: (state: T, formData: FormData) => Promise<T>;
   readonly initialState: Awaited<T>;
-  readonly renderFields: (state: Awaited<T>, isPending: boolean) => JSX.Element;
-  readonly renderUnexpectedErrors: (state: Awaited<T>) => JSX.Element;
+  readonly renderFields: (state: Awaited<T>, isPending: boolean) => ReactNode;
+  readonly renderUnexpectedErrors: (state: Awaited<T>) => ReactNode;
   readonly onFormSuccess: () => void;
   readonly onFormError: () => void;
 
