@@ -25,12 +25,12 @@ const ImageValidator = z
 
 type SafeProfileInput = z.infer<typeof UpdateProfileSchema>;
 type PartialProfileInput = Partial<SafeProfileInput>;
-type CreateStaffError = Partial<
+type UpdateProfileError = Partial<
   Record<keyof SafeProfileInput, string[]> & { unexpected?: string }
 >;
 export type UpdateProfileResponse = ActionResponse<
   PartialProfileInput,
-  CreateStaffError
+  UpdateProfileError
 >;
 
 const bucketId = 'avatars';
@@ -189,7 +189,7 @@ async function setTokensAsync(tokens: {
 
 function createErrorResponse(
   input: SafeProfileInput,
-  errors: CreateStaffError
+  errors: UpdateProfileError
 ): UpdateProfileResponse {
   return {
     userEntered: { ...input, avatar: undefined },

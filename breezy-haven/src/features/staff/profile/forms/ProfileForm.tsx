@@ -4,7 +4,10 @@ import { Save } from 'lucide-react';
 import Image from 'next/image';
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
-import { updateProfileAction } from '../actions/updateProfileAction';
+import {
+  updateProfileAction,
+  type UpdateProfileResponse,
+} from '../actions/updateProfileAction';
 
 interface ProfileFormProps {
   readonly defaultProfile: Readonly<{
@@ -50,6 +53,71 @@ export function ProfileForm({ defaultProfile }: ProfileFormProps) {
     },
     []
   );
+
+  const handleRenderFields = useCallback(
+    (state: UpdateProfileResponse, isPending: boolean) => (
+      <>
+        <FormRow
+          kind='input'
+          id='email'
+          name='email'
+          labelText='Email'
+          autoComplete='none'
+          labelClassname='min-w-20'
+          defaultValue={defaultProfile.email}
+          readOnly
+        />
+
+        <FormRow
+          kind='input'
+          id='fullName'
+          name='fullName'
+          labelText='Full name'
+          labelClassname='min-w-20'
+          defaultValue={state.userEntered?.fullName ?? defaultProfile.fullName}
+          error={state.errors?.fullName?.[0]}
+          disabled={isPending}
+        />
+
+        <FormRow
+          kind='input'
+          type='file'
+          accept='.png, .jpg, .jpeg'
+          id='avatar'
+          name='avatar'
+          labelText='Avatar'
+          labelClassname='min-w-20'
+          error={state.errors?.avatar?.[0]}
+          disabled={isPending}
+          onChange={handleFileChange}
+        />
+
+        <div className='relative aspect-video overflow-hidden rounded-lg md:min-w-2xs md:self-end'>
+          <Image
+            src={previewImgUrl}
+            alt='staff avatar'
+            fill
+            className='mask-y-from-95% mask-x-from-80% object-cover'
+          />
+        </div>
+      </>
+    ),
+    [
+      defaultProfile.email,
+      defaultProfile.fullName,
+      handleFileChange,
+      previewImgUrl,
+    ]
+  );
+
+  const handleRenderUnexpectedErrors = useCallback(
+    (state: UpdateProfileResponse) =>
+      state.errors?.unexpected ? (
+        <p className='text-red-500'>{state.errors.unexpected}</p>
+      ) : null,
+    []
+  );
+
   return (
     <Form
       action={updateProfileAction}
@@ -61,60 +129,8 @@ export function ProfileForm({ defaultProfile }: ProfileFormProps) {
           <Save /> Save changes
         </>
       }
-      renderFields={(state, isPending) => (
-        <>
-          <FormRow
-            kind='input'
-            id='email'
-            name='email'
-            labelText='Email'
-            autoComplete='none'
-            labelClassname='min-w-20'
-            defaultValue={defaultProfile.email}
-            readOnly
-          />
-
-          <FormRow
-            kind='input'
-            id='fullName'
-            name='fullName'
-            labelText='Full name'
-            labelClassname='min-w-20'
-            defaultValue={
-              state.userEntered?.fullName ?? defaultProfile.fullName
-            }
-            error={state.errors?.fullName?.[0]}
-            readOnly={isPending}
-          />
-
-          <FormRow
-            kind='input'
-            type='file'
-            accept='.png, .jpg, .jpeg'
-            id='avatar'
-            name='avatar'
-            labelText='Avatar'
-            labelClassname='min-w-20'
-            error={state.errors?.avatar?.[0]}
-            readOnly={isPending}
-            onChange={handleFileChange}
-          />
-
-          <div className='relative aspect-video overflow-hidden rounded-lg md:min-w-2xs md:self-end'>
-            <Image
-              src={previewImgUrl}
-              alt='staff avatar'
-              fill
-              className='mask-y-from-95% mask-x-from-80% object-cover'
-            />
-          </div>
-        </>
-      )}
-      renderUnexpectedErrors={state =>
-        state.errors?.unexpected ? (
-          <p className='text-red-500'>{state.errors.unexpected}</p>
-        ) : null
-      }
+      renderFields={handleRenderFields}
+      renderUnexpectedErrors={handleRenderUnexpectedErrors}
     />
   );
 }
