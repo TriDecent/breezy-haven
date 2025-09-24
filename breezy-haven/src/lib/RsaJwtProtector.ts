@@ -14,8 +14,14 @@ export class RsaJwtProtector<PayloadT extends JWTPayload>
     private readonly _cipher: IRsaJwtCipher<{ token: string }>
   ) {}
 
-  async createTokensAsync(payload: PayloadT): Promise<TokenPair> {
-    const tokenPair = await this._authenticator.createTokensAsync(payload);
+  async createTokensAsync(
+    payload: PayloadT,
+    absoluteExp?: number
+  ): Promise<TokenPair> {
+    const tokenPair = await this._authenticator.createTokensAsync(
+      payload,
+      absoluteExp
+    );
     return {
       accessToken: await this._cipher.encryptAsync({
         token: tokenPair.accessToken,

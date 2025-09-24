@@ -43,7 +43,7 @@ export async function loginAction(
     return createUnexpectedResponse(safeInput);
 
   const tokens = await Auth.staff.session.createTokensAsync({
-    userId: data.email,
+    userId: data.id.toString(),
     email: data.email,
     avatarUrl: data.avatarUrl,
     fullName: data.fullName,

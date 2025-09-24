@@ -19,7 +19,7 @@ export interface RefreshTokenPayload extends JWTPayload {
 }
 
 export interface IRsaJwtAuthenticator<AccessT> {
-  createTokensAsync(payload: AccessT): Promise<TokenPair>;
+  createTokensAsync(payload: AccessT, absoluteExp?: number): Promise<TokenPair>;
   verifyAccessTokenAsync(token: TokenPair['accessToken']): Promise<AccessT>;
   verifyRefreshTokenAsync(
     token: TokenPair['refreshToken']
@@ -52,7 +52,10 @@ export class RsaJwtAuthenticator<AccessT extends AccessTokenPayload>
     private readonly _accessSchema: z.ZodType<AccessT>
   ) {}
 
-  async createTokensAsync(payload: AccessT): Promise<TokenPair> {
+  async createTokensAsync(
+    payload: AccessT,
+    absoluteExp?: number
+  ): Promise<TokenPair> {
     const tokenId = crypto.randomUUID();
 
     await this._refreshTokenRepo.addAsync(tokenId);
@@ -62,7 +65,7 @@ export class RsaJwtAuthenticator<AccessT extends AccessTokenPayload>
       this.createRefreshTokenAsync({
         userId: payload.userId,
         refreshTokenId: tokenId,
-        absoluteExp: Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60,
+        absoluteExp: absoluteExp ?? Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60,
       }),
     ]);
 

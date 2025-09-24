@@ -159,8 +159,8 @@ export const refreshAccessTokenAsync = cache(async () => {
 
   const refreshPayload = await verifyRefreshTokenAsync();
   if (!refreshPayload) return null;
-  const { data, errors } = await unauthStaffService.getByEmail(
-    refreshPayload.userId
+  const { data, errors } = await unauthStaffService.getById(
+    Number(refreshPayload.userId)
   );
   if (errors) return null;
 
@@ -168,7 +168,7 @@ export const refreshAccessTokenAsync = cache(async () => {
     return await (
       await getJwtManagerAsync()
     ).refreshAccessTokenAsync(refreshToken, {
-      userId: data.email,
+      userId: data.id.toString(),
       ...data,
     });
   } catch (e: unknown) {
@@ -229,8 +229,8 @@ export const refreshAccessTokenAsyncFromRequest = cache(
     const refreshPayload = await verifyRefreshTokenAsyncFromRequest(request);
     if (!refreshPayload) return null;
 
-    const { data, errors } = await unauthStaffService.getByEmail(
-      refreshPayload.userId
+    const { data, errors } = await unauthStaffService.getById(
+      Number(refreshPayload.userId)
     );
 
     if (errors) return null;
@@ -239,7 +239,7 @@ export const refreshAccessTokenAsyncFromRequest = cache(
       return await (
         await getJwtManagerAsync()
       ).refreshAccessTokenAsync(refreshToken, {
-        userId: data.email,
+        userId: data.id.toString(),
         ...data,
       });
     } catch (e: unknown) {
@@ -249,14 +249,18 @@ export const refreshAccessTokenAsyncFromRequest = cache(
   }
 );
 
-export const createTokensAsync = cache(async (payload: UserPayload) => {
-  try {
-    return await (await getJwtManagerAsync()).createTokensAsync(payload);
-  } catch (e: unknown) {
-    console.log(e);
-    return null;
+export const createTokensAsync = cache(
+  async (payload: UserPayload, absoluteExp?: number) => {
+    try {
+      return await (
+        await getJwtManagerAsync()
+      ).createTokensAsync(payload, absoluteExp);
+    } catch (e: unknown) {
+      console.log(e);
+      return null;
+    }
   }
-});
+);
 
 export const ensureStaffIsAuthenticatedFromRequestAsync = cache(
   async (request: NextRequest): Promise<NextResponse> => {
