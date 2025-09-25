@@ -1,6 +1,6 @@
 'use client';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components';
-import { useGetStaffAuthQuery } from '@/shared/store/authApi';
+import { useGetStaffAuthQuery } from '@/shared/store';
 
 export function StaffBadge() {
   const { isLoading, isError, data } = useGetStaffAuthQuery();

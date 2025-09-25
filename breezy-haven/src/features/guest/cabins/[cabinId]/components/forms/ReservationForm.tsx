@@ -16,7 +16,11 @@ import {
 } from '@/shared/components';
 import { ROUTES } from '@/shared/constants';
 import type { Cabin } from '@/shared/schemas';
-import { uiActions, useGetAuthQuery, type RootState } from '@/shared/store';
+import {
+  uiActions,
+  useGetGuestAuthQuery,
+  type RootState,
+} from '@/shared/store';
 import { dateHelper } from '@/shared/utils';
 import { parseISO } from 'date-fns';
 import { useActionState, useEffect, useState } from 'react';
@@ -136,7 +140,7 @@ function GuestCountSelect({ maxCapacity }: { maxCapacity: number }) {
 }
 
 function ActionConfirm({ isProcessing }: { isProcessing: boolean }) {
-  const { data } = useGetAuthQuery();
+  const { data } = useGetGuestAuthQuery();
   const [isMounted, setIsMounted] = useState<boolean>(false);
   useEffect(() => setIsMounted(true), []);
 
@@ -188,7 +192,7 @@ function ObservationsInput({
 
 function Status() {
   const [isMounted, setIsMounted] = useState<boolean>(false);
-  const { data, isFetching } = useGetAuthQuery();
+  const { data, isFetching } = useGetGuestAuthQuery();
   useEffect(() => setIsMounted(true), []);
 
   return (
