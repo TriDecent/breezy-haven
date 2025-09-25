@@ -94,16 +94,17 @@ export default async function Page() {
 }
 
 async function BreezyHavenIntroduction() {
-  const { count, error } = await unauthCabinService.getCount();
+  const getCountResult = await unauthCabinService.getCount();
 
-  if (error) throw new Error(error.message);
+  if (getCountResult.type === 'error')
+    throw new Error(getCountResult.payload.message);
 
   return (
     <p>
-      Our collection of {count} premium cabins offers a cozy home base, but the
-      true magic lies in the surrounding wilderness. Wander through lush
-      forests, breathe in crisp mountain air, and gaze at the stars from beside
-      a crackling fire or your private hot tub.
+      Our collection of {getCountResult.payload} premium cabins offers a cozy
+      home base, but the true magic lies in the surrounding wilderness. Wander
+      through lush forests, breathe in crisp mountain air, and gaze at the stars
+      from beside a crackling fire or your private hot tub.
     </p>
   );
 }

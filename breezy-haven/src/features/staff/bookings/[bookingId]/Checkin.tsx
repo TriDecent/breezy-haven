@@ -11,7 +11,7 @@ import {
 import { toast } from 'sonner';
 
 import { Button, Checkbox } from '@/shared/components';
-import { priceFormatter } from '@/shared/utils';
+import { formatter } from '@/shared/utils';
 import { checkinAction } from './checkinAction';
 import { BookingContext } from './context/BookingContext';
 
@@ -60,7 +60,7 @@ export function Checkin() {
           Do you want to add breakfast for
         </span>
         <span className='text-emerald-500'>
-          ${priceFormatter.format(booking.setting.breakfastPrice)}
+          ${formatter.formatPrice(booking.setting.breakfastPrice)}
         </span>
       </Confirmation>
 
@@ -83,18 +83,18 @@ export function Checkin() {
           {shouldAddBreakfast ? (
             <span>
               $
-              {priceFormatter.format(
+              {formatter.formatPrice(
                 booking.totalPrice +
                   booking.numNights * booking.setting.breakfastPrice
               )}{' '}
               <span className='text-muted-foreground'>
-                (${priceFormatter.format(booking.totalPrice)} + $
-                {priceFormatter.format(booking.setting.breakfastPrice)} x{' '}
+                (${formatter.formatPrice(booking.totalPrice)} + $
+                {formatter.formatPrice(booking.setting.breakfastPrice)} x{' '}
                 {booking.numNights} day{booking.numNights > 1 ? 's' : ''})
               </span>
             </span>
           ) : (
-            `$${priceFormatter.format(booking.totalPrice)}`
+            `$${formatter.formatPrice(booking.totalPrice)}`
           )}
         </span>
       </Confirmation>

@@ -2,6 +2,7 @@ import { supabase } from '@/lib/supabase';
 import { DTOCabin } from '@/repositories';
 
 import type { Cabin, NullableCabin } from '@/shared/schemas';
+import type { Result } from '@/shared/types';
 import { PostgrestError } from '@supabase/supabase-js';
 import { cache } from 'react';
 import { IService } from './BaseService';
@@ -42,16 +43,15 @@ export default class CabinService<T extends Cabin | NullableCabin>
     return this._service.delete(id);
   }
 
-  async getCount(): Promise<{
-    count: number | null;
-    error: PostgrestError | null;
-  }> {
+  async getCount(): Promise<Result<number, PostgrestError>> {
     await this._service.verifyPermission();
 
     const { count, error } = await supabase
       .from('cabins')
       .select('*', { count: 'exact', head: true });
 
-    return { count: count, error };
+    if (error) return { type: 'error', payload: error };
+
+    return { type: 'success', payload: count ?? 0 };
   }
 }
