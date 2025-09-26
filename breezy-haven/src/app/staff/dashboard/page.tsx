@@ -1,9 +1,17 @@
 import {
   bookingTimeFrames,
   QuerySchema,
+  Sales,
   StatsWrapper,
 } from '@/features/staff/dashboard';
-import { QueryButton, Spinner } from '@/shared/components';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  QueryButton,
+  Spinner,
+} from '@/shared/components';
 import { ROUTES } from '@/shared/constants';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
@@ -39,6 +47,18 @@ export default async function DashboardPage({
 
       <Suspense fallback={<Spinner />} key={query}>
         <StatsWrapper query={query} />
+      </Suspense>
+
+      <Suspense fallback={<Spinner />}>
+        <Card>
+          <CardHeader>
+            <CardTitle>Sales</CardTitle>
+          </CardHeader>
+
+          <CardContent className='px-4'>
+            <Sales query={query}/>
+          </CardContent>
+        </Card>
       </Suspense>
     </section>
   );
