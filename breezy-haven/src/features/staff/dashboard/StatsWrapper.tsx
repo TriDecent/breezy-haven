@@ -21,7 +21,7 @@ export async function StatsWrapper({ query }: { query: Query }) {
   if (cabinCountResult.type === 'error')
     throw new Error('Failed to fetch cabin count. Please try again!');
 
-  const days = Number(query);
+  const days = query;
   const startDate = subDays(new Date(), days);
 
   const queryBookings = bookings.filter(booking =>
@@ -51,7 +51,7 @@ export async function StatsWrapper({ query }: { query: Query }) {
   return (
     <Stats
       bookingCount={bookingCount.toString()}
-      sales={`$${formatter.formatPrice(sales)}`}
+      sales={`${formatter.formatPrice(sales)}`}
       checkinCount={checkinCount.toString()}
       occupancyRate={`${formatter.formatNumber(occupancyRate * 100)}%`}
     />

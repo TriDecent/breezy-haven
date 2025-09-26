@@ -1,9 +1,9 @@
 class Formatter {
   formatPrice(price: number): string {
-    return price.toLocaleString('en-US', {
+    return `$${price.toLocaleString('en-US', {
       maximumFractionDigits: 2,
       minimumFractionDigits: 2,
-    });
+    })}`;
   }
 
   formatNumber(num: number): string {

@@ -60,7 +60,7 @@ export function Checkin() {
           Do you want to add breakfast for
         </span>
         <span className='text-emerald-500'>
-          ${formatter.formatPrice(booking.setting.breakfastPrice)}
+          {formatter.formatPrice(booking.setting.breakfastPrice)}
         </span>
       </Confirmation>
 
@@ -82,19 +82,18 @@ export function Checkin() {
         <span className='text-emerald-500'>
           {shouldAddBreakfast ? (
             <span>
-              $
               {formatter.formatPrice(
                 booking.totalPrice +
                   booking.numNights * booking.setting.breakfastPrice
               )}{' '}
               <span className='text-muted-foreground'>
-                (${formatter.formatPrice(booking.totalPrice)} + $
+                ({formatter.formatPrice(booking.totalPrice)} +
                 {formatter.formatPrice(booking.setting.breakfastPrice)} x{' '}
                 {booking.numNights} day{booking.numNights > 1 ? 's' : ''})
               </span>
             </span>
           ) : (
-            `$${formatter.formatPrice(booking.totalPrice)}`
+            `${formatter.formatPrice(booking.totalPrice)}`
           )}
         </span>
       </Confirmation>

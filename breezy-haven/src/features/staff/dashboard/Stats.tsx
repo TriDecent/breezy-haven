@@ -35,14 +35,13 @@ export function Stats({
   return (
     <ul className='grid grid-cols-1 justify-items-center gap-8 md:grid-cols-2 md:gap-x-6 md:gap-y-12 lg:grid-cols-3 xl:grid-cols-4'>
       {Array.from(STATS).map(([key, stat]) => (
-        <li key={key} className='md:w-full'>
+        <li key={key} className='w-full'>
           <StatCard
             key={key}
             variant={stat.variant}
             icon={stat.icon}
             label={stat.label}
             value={stat.value}
-            className='min-w-80 md:min-w-0'
           />
         </li>
       ))}
