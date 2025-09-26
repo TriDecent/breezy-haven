@@ -1,17 +1,9 @@
 import {
+  BookingQuerySchema,
   bookingTimeFrames,
-  QuerySchema,
-  Sales,
-  StatsWrapper,
+  DataOverview,
 } from '@/features/staff/dashboard';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  QueryButton,
-  Spinner,
-} from '@/shared/components';
+import { QueryButton, Spinner } from '@/shared/components';
 import { ROUTES } from '@/shared/constants';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
@@ -23,7 +15,7 @@ export default async function DashboardPage({
 }: {
   searchParams: Promise<unknown>;
 }) {
-  const parsed = QuerySchema.safeParse(await searchParams);
+  const parsed = BookingQuerySchema.safeParse(await searchParams);
   let query = 7;
   if (parsed.success) query = parsed.data.last;
 
@@ -45,20 +37,8 @@ export default async function DashboardPage({
         ))}
       </div>
 
-      <Suspense fallback={<Spinner />} key={query}>
-        <StatsWrapper query={query} />
-      </Suspense>
-
       <Suspense fallback={<Spinner />}>
-        <Card>
-          <CardHeader>
-            <CardTitle>Sales</CardTitle>
-          </CardHeader>
-
-          <CardContent className='px-4'>
-            <Sales query={query}/>
-          </CardContent>
-        </Card>
+        <DataOverview queryDays={query} />
       </Suspense>
     </section>
   );
