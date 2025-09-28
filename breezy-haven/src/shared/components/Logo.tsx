@@ -2,6 +2,7 @@ import breezyHavenLogo from '@/../public/logo.png';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ROUTES } from '../constants/ROUTES';
+import { Shimmer } from './Shimmer';
 
 export default function Logo() {
   return (
@@ -13,9 +14,9 @@ export default function Logo() {
         alt='The Breezy Haven logo'
         priority
       />
-      <span className='text-primary-100 hidden text-xl font-semibold md:block'>
+      <Shimmer className='hidden text-xl font-semibold md:block'>
         The Breezy Haven
-      </span>
+      </Shimmer>
     </Link>
   );
 }

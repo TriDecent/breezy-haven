@@ -19,6 +19,7 @@ export { default as PreviewImage } from './PreviewImage';
 export { default as PrimaryButton } from './PrimaryButton';
 export { QueryButton } from './QueryButton';
 export { ScrollTo } from './ScrollTo';
+export { Shimmer } from './Shimmer';
 export { default as Spinner } from './Spinner';
 export { default as Textarea } from './Textarea';
 export { default as TextExpander } from './TextExpander';

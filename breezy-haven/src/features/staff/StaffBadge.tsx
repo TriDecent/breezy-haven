@@ -7,7 +7,7 @@ export function StaffBadge() {
 
   return (
     <div
-      className={`from-accent-100 via-primary-200 flex items-center gap-2 rounded-full bg-gradient-to-tr to-indigo-400 px-4 py-1 shadow-md md:py-2 ${isLoading || isError ? 'animate-pulse' : ''}`}
+      className={`from-accent-100 via-primary-200 flex items-center gap-2 rounded-full bg-gradient-to-tr to-indigo-400 px-4 py-1 shadow-md shadow-indigo-400 select-none md:py-2 ${isLoading || isError ? 'animate-pulse' : ''}`}
     >
       <Avatar>
         <AvatarImage

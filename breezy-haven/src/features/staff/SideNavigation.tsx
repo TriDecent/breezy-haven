@@ -8,6 +8,7 @@ import {
   UserIcon,
 } from '@heroicons/react/24/solid';
 
+import { Shimmer } from '@/shared/components';
 import { ROUTES } from '@/shared/constants';
 import { SettingsIcon } from 'lucide-react';
 import Image from 'next/image';
@@ -30,7 +31,7 @@ export function SideNavigation() {
 
   return (
     <div className='sticky top-0 flex h-full flex-col gap-8 py-4'>
-      <div className='flex flex-col items-center gap-1'>
+      <div className='flex flex-col items-center gap-4'>
         <Image
           src={breezyHavenLogo}
           width={69}
@@ -38,7 +39,9 @@ export function SideNavigation() {
           alt='The Breezy Haven logo'
           priority
         />
-        <p>The Breezy Haven</p>
+        <p>
+          <Shimmer className='text-xl'>The Breezy Haven</Shimmer>
+        </p>
       </div>
       <ul className='px-4'>
         <nav className='flex flex-col gap-6'>
