@@ -1,5 +1,11 @@
 import { staffBookingService, staffCabinService } from '@/services';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/shared/components';
 import { errorHelper, formatter } from '@/shared/utils';
 import { format, isWithinInterval, parseISO, subDays } from 'date-fns';
 
@@ -7,6 +13,7 @@ import type { Booking } from '@/shared/schemas';
 import type { BookingQuery } from './BookingQuerySchema';
 import { SalesChart, type Sale } from './SalesChart';
 import { Stats } from './Stats';
+import { StayDurationChart, type StayDurationPie } from './StayDurationChart';
 
 export async function DataOverview({ queryDays }: { queryDays: BookingQuery }) {
   const [{ data: bookings, errors: bookingErrors }, cabinCountResult] =
@@ -29,28 +36,112 @@ export async function DataOverview({ queryDays }: { queryDays: BookingQuery }) {
   );
 
   return (
-    <>
+    <div className='space-y-16'>
       <StatsSection
-        booking={filteredBookings}
+        bookings={filteredBookings}
         cabinCount={cabinCountResult.payload}
         days={queryDays}
       />
 
+      <StayDurationSection bookings={filteredBookings} />
+
       <SalesSection bookings={filteredBookings} />
-    </>
+    </div>
   );
 }
 
+function StayDurationSection({ bookings }: { bookings: readonly Booking[] }) {
+  const pieData = new Map<StayDurationPie['name'], number>();
+
+  for (const booking of bookings) {
+    switch (getStayDurationGroup(booking.numNights)) {
+      case 'oneNight':
+        pieData.set('oneNight', (pieData.get('oneNight') ?? 0) + 1);
+        break;
+      case 'twoNight':
+        pieData.set('twoNight', (pieData.get('twoNight') ?? 0) + 1);
+        break;
+      case 'threeNight':
+        pieData.set('threeNight', (pieData.get('threeNight') ?? 0) + 1);
+        break;
+      case 'fourToFiveNight':
+        pieData.set(
+          'fourToFiveNight',
+          (pieData.get('fourToFiveNight') ?? 0) + 1
+        );
+        break;
+      case 'sixToSevenNight':
+        pieData.set(
+          'sixToSevenNight',
+          (pieData.get('sixToSevenNight') ?? 0) + 1
+        );
+        break;
+      case 'eightToFourteenNight':
+        pieData.set(
+          'eightToFourteenNight',
+          (pieData.get('eightToFourteenNight') ?? 0) + 1
+        );
+        break;
+      case 'fifteenToTwentyOneNight':
+        pieData.set(
+          'fifteenToTwentyOneNight',
+          (pieData.get('fifteenToTwentyOneNight') ?? 0) + 1
+        );
+        break;
+      case 'aboveTwentyOneNight':
+        pieData.set(
+          'aboveTwentyOneNight',
+          (pieData.get('aboveTwentyOneNight') ?? 0) + 1
+        );
+        break;
+    }
+  }
+
+  return (
+    <Card className='lg:w-2/3 ml-auto'>
+      <CardHeader>
+        <CardTitle className='text-muted-foreground font-bold tracking-wider'>
+          Stay Duration
+        </CardTitle>
+        <CardDescription>
+          Distribution of bookings by stay duration (number of nights).
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <StayDurationChart
+          pieData={[
+            ...pieData.entries().map(([name, value]) => ({
+              name,
+              value,
+            })),
+          ]}
+        />
+      </CardContent>
+    </Card>
+  );
+}
+
+function getStayDurationGroup(numNights: number): StayDurationPie['name'] {
+  if (numNights === 1) return 'oneNight';
+  if (numNights === 2) return 'twoNight';
+  if (numNights === 3) return 'threeNight';
+  if (numNights >= 4 && numNights <= 5) return 'fourToFiveNight';
+  if (numNights >= 6 && numNights <= 7) return 'sixToSevenNight';
+  if (numNights >= 8 && numNights <= 14) return 'eightToFourteenNight';
+  if (numNights >= 15 && numNights <= 21) return 'fifteenToTwentyOneNight';
+  return 'aboveTwentyOneNight';
+}
+
 function StatsSection({
-  booking,
+  bookings,
   cabinCount,
   days,
 }: {
-  booking: readonly Booking[];
+  bookings: readonly Booking[];
   cabinCount: number;
   days: number;
 }) {
-  const stats = booking.reduce(
+  const stats = bookings.reduce(
     (acc, cur) => {
       acc.totalBookings += 1;
       acc.totalSales += cur.totalPrice;
@@ -94,7 +185,12 @@ function SalesSection({ bookings }: { bookings: readonly Booking[] }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Sales</CardTitle>
+        <CardTitle className='text-muted-foreground font-bold tracking-wider'>
+          Sales{' '}
+          {bookings.length > 0
+            ? `from ${sales.at(0)?.date} — ${sales.at(-1)?.date}`
+            : null}
+        </CardTitle>
       </CardHeader>
 
       <CardContent className='px-4'>

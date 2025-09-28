@@ -33,7 +33,7 @@ export function Stats({
   STATS.set('occupancy', { ...STATS.get('occupancy')!, value: occupancyRate });
 
   return (
-    <ul className='grid grid-cols-1 justify-items-center gap-8 md:grid-cols-2 md:gap-x-6 md:gap-y-12 lg:grid-cols-3 xl:grid-cols-4'>
+    <ul className='grid grid-cols-1 justify-items-center gap-8 md:grid-cols-2 md:gap-x-6 md:gap-y-8 lg:grid-cols-3 xl:grid-cols-4'>
       {Array.from(STATS).map(([key, stat]) => (
         <li key={key} className='w-full'>
           <StatCard

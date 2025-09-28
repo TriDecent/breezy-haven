@@ -1,13 +1,14 @@
 'use client';
 import {
   ChartContainer,
+  ChartLegend,
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
 } from '@/shared/components';
 import { formatter } from '@/shared/utils';
-import { Area, AreaChart, CartesianGrid, Legend, XAxis, YAxis } from 'recharts';
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 export type Sale = Readonly<{
   date: string;
@@ -30,7 +31,7 @@ export function SalesChart({ sales }: { sales: Sale[] }) {
   return sales.length === 0 ? (
     <p className='text-center'>No result</p>
   ) : (
-    <ChartContainer config={chartConfig}>
+    <ChartContainer config={chartConfig} className='min-h-36 w-full'>
       <AreaChart
         accessibilityLayer
         data={sales}
@@ -38,7 +39,6 @@ export function SalesChart({ sales }: { sales: Sale[] }) {
       >
         <CartesianGrid />
         <YAxis
-          name='Sales'
           tickMargin={10}
           tickLine={false}
           axisLine={false}
@@ -51,7 +51,7 @@ export function SalesChart({ sales }: { sales: Sale[] }) {
           axisLine={false}
         />
         <ChartTooltip content={<ChartTooltipContent />} />
-        <Legend content={<ChartLegendContent />} />
+        <ChartLegend content={<ChartLegendContent />} />
         <Area
           dataKey={'total'}
           color={chartConfig.total.color}
