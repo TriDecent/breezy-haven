@@ -53,10 +53,10 @@ export async function DataOverview({ queryDays }: { queryDays: BookingQuery }) {
       </AnimationWrapper>
 
       <div className='flex flex-col gap-x-8 gap-y-16 xl:flex-row'>
-        <AnimationWrapper>
+        <AnimationWrapper className='h-fit flex-1'>
           <TodayActivitySection bookings={filteredBookings} />
         </AnimationWrapper>
-        <AnimationWrapper>
+        <AnimationWrapper className='max-w-xl flex-1 lg:mb-auto lg:w-2/3 lg:self-end'>
           <StayDurationSection bookings={filteredBookings} />
         </AnimationWrapper>
       </div>
@@ -81,7 +81,7 @@ function TodayActivitySection({
   );
 
   return (
-    <Card className='h-fit flex-1'>
+    <Card>
       <CardHeader>
         <CardTitle className='text-muted-foreground font-bold tracking-wider'>
           Today&apos;s Activity
@@ -146,7 +146,7 @@ function StayDurationSection({ bookings }: { bookings: readonly Booking[] }) {
   }
 
   return (
-    <Card className='max-w-xl flex-1 lg:mb-auto lg:w-2/3 lg:self-end'>
+    <Card>
       <CardHeader>
         <CardTitle className='text-muted-foreground font-bold tracking-wider'>
           Stay Duration Summary

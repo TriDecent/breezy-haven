@@ -6,6 +6,7 @@ import {
 import {
   AlertDialog,
   AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -81,28 +82,19 @@ export function CheckInOutButton({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
           {mode === 'checkin' ? (
             <>
-              <AlertDialogAction asChild>
-                <Button
-                  variant='outline'
-                  onClick={() => handleAction(false)}
-                  className='text-white/75'
-                >
-                  No Breakfast
-                </Button>
+              <AlertDialogAction onClick={() => handleAction(false)}>
+                No Breakfast
               </AlertDialogAction>
-              <AlertDialogAction asChild>
-                <Button variant='default' onClick={() => handleAction(true)}>
-                  Add Breakfast
-                </Button>
+              <AlertDialogAction onClick={() => handleAction(true)}>
+                Add Breakfast
               </AlertDialogAction>
             </>
           ) : (
-            <AlertDialogAction asChild>
-              <Button onClick={() => handleAction(false)} variant='destructive'>
-                Confirm Checkout
-              </Button>
+            <AlertDialogAction onClick={() => handleAction(false)}>
+              Confirm Checkout
             </AlertDialogAction>
           )}
         </AlertDialogFooter>
