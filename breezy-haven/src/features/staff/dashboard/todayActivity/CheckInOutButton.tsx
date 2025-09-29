@@ -3,7 +3,17 @@ import {
   checkinAction,
   checkoutAction,
 } from '@/features/staff/bookings/[bookingId]';
-import { Button } from '@/shared/components';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+  Button,
+} from '@/shared/components';
 import type { Booking } from '@/shared/schemas';
 import { useCallback, useTransition, type ReactNode } from 'react';
 import { toast } from 'sonner';
@@ -24,7 +34,7 @@ export function CheckInOutButton({
   const [isPending, startTransition] = useTransition();
 
   const handleAction = useCallback(
-    () =>
+    (hasBreakFast: boolean) =>
       toast.warning('Confirm your action', {
         action: {
           label: 'Yes',
@@ -36,7 +46,7 @@ export function CheckInOutButton({
               // ? Normally, without `await`, `isPending` returns false immediately
               toast.promise(
                 mode === 'checkin'
-                  ? checkinAction(bookingId, false)
+                  ? checkinAction(bookingId, hasBreakFast)
                   : checkoutAction(bookingId),
                 {
                   loading: 'Processing...',
@@ -51,13 +61,52 @@ export function CheckInOutButton({
   );
 
   return (
-    <Button
-      onClick={handleAction}
-      disabled={isPending}
-      variant='gradient'
-      className={className}
-    >
-      {children}
-    </Button>
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button variant='gradient' className={className} disabled={isPending}>
+          {children}
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>
+            {mode === 'checkin'
+              ? 'Do you want to add breakfast for the guest?'
+              : 'Confirm checkout'}
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+            {mode === 'checkin'
+              ? 'This will check in the guest. You can optionally add breakfast which will be added to the total cost.'
+              : 'This will check out the guest and finalize their stay.'}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          {mode === 'checkin' ? (
+            <>
+              <AlertDialogAction asChild>
+                <Button
+                  variant='outline'
+                  onClick={() => handleAction(false)}
+                  className='text-white/75'
+                >
+                  No Breakfast
+                </Button>
+              </AlertDialogAction>
+              <AlertDialogAction asChild>
+                <Button variant='default' onClick={() => handleAction(true)}>
+                  Add Breakfast
+                </Button>
+              </AlertDialogAction>
+            </>
+          ) : (
+            <AlertDialogAction asChild>
+              <Button onClick={() => handleAction(false)} variant='destructive'>
+                Confirm Checkout
+              </Button>
+            </AlertDialogAction>
+          )}
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
