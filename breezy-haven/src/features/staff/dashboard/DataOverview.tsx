@@ -65,9 +65,9 @@ function TodayActivitySection({
 }) {
   const todayBookings = bookings.filter(
     booking =>
-      ((booking.status === 'unconfirmed' || booking.status === 'checked-in') &&
+      (booking.status === 'unconfirmed' &&
         isToday(parseISO(booking.startDate))) ||
-      isToday(parseISO(booking.endDate))
+      (booking.status === 'checked-in' && isToday(parseISO(booking.endDate)))
   );
 
   return (

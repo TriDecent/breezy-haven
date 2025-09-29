@@ -4,7 +4,7 @@ import { ROUTES } from '@/shared/constants';
 import { CircleCheck, LucideChevronRightSquare } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import type { ReactNode } from 'react';
+import { CheckInOutButton } from './CheckInOutButton';
 import { StatusBadge } from './StatusBadge';
 
 export function TodayActivity({
@@ -13,7 +13,7 @@ export function TodayActivity({
   bookings: readonly BookingWithRelations[];
 }) {
   return (
-    <ul className='grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-y-8 lg:grid-cols-1'>
+    <ul className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-y-8 lg:grid-cols-1'>
       {bookings.map(booking => (
         <li
           key={booking.id}
@@ -32,10 +32,14 @@ export function TodayActivity({
           <p className='text-muted-foreground ml-auto text-xs font-medium lg:ml-0 lg:text-base'>
             {booking.numNights} nights
           </p>
-          <OperationButton className='w-full min-w-32 uppercase lg:w-fit'>
+          <CheckInOutButton
+            bookingId={booking.id}
+            mode={booking.status === 'unconfirmed' ? 'checkin' : 'checkout'}
+            className='w-full min-w-32 uppercase lg:w-fit'
+          >
             <CircleCheck />{' '}
             {booking.status === 'unconfirmed' ? 'checkin' : 'checkout'}
-          </OperationButton>
+          </CheckInOutButton>
         </li>
       ))}
     </ul>
@@ -71,19 +75,5 @@ function BasicInfo({
         </Link>
       </Button>
     </div>
-  );
-}
-
-function OperationButton({
-  children,
-  className,
-}: {
-  children: ReactNode;
-  className: string;
-}) {
-  return (
-    <Button variant='gradient' className={className}>
-      {children}
-    </Button>
   );
 }
