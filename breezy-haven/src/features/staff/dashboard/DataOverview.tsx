@@ -1,4 +1,8 @@
-import { staffBookingService, staffCabinService } from '@/services';
+import {
+  staffBookingService,
+  staffCabinService,
+  type BookingWithRelations,
+} from '@/services';
 import {
   Card,
   CardContent,
@@ -7,18 +11,19 @@ import {
   CardTitle,
 } from '@/shared/components';
 import { errorHelper, formatter } from '@/shared/utils';
-import { format, isWithinInterval, parseISO, subDays } from 'date-fns';
+import { format, isToday, isWithinInterval, parseISO, subDays } from 'date-fns';
 
 import type { Booking } from '@/shared/schemas';
 import type { BookingQuery } from './BookingQuerySchema';
 import { SalesChart, type Sale } from './SalesChart';
 import { Stats } from './Stats';
 import { StayDurationChart, type StayDurationPie } from './StayDurationChart';
+import { TodayActivity } from './todayActivity/TodayActivity';
 
 export async function DataOverview({ queryDays }: { queryDays: BookingQuery }) {
   const [{ data: bookings, errors: bookingErrors }, cabinCountResult] =
     await Promise.all([
-      staffBookingService.getAll(),
+      staffBookingService.getAllBookingsWithRelations(),
       staffCabinService.getCount(),
     ]);
 
@@ -43,10 +48,49 @@ export async function DataOverview({ queryDays }: { queryDays: BookingQuery }) {
         days={queryDays}
       />
 
-      <StayDurationSection bookings={filteredBookings} />
+      <div className='flex flex-col gap-x-8 gap-y-16 xl:flex-row'>
+        <TodayActivitySection bookings={filteredBookings} />
+        <StayDurationSection bookings={filteredBookings} />
+      </div>
 
       <SalesSection bookings={filteredBookings} />
     </div>
+  );
+}
+
+function TodayActivitySection({
+  bookings,
+}: {
+  bookings: readonly BookingWithRelations[];
+}) {
+  const todayBookings = bookings.filter(
+    booking =>
+      ((booking.status === 'unconfirmed' || booking.status === 'checked-in') &&
+        isToday(parseISO(booking.startDate))) ||
+      isToday(parseISO(booking.endDate))
+  );
+
+  return (
+    <Card className='h-fit flex-1'>
+      <CardHeader>
+        <CardTitle className='text-muted-foreground font-bold tracking-wider'>
+          Today&apos;s Activity
+        </CardTitle>
+        <CardDescription>
+          See all check-ins, check-outs, and new bookings for today.
+        </CardDescription>
+      </CardHeader>
+
+      <CardContent className='px-2'>
+        {todayBookings.length > 0 ? (
+          <TodayActivity bookings={todayBookings} />
+        ) : (
+          <p className='flex h-12 items-center justify-center'>
+            There are no bookings due today.
+          </p>
+        )}
+      </CardContent>
+    </Card>
   );
 }
 
@@ -98,7 +142,7 @@ function StayDurationSection({ bookings }: { bookings: readonly Booking[] }) {
   }
 
   return (
-    <Card className='ml-auto max-w-xl lg:w-2/3'>
+    <Card className='max-w-xl flex-1 lg:mb-auto lg:w-2/3 lg:self-end'>
       <CardHeader>
         <CardTitle className='text-muted-foreground font-bold tracking-wider'>
           Stay Duration Summary
