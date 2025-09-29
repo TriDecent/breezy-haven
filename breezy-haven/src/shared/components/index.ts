@@ -1,3 +1,4 @@
+export { AnimationWrapper } from './AnimationWrapper';
 export { default as Badge } from './Badge';
 export { default as Counter } from './Counter';
 export * from './DataTable';

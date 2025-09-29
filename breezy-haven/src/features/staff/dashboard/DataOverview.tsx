@@ -4,6 +4,7 @@ import {
   type BookingWithRelations,
 } from '@/services';
 import {
+  AnimationWrapper,
   Card,
   CardContent,
   CardDescription,
@@ -14,6 +15,7 @@ import { errorHelper, formatter } from '@/shared/utils';
 import { format, isToday, isWithinInterval, parseISO, subDays } from 'date-fns';
 
 import type { Booking } from '@/shared/schemas';
+
 import type { BookingQuery } from './BookingQuerySchema';
 import { SalesChart, type Sale } from './SalesChart';
 import { Stats } from './Stats';
@@ -42,18 +44,26 @@ export async function DataOverview({ queryDays }: { queryDays: BookingQuery }) {
 
   return (
     <div className='space-y-16'>
-      <StatsSection
-        bookings={filteredBookings}
-        cabinCount={cabinCountResult.payload}
-        days={queryDays}
-      />
+      <AnimationWrapper>
+        <StatsSection
+          bookings={filteredBookings}
+          cabinCount={cabinCountResult.payload}
+          days={queryDays}
+        />
+      </AnimationWrapper>
 
       <div className='flex flex-col gap-x-8 gap-y-16 xl:flex-row'>
-        <TodayActivitySection bookings={filteredBookings} />
-        <StayDurationSection bookings={filteredBookings} />
+        <AnimationWrapper>
+          <TodayActivitySection bookings={filteredBookings} />
+        </AnimationWrapper>
+        <AnimationWrapper>
+          <StayDurationSection bookings={filteredBookings} />
+        </AnimationWrapper>
       </div>
 
-      <SalesSection bookings={filteredBookings} />
+      <AnimationWrapper>
+        <SalesSection bookings={filteredBookings} />
+      </AnimationWrapper>
     </div>
   );
 }
@@ -82,13 +92,7 @@ function TodayActivitySection({
       </CardHeader>
 
       <CardContent className='px-2'>
-        {todayBookings.length > 0 ? (
-          <TodayActivity bookings={todayBookings} />
-        ) : (
-          <p className='flex h-12 items-center justify-center'>
-            There are no bookings due today.
-          </p>
-        )}
+        <TodayActivity bookings={todayBookings} />
       </CardContent>
     </Card>
   );
