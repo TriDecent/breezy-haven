@@ -27,7 +27,7 @@ export function QueryButton({
     for (const { key, value } of queries) {
       copiedSearchParams.set(key, value);
     }
-    router.replace(`?${copiedSearchParams.toString()}`);
+    router.replace(`?${copiedSearchParams.toString()}`, { scroll: false });
   }, [queries, router, searchParams]);
 
   return (

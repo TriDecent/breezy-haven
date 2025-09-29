@@ -28,9 +28,7 @@ const chartConfig: ChartConfig = {
 };
 
 export function SalesChart({ sales }: { sales: Sale[] }) {
-  return sales.length === 0 ? (
-    <p className='text-center'>No result</p>
-  ) : (
+  return (
     <ChartContainer config={chartConfig} className='min-h-36 w-full'>
       <AreaChart
         accessibilityLayer

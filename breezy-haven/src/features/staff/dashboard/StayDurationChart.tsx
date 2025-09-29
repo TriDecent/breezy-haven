@@ -67,7 +67,7 @@ export function StayDurationChart({
   return (
     <ChartContainer
       config={chartConfig}
-      className='min-h-96 w-full md:min-h-82'
+      className='min-h-96 w-full md:min-h-0'
     >
       <PieChart accessibilityLayer>
         <ChartTooltip content={<ChartTooltipContent />} />

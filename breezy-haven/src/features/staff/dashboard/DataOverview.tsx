@@ -98,24 +98,28 @@ function StayDurationSection({ bookings }: { bookings: readonly Booking[] }) {
   }
 
   return (
-    <Card className='lg:w-2/3 ml-auto'>
+    <Card className='ml-auto max-w-xl lg:w-2/3'>
       <CardHeader>
         <CardTitle className='text-muted-foreground font-bold tracking-wider'>
-          Stay Duration
+          Stay Duration Summary
         </CardTitle>
         <CardDescription>
           Distribution of bookings by stay duration (number of nights).
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <StayDurationChart
-          pieData={[
-            ...pieData.entries().map(([name, value]) => ({
-              name,
-              value,
-            })),
-          ]}
-        />
+        {pieData.size > 0 ? (
+          <StayDurationChart
+            pieData={[
+              ...pieData.entries().map(([name, value]) => ({
+                name,
+                value,
+              })),
+            ]}
+          />
+        ) : (
+          <p className='flex h-12 items-center justify-center'>No result</p>
+        )}
       </CardContent>
     </Card>
   );
@@ -191,10 +195,18 @@ function SalesSection({ bookings }: { bookings: readonly Booking[] }) {
             ? `from ${sales.at(0)?.date} — ${sales.at(-1)?.date}`
             : null}
         </CardTitle>
+        <CardDescription>
+          Overview of total and extra sales generated from bookings within the
+          selected period.
+        </CardDescription>
       </CardHeader>
 
       <CardContent className='px-4'>
-        <SalesChart sales={sales} />
+        {sales.length > 0 ? (
+          <SalesChart sales={sales} />
+        ) : (
+          <p className='flex h-12 items-center justify-center'>No result</p>
+        )}
       </CardContent>
     </Card>
   );
