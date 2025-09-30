@@ -8,14 +8,18 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
+  ScrollArea,
+  ScrollBar,
 } from '@/shared/components';
 import { errorHelper, formatter } from '@/shared/utils';
 import { format, isToday, isWithinInterval, parseISO, subDays } from 'date-fns';
 
 import type { Booking } from '@/shared/schemas';
 
+import { ArrowBigDownDash } from 'lucide-react';
 import type { BookingQuery } from './BookingQuerySchema';
 import { DataRefresh } from './DataRefresh';
 import { SalesChart, type Sale } from './SalesChart';
@@ -97,8 +101,19 @@ function TodayActivitySection({
       </CardHeader>
 
       <CardContent className='px-2'>
-        <TodayActivity bookings={todayBookings} />
+        <ScrollArea className='h-75'>
+          <ScrollBar orientation='vertical' />
+          <TodayActivity bookings={todayBookings} />
+        </ScrollArea>
       </CardContent>
+      {todayBookings.length > 3 ? (
+        <CardFooter className='justify-center'>
+          <ArrowBigDownDash
+            size={32}
+            className='text-muted-foreground animate-bounce'
+          />
+        </CardFooter>
+      ) : null}
     </Card>
   );
 }

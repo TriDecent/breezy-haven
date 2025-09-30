@@ -67,7 +67,7 @@ export function TodayActivityList({
       initial={Variants.slide.key.hidden}
       whileInView={Variants.slide.key.visible}
       exit={Variants.slide.key.safelyHidden}
-      viewport={{ amount: 0.5 }}
+      viewport={{ amount: 0.2 }}
       transition={{ type: 'spring', delayChildren: stagger(0.5) }}
       className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-y-8 lg:grid-cols-1'
     >
