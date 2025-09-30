@@ -1,4 +1,4 @@
-import { Auth } from '@/lib';
+import { Auth } from '@/features/auth';
 import { FileRepository, Repository } from '@/repositories';
 import {
   BookingSchema,
@@ -16,9 +16,8 @@ import GuestService from './GuestService';
 import SettingService from './SettingService';
 import StaffService from './StaffService';
 export { type BookingWithRelations } from './BookingService';
-export * from './countryService';
+export * from './country-service';
 export * from './types';
-
 const cabinRepository = new Repository('cabins');
 const bookingRepository = new Repository('bookings');
 const guestRepository = new Repository('guests');

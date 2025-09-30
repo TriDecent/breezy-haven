@@ -1,17 +1,13 @@
 'use client';
-import { DTOCabin, NonNullableObject } from '@/repositories';
 import { PreviewImage } from '@/shared/components';
 import { ROUTES } from '@/shared/constants';
 import { PriorityContext } from '@/shared/providers';
+import type { Cabin } from '@/shared/schemas';
 import { UsersIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import { use } from 'react';
 
-export default function CabinCard({
-  cabin,
-}: {
-  cabin: NonNullableObject<DTOCabin>;
-}) {
+export default function CabinCard({ cabin }: { cabin: Cabin }) {
   const { id, name, maxCapacity, regularPrice, discount, image } = cabin;
   const isPriority = use(PriorityContext);
 

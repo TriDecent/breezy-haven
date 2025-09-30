@@ -27,8 +27,8 @@ import Image from 'next/image';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'sonner';
-import { duplicateCabinAction } from './actions/duplicateCabinAction';
-import { deleteCabinAction } from './deleteCabinAction';
+import { duplicateCabinAction } from './actions/duplicate-cabin-action';
+import { deleteCabinAction } from './actions/delete-cabin-action';
 
 const columns: ColumnDef<Cabin>[] = [
   {

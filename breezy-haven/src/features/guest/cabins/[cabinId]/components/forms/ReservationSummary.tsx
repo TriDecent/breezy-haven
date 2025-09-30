@@ -1,6 +1,6 @@
 'use client';
-import type { DTOCabin, DTOSetting, NonNullableObject } from '@/repositories';
 import { DateSelector } from '@/shared/components';
+import type { Cabin, Setting } from '@/shared/schemas';
 import {
   fromDateRangeToISO,
   fromISOToDateRange,
@@ -18,9 +18,9 @@ export default function ReservationSummary({
   alreadyBookedDates,
   cabin,
 }: {
-  setting: NonNullableObject<DTOSetting>;
+  setting: Setting;
   alreadyBookedDates: readonly Date[];
-  cabin: NonNullableObject<DTOCabin>;
+  cabin: Cabin;
 }) {
   const isoDateRange = useSelector((state: RootState) => state.ui.isoDateRange);
   const dispatch = useDispatch();

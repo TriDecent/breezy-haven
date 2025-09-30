@@ -1,6 +1,6 @@
 'use server';
 
-import { Auth } from '@/lib';
+import { Auth } from '@/features/auth';
 import { bookingService, unauthCabinService } from '@/services';
 import { ROUTES } from '@/shared/constants';
 import { dateHelper } from '@/shared/utils';

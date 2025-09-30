@@ -1,12 +1,13 @@
 'use server';
-import { Auth } from '@/lib';
+
+import { Auth } from '@/features/auth';
 import { getCountries, guestService } from '@/services';
 import { ROUTES } from '@/shared/constants';
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
-export async function updateProfile(
+export async function updateProfileAction(
   _currentState: UpdateProfileResponse,
   formData: FormData
 ): Promise<UpdateProfileResponse> {

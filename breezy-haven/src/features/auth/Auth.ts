@@ -3,7 +3,7 @@ import {
   getThirdPartySessionAsync,
   nextAuth,
   verifySession,
-} from './guestAuth';
+} from './guest-auth';
 import {
   createTokensAsync,
   ensureStaffIsAuthenticatedAsync,
@@ -14,7 +14,7 @@ import {
   verifyAccessTokenAsyncFromRequest,
   verifyRefreshTokenAsync,
   verifyRefreshTokenAsyncFromRequest,
-} from './staffAuth';
+} from './staff-auth';
 
 export const Auth = {
   guest: {

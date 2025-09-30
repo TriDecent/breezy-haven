@@ -1,5 +1,6 @@
+import { Auth } from '@/features/auth';
 import { BookingList } from '@/features/guest/account/reservations';
-import { Auth } from '@/lib';
+
 import { bookingService } from '@/services';
 import { ROUTES } from '@/shared/constants';
 import { errorHelper } from '@/shared/utils';

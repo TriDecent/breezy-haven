@@ -11,7 +11,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { LogOut, Menu, UserCircle, X } from 'lucide-react';
 import Link from 'next/link';
 import { useState, type ReactNode } from 'react';
-import { logoutAction } from './logoutAction';
+import { logoutAction } from './logout-action';
 
 export function SubMenu() {
   const [isOpen, setIsOpen] = useState(false);

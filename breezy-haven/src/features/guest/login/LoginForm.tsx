@@ -6,7 +6,7 @@ import Form from 'next/form';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useActionState, useEffect } from 'react';
 import { toast } from 'sonner';
-import { loginAction, type LoginActionResponse } from './loginAction';
+import { loginAction, type LoginActionResponse } from './login-action';
 
 export function LoginForm() {
   const [state, dispatch, isPending] = useActionState<

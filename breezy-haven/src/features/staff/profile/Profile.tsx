@@ -1,4 +1,4 @@
-import { Auth } from '@/lib';
+import { Auth } from '@/features/auth';
 import { ROUTES } from '@/shared/constants';
 import { redirect } from 'next/navigation';
 import { ProfileForm } from './forms/ProfileForm';

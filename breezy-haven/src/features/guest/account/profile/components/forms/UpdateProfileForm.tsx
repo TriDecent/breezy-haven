@@ -3,7 +3,7 @@
 import { Input, PrimaryButton } from '@/shared/components';
 import { InputHTMLAttributes, useActionState, type ReactElement } from 'react';
 import type { GuestForm } from './GuestFormSchema';
-import { updateProfile } from './updateProfileAction';
+import { updateProfileAction } from './update-profile-action';
 
 export default function UpdateProfileForm({
   guest,
@@ -12,7 +12,7 @@ export default function UpdateProfileForm({
   guest: GuestForm;
   countrySelector: ReactElement;
 }) {
-  const [state, dispatch, isPending] = useActionState(updateProfile, {
+  const [state, dispatch, isPending] = useActionState(updateProfileAction, {
     userEntered: null,
     errors: null,
   });

@@ -3,8 +3,7 @@ const isDev = process.env.NODE_ENV === 'development';
 const sevenDays = 60 * 60 * 7 * 24;
 const oneHour = 60 * 60;
 
-
-export const CookieConfig = {
+export const COOKIES_CONFIG = {
   keys: {
     staff: {
       token: {

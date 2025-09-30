@@ -2,7 +2,7 @@ import { ThemeToggle } from '@/shared/components';
 import { StaffBadge } from './StaffBadge';
 import { SubMenu } from './SubMenu';
 
-export function Header() {
+export function StaffHeader() {
   return (
     <div className='flex justify-between px-4 py-4 md:py-8'>
       <StaffBadge />

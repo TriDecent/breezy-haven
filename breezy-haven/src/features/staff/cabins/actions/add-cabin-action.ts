@@ -1,7 +1,7 @@
 'use server';
 import { fileService, staffCabinService } from '@/services';
 
-import { Auth } from '@/lib';
+import { Auth } from '@/features/auth';
 import { ROUTES } from '@/shared/constants';
 import type { Cabin } from '@/shared/schemas';
 import { revalidatePath } from 'next/cache';

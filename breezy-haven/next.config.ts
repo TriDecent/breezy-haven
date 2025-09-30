@@ -1,5 +1,7 @@
 import type { NextConfig } from 'next';
 
+import bundleAnalyzer from '@next/bundle-analyzer';
+
 const nextConfig: NextConfig = {
   images: {
     qualities: [25, 50, 75, 100],
@@ -16,4 +18,6 @@ const nextConfig: NextConfig = {
   // output: 'export',
 };
 
-export default nextConfig;
+export default process.env.ANALYZE === 'true'
+  ? bundleAnalyzer({ enabled: true })(nextConfig)
+  : nextConfig;

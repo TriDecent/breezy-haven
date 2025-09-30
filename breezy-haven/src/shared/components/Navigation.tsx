@@ -1,7 +1,7 @@
 'use client';
 
-import { ROUTES } from '../constants/ROUTES';
-import { useGetGuestAuthQuery } from '../store/authApi';
+import { ROUTES } from '../constants/routes';
+import { useGetGuestAuthQuery } from '../store/auth-api';
 import NavItem from './NavItem';
 
 interface Route {

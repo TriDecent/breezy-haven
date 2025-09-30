@@ -3,7 +3,7 @@ import { cache } from 'react';
 
 import { refreshTokenRepository } from '@/repositories';
 
-import { CookieConfig, ROUTES } from '@/shared/constants';
+import { COOKIES_CONFIG, ROUTES } from '@/shared/constants';
 import { importJWK } from 'jose';
 
 import { cookies } from 'next/headers';
@@ -114,7 +114,7 @@ export const verifyAccessTokenAsync = cache(async () => {
   const cookieStore = await cookies();
   const accessToken = getTokenFromCookies(
     cookieStore,
-    CookieConfig.keys.staff.token.access
+    COOKIES_CONFIG.keys.staff.token.access
   );
 
   if (!accessToken) return null;
@@ -132,7 +132,7 @@ export const verifyRefreshTokenAsync = cache(async () => {
   const cookieStore = await cookies();
   const refreshToken = getTokenFromCookies(
     cookieStore,
-    CookieConfig.keys.staff.token.refresh
+    COOKIES_CONFIG.keys.staff.token.refresh
   );
 
   if (!refreshToken) return null;
@@ -152,7 +152,7 @@ export const refreshAccessTokenAsync = cache(async () => {
 
   const refreshToken = getTokenFromCookies(
     cookieStore,
-    CookieConfig.keys.staff.token.refresh
+    COOKIES_CONFIG.keys.staff.token.refresh
   );
 
   if (!refreshToken) return null;
@@ -181,7 +181,7 @@ export const verifyAccessTokenAsyncFromRequest = cache(
   async (request: NextRequest) => {
     const accessToken = getTokenFromCookies(
       request.cookies,
-      CookieConfig.keys.staff.token.access
+      COOKIES_CONFIG.keys.staff.token.access
     );
 
     if (!accessToken) return null;
@@ -201,7 +201,7 @@ export const verifyRefreshTokenAsyncFromRequest = cache(
   async (request: NextRequest) => {
     const refreshToken = getTokenFromCookies(
       request.cookies,
-      CookieConfig.keys.staff.token.refresh
+      COOKIES_CONFIG.keys.staff.token.refresh
     );
 
     if (!refreshToken) return null;
@@ -221,7 +221,7 @@ export const refreshAccessTokenAsyncFromRequest = cache(
   async (request: NextRequest) => {
     const refreshToken = getTokenFromCookies(
       request.cookies,
-      CookieConfig.keys.staff.token.refresh
+      COOKIES_CONFIG.keys.staff.token.refresh
     );
 
     if (!refreshToken) return null;
@@ -283,14 +283,14 @@ export const ensureStaffIsAuthenticatedFromRequestAsync = cache(
 
     const response = NextResponse.next();
     response.cookies.set(
-      CookieConfig.keys.staff.token.access,
+      COOKIES_CONFIG.keys.staff.token.access,
       tokens.accessToken,
-      CookieConfig.option.short
+      COOKIES_CONFIG.option.short
     );
     response.cookies.set(
-      CookieConfig.keys.staff.token.refresh,
+      COOKIES_CONFIG.keys.staff.token.refresh,
       tokens.refreshToken,
-      CookieConfig.option.long
+      COOKIES_CONFIG.option.long
     );
 
     return response;
@@ -311,14 +311,14 @@ export const ensureStaffIsAuthenticatedAsync = cache(async () => {
 
   const cookieStore = await cookies();
   cookieStore.set(
-    CookieConfig.keys.staff.token.access,
+    COOKIES_CONFIG.keys.staff.token.access,
     tokens.accessToken,
-    CookieConfig.option.short
+    COOKIES_CONFIG.option.short
   );
   cookieStore.set(
-    CookieConfig.keys.staff.token.refresh,
+    COOKIES_CONFIG.keys.staff.token.refresh,
     tokens.refreshToken,
-    CookieConfig.option.long
+    COOKIES_CONFIG.option.long
   );
 });
 

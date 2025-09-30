@@ -1,6 +1,6 @@
 'use server';
 
-import { Auth } from '@/lib';
+import { Auth } from '@/features/auth';
 import { staffBookingService, staffSettingService } from '@/services';
 import { ROUTES } from '@/shared/constants';
 import type { Booking } from '@/shared/schemas';

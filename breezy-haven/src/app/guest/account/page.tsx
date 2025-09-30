@@ -1,4 +1,4 @@
-import { Auth } from '@/lib';
+import { Auth } from '@/features/auth';
 import { ROUTES } from '@/shared/constants';
 
 import { Metadata } from 'next';

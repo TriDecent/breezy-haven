@@ -1,5 +1,5 @@
-import { Auth } from '@/lib';
-import { CookieConfig } from '@/shared/constants';
+import { Auth } from '@/features/auth';
+import { COOKIES_CONFIG } from '@/shared/constants';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
@@ -28,14 +28,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     const response = NextResponse.json({ isAuthenticated: true });
     response.cookies.set(
-      CookieConfig.keys.staff.token.access,
+      COOKIES_CONFIG.keys.staff.token.access,
       tokens.accessToken,
-      CookieConfig.option.short
+      COOKIES_CONFIG.option.short
     );
     response.cookies.set(
-      CookieConfig.keys.staff.token.refresh,
+      COOKIES_CONFIG.keys.staff.token.refresh,
       tokens.refreshToken,
-      CookieConfig.option.long
+      COOKIES_CONFIG.option.long
     );
 
     return response;

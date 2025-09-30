@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint .",
     "prod": "next build && next start",
-    "postinstall": "npm rebuild sharp --platform=linux --arch=x64 || true"
+    "postinstall": "npm rebuild sharp --platform=linux --arch=x64 || true",
+    "analyze": "cross-env ANALYZE=true next build"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
@@ -50,12 +51,14 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@next/bundle-analyzer": "^15.5.4",
     "@tailwindcss/postcss": "^4",
     "@types/bcrypt": "^6.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/react-redux": "^7.1.34",
+    "cross-env": "^10.1.0",
     "eslint": "^9",
     "eslint-config-next": "15.3.5",
     "prettier": "^3.6.2",

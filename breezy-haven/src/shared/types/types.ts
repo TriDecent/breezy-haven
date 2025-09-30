@@ -5,3 +5,7 @@ export type Result<TSuccess, TError> = Readonly<
     }
   | { type: 'error'; payload: TError }
 >;
+
+export type NonNullableObject<T> = {
+  [P in keyof T]: NonNullable<T[P]>;
+};

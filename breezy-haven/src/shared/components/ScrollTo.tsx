@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowUp } from 'lucide-react';
 import Variants from '../animations/Variants';
-import useScrollDirection from '../hooks/useScrollDirection';
+import useScrollDirection from '../hooks/use-scroll-direction';
 import { Button } from './ui/button';
 
 export function ScrollTo({ id }: { id: string }) {

@@ -1,12 +1,13 @@
 'use server';
-import { Auth } from '@/lib';
+
+import { Auth } from '@/features/auth';
 import { bookingService } from '@/services';
 import { ROUTES } from '@/shared/constants';
 import { errorHelper } from '@/shared/utils';
 
 import { revalidatePath } from 'next/cache';
 
-export async function deleteBooking(bookingId: number) {
+export async function deleteBookingAction(bookingId: number) {
   const session = await Auth.guest.getFullSessionAsync();
   if (!session.main)
     throw new Error('You are not authorized to perform this action');

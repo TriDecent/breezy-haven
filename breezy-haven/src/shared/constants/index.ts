@@ -1,2 +1,2 @@
-export * from './CookiesConfig';
-export * from './ROUTES';
+export * from './cookies-config';
+export * from './routes';

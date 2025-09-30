@@ -1,7 +1,7 @@
 import breezyHavenLogo from '@/../public/logo.png';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ROUTES } from '../constants/ROUTES';
+import { ROUTES } from '../constants/routes';
 import { Shimmer } from './Shimmer';
 
 export default function Logo() {

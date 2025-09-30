@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 
 import { Button, Checkbox } from '@/shared/components';
 import { formatter } from '@/shared/utils';
-import { checkinAction } from './checkinAction';
+import { checkinAction } from './checkin-action';
 import { BookingContext } from './context/BookingContext';
 
 export function Checkin() {

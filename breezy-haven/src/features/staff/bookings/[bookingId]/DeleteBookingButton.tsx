@@ -14,7 +14,7 @@ import {
 } from '@/shared/components';
 import type { Booking } from '@/shared/schemas';
 import { toast } from 'sonner';
-import { deleteBookingAction } from '../deleteBookingAction';
+import { deleteBookingAction } from '../delete-booking-action';
 
 export function DeleteBookingButton({
   bookingId,

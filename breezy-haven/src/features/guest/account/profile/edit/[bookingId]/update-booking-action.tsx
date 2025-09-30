@@ -1,10 +1,18 @@
 'use server';
 
-import { Auth } from '@/lib';
-import type { NonNullableObject } from '@/repositories';
+import { Auth } from '@/features/auth';
 import { bookingService } from '@/services';
 import { ROUTES } from '@/shared/constants';
-import { bookingArraySchema, BookingInputSchema, type Booking, type BookingActionResponse, type SafeBooking, type SafeBookingArray, type SafeBookingInput } from '@/shared/schemas';
+import {
+  bookingArraySchema,
+  BookingInputSchema,
+  type Booking,
+  type BookingActionResponse,
+  type SafeBooking,
+  type SafeBookingArray,
+  type SafeBookingInput,
+} from '@/shared/schemas';
+import type { NonNullableObject } from '@/shared/types';
 import { dateHelper } from '@/shared/utils';
 
 import { revalidatePath } from 'next/cache';

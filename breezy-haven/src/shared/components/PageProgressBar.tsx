@@ -1,6 +1,6 @@
 'use client';
 
-import { useScrollProgress } from '../hooks/useScrollProgress';
+import { useScrollProgress } from '../hooks/use-scroll-progress';
 
 export default function PageProgressBar() {
   const progress = useScrollProgress();

@@ -1,6 +1,5 @@
 'use client';
 
-import { DTOCabin, NonNullableObject } from '@/repositories';
 import { notFound, useSearchParams } from 'next/navigation';
 import {
   CabinCapacities,
@@ -58,7 +57,7 @@ export default function QueryCabins({ cabins }: { cabins: Cabin[] }) {
 
 function filterCabinsBasedOnCapacity(
   capacity: string,
-  cabins: NonNullableObject<DTOCabin>[]
+  cabins: Cabin[]
 ): Cabin[] {
   switch (capacity) {
     case 'all':

@@ -1,5 +1,3 @@
-export { cn } from './utils';
+export { cn } from '../shared/utils/utils';
 
 export { supabase } from './supabase';
-
-export { Auth } from './auth';

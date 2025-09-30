@@ -1,5 +1,5 @@
 'use client';
-import { cn } from '@/lib/utils';
+import { cn } from '@/shared/utils';
 import { motion } from 'framer-motion';
 
 export function Shimmer({

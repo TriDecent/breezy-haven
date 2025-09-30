@@ -1,9 +1,9 @@
 'use server';
 
-import { Auth } from '@/lib';
+import { Auth } from '@/features/auth';
 import { unauthStaffService } from '@/services';
 import type { ActionResponse } from '@/shared/actions';
-import { CookieConfig } from '@/shared/constants';
+import { COOKIES_CONFIG } from '@/shared/constants';
 
 import { compare } from 'bcrypt';
 import { cookies } from 'next/headers';
@@ -54,14 +54,14 @@ export async function loginAction(
   const cookieStore = await cookies();
 
   cookieStore.set(
-    CookieConfig.keys.staff.token.access,
+    COOKIES_CONFIG.keys.staff.token.access,
     tokens.accessToken,
-    CookieConfig.option.short
+    COOKIES_CONFIG.option.short
   );
   cookieStore.set(
-    CookieConfig.keys.staff.token.refresh,
+    COOKIES_CONFIG.keys.staff.token.refresh,
     tokens.refreshToken,
-    CookieConfig.option.long
+    COOKIES_CONFIG.option.long
   );
 
   return {

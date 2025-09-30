@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import {
   createStaffAction,
   type CreateStaffResponse,
-} from './createStaffAction';
+} from './create-staff-action';
 
 export function StaffCreationForm() {
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);

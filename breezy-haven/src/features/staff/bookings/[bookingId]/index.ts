@@ -1,3 +1,3 @@
 export { BookingDetails } from './BookingDetails';
-export { checkinAction } from './checkinAction';
-export { checkoutAction } from './checkoutAction';
+export { checkinAction } from './checkin-action';
+export { checkoutAction } from './checkout-action';

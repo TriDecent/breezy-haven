@@ -1,4 +1,4 @@
-import { Auth } from '@/lib';
+import { Auth } from '@/features/auth';
 import { NextResponse } from 'next/server';
 
 class AuthError {

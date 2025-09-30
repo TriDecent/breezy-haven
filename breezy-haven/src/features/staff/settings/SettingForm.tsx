@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import {
   updateSettingAction,
   type UpdateSettingResponse,
-} from './updateSettingAction';
+} from './update-setting-action';
 
 export function SettingForm({ defaultSetting }: { defaultSetting: Setting }) {
   const { state, dispatch, isPending } = useFormState();

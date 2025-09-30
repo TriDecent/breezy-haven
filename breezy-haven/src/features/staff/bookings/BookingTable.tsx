@@ -34,8 +34,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { StatusBadge } from './StatusBadge';
-import { checkoutAction } from './[bookingId]/checkoutAction';
-import { deleteBookingAction } from './deleteBookingAction';
+import { checkoutAction } from './[bookingId]/checkout-action';
+import { deleteBookingAction } from './delete-booking-action';
 
 export function BookingTable({ bookings }: BookingTableProps) {
   return <DataTable columns={columns} data={[...bookings]} />;

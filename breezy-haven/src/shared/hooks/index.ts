@@ -1,2 +1,2 @@
-export { default as useScrollDirection } from './useScrollDirection';
-export * from './useScrollProgress';
+export { default as useScrollDirection } from './use-scroll-direction';
+export * from './use-scroll-progress';

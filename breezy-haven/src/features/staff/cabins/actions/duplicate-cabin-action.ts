@@ -1,7 +1,7 @@
 'use server';
 import { staffCabinService } from '@/services';
 
-import { Auth } from '@/lib';
+import { Auth } from '@/features/auth';
 import { ROUTES } from '@/shared/constants';
 import { revalidatePath } from 'next/cache';
 import z from 'zod';

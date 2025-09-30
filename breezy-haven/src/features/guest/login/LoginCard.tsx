@@ -1,4 +1,3 @@
-import { cn } from '@/lib/utils';
 import {
   Button,
   Card,
@@ -8,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/components';
+import { cn } from '@/shared/utils';
 
 import { type JSX } from 'react';
 
@@ -47,7 +47,7 @@ export function LoginCard({
           </span>
           <Button
             variant='link'
-            className='dark:underline animate-pulse'
+            className='animate-pulse dark:underline'
             onClick={onSignupClick}
           >
             Sign up

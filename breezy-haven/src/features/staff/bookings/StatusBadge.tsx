@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils';
 import type { Booking } from '@/shared/schemas';
+import { cn } from '@/shared/utils';
 
 const StatusStyle: Record<Booking['status'], string> = {
   unconfirmed: 'bg-sky-200 text-sky-700',

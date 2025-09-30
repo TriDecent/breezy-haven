@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import {
   updateProfileAction,
   type UpdateProfileResponse,
-} from '../actions/updateProfileAction';
+} from '../actions/update-profile-action';
 
 interface ProfileFormProps {
   readonly defaultProfile: Readonly<{

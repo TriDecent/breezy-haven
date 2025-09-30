@@ -26,7 +26,7 @@ import { parseISO } from 'date-fns';
 import { useActionState, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'sonner';
-import { addBookingAction, AddBookingResponse } from './addBookingAction';
+import { addBookingAction, AddBookingResponse } from './add-booking-action';
 
 export default function ReservationForm({ cabin }: { cabin: Cabin }) {
   const [formState, formAction, isPending] = useActionState<

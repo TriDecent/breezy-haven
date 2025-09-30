@@ -1,6 +1,6 @@
 'use server';
 
-import { Auth } from '@/lib';
+import { Auth } from '@/features/auth';
 import { staffSettingService } from '@/services';
 import type { ActionResponse } from '@/shared/actions';
 import { ROUTES } from '@/shared/constants';

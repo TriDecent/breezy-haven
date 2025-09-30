@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import {
   updatePasswordAction,
   type UpdatePasswordResponse,
-} from '../actions/updatePasswordAction';
+} from '../actions/update-password-action';
 
 export function UpdatePasswordForm() {
   const handleFormSuccess = useCallback(

@@ -26,7 +26,7 @@ import {
 } from 'react';
 import type { DateRange } from 'react-day-picker';
 import { toast } from 'sonner';
-import { updateBookingAction } from './updateBookingAction';
+import { updateBookingAction } from './update-booking-action';
 
 type BookingInfo = {
   bookingId: number;

@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import GoogleLogin from './GoogleLogin';
 import { LoginCard } from './LoginCard';
 import { LoginForm } from './LoginForm';
-import { signupAction } from './signupAction';
+import { signupAction } from './signup-action';
 
 export function Authentication() {
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');

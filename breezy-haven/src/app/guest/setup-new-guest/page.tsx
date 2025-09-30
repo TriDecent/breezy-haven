@@ -1,4 +1,4 @@
-import { Auth } from '@/lib';
+import { Auth } from '@/features/auth';
 import { unauthGuestService } from '@/services';
 import { Spinner } from '@/shared/components';
 import { ROUTES } from '@/shared/constants';

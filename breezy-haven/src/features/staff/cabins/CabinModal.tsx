@@ -14,8 +14,8 @@ import { SquarePenIcon } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { CabinForm } from './CabinForm';
-import { addCabinAction } from './actions/addCabinAction';
-import { updateCabinAction } from './actions/updateCabinAction';
+import { addCabinAction } from './actions/add-cabin-action';
+import { updateCabinAction } from './actions/update-cabin-action';
 
 const PROMPTS = {
   add: {

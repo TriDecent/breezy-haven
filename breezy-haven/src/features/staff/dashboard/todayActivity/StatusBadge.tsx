@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils';
 import type { Booking } from '@/shared/schemas';
+import { cn } from '@/shared/utils';
 import type { ClassValue } from 'clsx';
 
 const StatusStyle: Record<

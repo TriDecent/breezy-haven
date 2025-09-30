@@ -1,6 +1,7 @@
 import { MiddlewareConfig, NextRequest, NextResponse } from 'next/server';
-import { Auth } from './lib/auth';
-import { ROUTES } from './shared/constants';
+
+import { Auth } from '@/features/auth';
+import { ROUTES } from '@/shared/constants';
 
 export const config: MiddlewareConfig = {
   matcher: [
@@ -17,7 +18,7 @@ export const config: MiddlewareConfig = {
     '/staff/guests',
     '/staff/settings',
     '/staff/user',
-    '/staff/profile'
+    '/staff/profile',
   ],
 };
 

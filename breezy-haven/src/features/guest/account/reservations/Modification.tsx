@@ -17,7 +17,7 @@ import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import { useTransition } from 'react';
 import { toast } from 'sonner';
-import { deleteBooking } from './deleteBookingAction';
+import { deleteBookingAction } from './delete-booking-action';
 
 const styles =
   'group text-primary-300 border-primary-800 hover:bg-accent-600 hover:text-primary-900 flex flex-1 items-center justify-center gap-2 px-4 py-6 text-xs font-bold uppercase transition-colors ';
@@ -41,7 +41,7 @@ export default function Modification({
           startTransition(async () => {
             onDelete();
             await toast
-              .promise(deleteBooking(id), {
+              .promise(deleteBookingAction(id), {
                 loading: 'Deleting...',
                 success: 'Deleted!',
                 error: 'Delete failed!',

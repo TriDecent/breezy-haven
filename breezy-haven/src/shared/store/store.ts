@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
-import authApi from './authApi';
-import { cabinFormSlice } from './cabinFormSlice';
-import uiSlice from './uiSlice';
+import authApi from './auth-api';
+import { cabinFormSlice } from './cabin-form-slice';
+import uiSlice from './ui-slice';
 
 const store = configureStore({
   reducer: {

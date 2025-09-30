@@ -17,7 +17,7 @@ import {
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Fragment } from 'react';
-import { ROUTES } from '../constants/ROUTES';
+import { ROUTES } from '../constants/routes';
 
 const MAX_VISIBLE = 3;
 

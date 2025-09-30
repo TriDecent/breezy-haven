@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Variants from '../animations/Variants';
-import useScrollDirection from '../hooks/useScrollDirection';
+import useScrollDirection from '../hooks/use-scroll-direction';
 
 export default function MiniSidebar({
   children,

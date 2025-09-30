@@ -4,9 +4,8 @@ import Google from 'next-auth/providers/google';
 import { unauthGuestService } from '@/services';
 import { cache } from 'react';
 
-import { type NonNullableObject } from '@/repositories';
-
 import { ROUTES } from '@/shared/constants';
+import type { NonNullableObject } from '@/shared/types';
 import { redirect } from 'next/navigation';
 
 export const nextAuth = NextAuth({

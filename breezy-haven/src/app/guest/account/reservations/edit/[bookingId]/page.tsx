@@ -1,5 +1,6 @@
+import { Auth } from '@/features/auth';
 import { BookingEditForm } from '@/features/guest/account/profile';
-import { Auth } from '@/lib';
+
 import { bookingService, unauthSettingService } from '@/services';
 import { errorHelper } from '@/shared/utils';
 
