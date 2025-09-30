@@ -1,6 +1,6 @@
 'use client';
 import type { BookingWithRelations } from '@/services';
-import { slideVariantKeys, Variants } from '@/shared/animations';
+import { Variants } from '@/shared/animations';
 import { Button } from '@/shared/components';
 import { ROUTES } from '@/shared/constants';
 import type { Booking } from '@/shared/schemas';
@@ -63,11 +63,11 @@ export function TodayActivityList({
 }) {
   return (
     <motion.ul
-      variants={Variants.slideVariant(0, 30)}
-      initial={slideVariantKeys.hidden}
-      whileInView={slideVariantKeys.visible}
+      variants={Variants.slide.variant(0, 30)}
+      initial={Variants.slide.key.hidden}
+      whileInView={Variants.slide.key.visible}
+      exit={Variants.slide.key.safelyHidden}
       viewport={{ amount: 0.5 }}
-      exit={slideVariantKeys.safelyHidden}
       transition={{ type: 'spring', delayChildren: stagger(0.5) }}
       className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-y-8 lg:grid-cols-1'
     >
@@ -93,7 +93,7 @@ export function TodayActivityItem({
 
   return (
     <motion.li
-      variants={Variants.slideVariant(0, 30)}
+      variants={Variants.slide.variant(0, 30)}
       layout
       className='bg-muted border-border flex flex-col justify-between gap-4 rounded-lg px-4 py-4 shadow lg:flex-row lg:items-center lg:gap-4 lg:px-6'
     >
@@ -131,10 +131,10 @@ export function EmptyTodayActivity() {
   return (
     <motion.p
       key='fallback'
-      variants={Variants.slideVariant(0, 30)}
-      initial={slideVariantKeys.hidden}
-      whileInView={slideVariantKeys.visible}
-      exit={slideVariantKeys.safelyHidden}
+      variants={Variants.slide.variant(0, 30)}
+      initial={Variants.slide.key.hidden}
+      whileInView={Variants.slide.key.visible}
+      exit={Variants.slide.key.safelyHidden}
       transition={{ type: 'spring' }}
       className='flex h-12 items-center justify-center'
     >

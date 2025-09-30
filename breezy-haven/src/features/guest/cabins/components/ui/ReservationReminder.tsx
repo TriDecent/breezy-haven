@@ -1,6 +1,6 @@
 'use client';
 
-import { slideVariantKeys, Variants } from '@/shared/animations';
+import { Variants } from '@/shared/animations';
 import { useScrollDirection } from '@/shared/hooks';
 import { fromISOToDateRange, type RootState } from '@/shared/store';
 import { XMarkIcon } from '@heroicons/react/24/solid';
@@ -21,10 +21,10 @@ export default function ReservationReminder() {
     <AnimatePresence>
       {direction === 'up' && shouldDisplay ? (
         <motion.aside
-          variants={Variants.slideVariant(0, 30)}
-          initial={slideVariantKeys.hidden}
-          animate={slideVariantKeys.visible}
-          exit={slideVariantKeys.safelyHidden}
+          variants={Variants.slide.variant(0, 30)}
+          initial={Variants.slide.key.hidden}
+          animate={Variants.slide.key.visible}
+          exit={Variants.slide.key.safelyHidden}
           transition={{ type: 'tween', duration: 0.35 }}
           className='bg-accent-500 text-primary-800 gap fixed inset-x-0 bottom-6 mx-auto flex w-fit items-center rounded px-4 py-2 font-semibold shadow-xl shadow-slate-900 md:rounded-full md:px-8 md:py-5'
         >

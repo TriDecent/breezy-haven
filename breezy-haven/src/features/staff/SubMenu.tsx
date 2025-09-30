@@ -1,5 +1,5 @@
 'use client';
-import { elasticVariantKeys, Variants } from '@/shared/animations';
+import { Variants } from '@/shared/animations';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -49,10 +49,10 @@ function AnimationWrapper({ children }: { children: ReactNode }) {
   return (
     <motion.div
       key='menu'
-      variants={Variants.zoomRotateVariant()}
-      initial={elasticVariantKeys.hidden}
-      animate={elasticVariantKeys.visible}
-      exit={elasticVariantKeys.exit}
+      variants={Variants.zoomRotate.variant()}
+      initial={Variants.zoomRotate.key.hidden}
+      animate={Variants.zoomRotate.key.visible}
+      exit={Variants.zoomRotate.key.exit}
       transition={{
         type: 'tween',
         duration: 0.2,

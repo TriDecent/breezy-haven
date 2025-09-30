@@ -1,6 +1,6 @@
 'use client';
 
-import { slideVariantKeys, Variants } from '@/shared/animations';
+import { Variants } from '@/shared/animations';
 import { Button, Input } from '@/shared/components';
 import { ROUTES } from '@/shared/constants';
 import { useScrollDirection } from '@/shared/hooks';
@@ -34,10 +34,10 @@ export default function SearchBar() {
     <AnimatePresence mode='wait'>
       {shouldDisplaySearch ? (
         <motion.div
-          variants={Variants.slideVariant(0, -30)}
-          initial={slideVariantKeys.hidden}
-          animate={slideVariantKeys.visible}
-          exit={slideVariantKeys.safelyHidden}
+          variants={Variants.slide.variant(0, -30)}
+          initial={Variants.slide.key.hidden}
+          animate={Variants.slide.key.visible}
+          exit={Variants.slide.key.safelyHidden}
           transition={{ type: 'spring' }}
           className='fixed inset-x-0 top-4 z-100 mx-auto w-fit min-w-2xs backdrop-blur-md'
         >
@@ -56,10 +56,10 @@ export default function SearchBar() {
       {!shouldDisplaySearch ? (
         <motion.aside
           key='fallback'
-          variants={Variants.slideVariant(0, 30)}
-          initial={slideVariantKeys.hidden}
-          animate={slideVariantKeys.visible}
-          exit={slideVariantKeys.safelyHidden}
+          variants={Variants.slide.variant(0, 30)}
+          initial={Variants.slide.key.hidden}
+          animate={Variants.slide.key.visible}
+          exit={Variants.slide.key.safelyHidden}
           className='fixed bottom-16'
         >
           <Button

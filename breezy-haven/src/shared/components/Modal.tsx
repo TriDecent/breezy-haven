@@ -8,7 +8,7 @@ import {
   type Ref,
 } from 'react';
 import { createPortal } from 'react-dom';
-import Variants, { slideVariantKeys } from '../animations/Variants';
+import Variants from '../animations/Variants';
 
 export interface ModalHandle {
   readonly open: () => void;
@@ -54,13 +54,13 @@ const Modal = ({ children, onClose, ref }: ModalProps) => {
           {isOpen ? (
             <motion.dialog
               ref={dialogRef}
-              variants={Variants.slideVariant(0, 50)}
-              initial={slideVariantKeys.hidden}
-              animate={slideVariantKeys.visible}
-              exit={slideVariantKeys.safelyHidden}
+              variants={Variants.slide.variant(0, 50)}
+              initial={Variants.slide.key.hidden}
+              animate={Variants.slide.key.visible}
+              exit={Variants.slide.key.safelyHidden}
               transition={{ type: 'tween', duration: 0.3, ease: 'easeOut' }}
               onAnimationStart={definition => {
-                if (definition !== slideVariantKeys.visible) return;
+                if (definition !== Variants.slide.key.visible) return;
                 dialogRef.current?.showModal();
               }}
               onCancel={e => {

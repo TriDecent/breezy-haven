@@ -16,10 +16,10 @@ export function Authentication() {
       {authMode === 'login' ? (
         <motion.div
           key='login'
-          variants={Variants.slideVariant(0, 30)}
-          initial={slideVariantKeys.hidden}
-          animate={slideVariantKeys.visible}
-          exit={slideVariantKeys.safelyHidden}
+          variants={Variants.slide.variant(0, 30)}
+          initial={Variants.slide.key.hidden}
+          animate={Variants.slide.key.visible}
+          exit={Variants.slide.key.safelyHidden}
           className='w-full max-w-xl'
         >
           <LoginCard
@@ -31,10 +31,10 @@ export function Authentication() {
       ) : (
         <motion.div
           key='signup'
-          variants={Variants.slideVariant(0, 30)}
-          initial={slideVariantKeys.hidden}
-          animate={slideVariantKeys.visible}
-          exit={slideVariantKeys.safelyHidden}
+          variants={Variants.slide.variant(0, 30)}
+          initial={Variants.slide.key.hidden}
+          animate={Variants.slide.key.visible}
+          exit={Variants.slide.key.safelyHidden}
           className='w-full max-w-xl'
         >
           <SignupCard onGoBackAction={() => setAuthMode('login')} />
@@ -44,7 +44,7 @@ export function Authentication() {
   );
 }
 
-import { slideVariantKeys, Variants } from '@/shared/animations';
+import { Variants } from '@/shared/animations';
 import {
   Button,
   Card,

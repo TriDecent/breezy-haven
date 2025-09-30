@@ -1,6 +1,6 @@
 'use client';
 
-import Variants, { slideVariantKeys } from '@/shared/animations/Variants';
+import Variants from '@/shared/animations/Variants';
 import { ROUTES } from '@/shared/constants';
 import { PriorityProvider } from '@/shared/providers';
 import { GetByGuestIdBookingSchema } from '@/shared/schemas';
@@ -81,17 +81,17 @@ export default function BookingList({ bookings }: Props) {
         <EmptyBooking />
       ) : (
         <motion.ul
-          variants={Variants.slideVariant(0, -30)}
-          initial={slideVariantKeys.hidden}
-          animate={slideVariantKeys.visible}
-          exit={slideVariantKeys.safelyHidden}
+          variants={Variants.slide.variant(0, -30)}
+          initial={Variants.slide.key.hidden}
+          animate={Variants.slide.key.visible}
+          exit={Variants.slide.key.safelyHidden}
           transition={{ delayChildren: stagger(0.5) }}
           className='space-y-6'
         >
           {optimisticBookings.map((booking, index) => (
             <motion.li
               layout
-              variants={Variants.slideVariant(0, -30)}
+              variants={Variants.slide.variant(0, -30)}
               key={booking.id}
             >
               <PriorityProvider isPriority={index === 0}>
@@ -116,10 +116,10 @@ export default function BookingList({ bookings }: Props) {
 function EmptyBooking() {
   return (
     <motion.p
-      variants={Variants.slideVariant(0, -30)}
-      initial={slideVariantKeys.hidden}
-      animate={slideVariantKeys.visible}
-      exit={slideVariantKeys.safelyHidden}
+      variants={Variants.slide.variant(0, -30)}
+      initial={Variants.slide.key.hidden}
+      animate={Variants.slide.key.visible}
+      exit={Variants.slide.key.safelyHidden}
       key='fallback'
       className='text-lg'
     >

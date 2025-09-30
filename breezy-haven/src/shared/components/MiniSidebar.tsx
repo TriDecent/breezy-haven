@@ -4,7 +4,7 @@ import { Bars3Icon } from '@heroicons/react/24/solid';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import Variants, { slideVariantKeys } from '../animations/Variants';
+import Variants from '../animations/Variants';
 import useScrollDirection from '../hooks/useScrollDirection';
 
 export default function MiniSidebar({
@@ -39,10 +39,10 @@ export default function MiniSidebar({
           {direction === 'up' && !shouldOpenSideBar ? (
             <motion.button
               key='bar3'
-              variants={Variants.slideVariant(0, 30)}
-              initial={slideVariantKeys.hidden}
-              animate={slideVariantKeys.visible}
-              exit={slideVariantKeys.safelyHidden}
+              variants={Variants.slide.variant(0, 30)}
+              initial={Variants.slide.key.hidden}
+              animate={Variants.slide.key.visible}
+              exit={Variants.slide.key.safelyHidden}
               transition={{ type: 'spring' }}
               onClick={() => setShouldOpenSideBar(true)}
               className='bg-background fixed right-6 bottom-8 rounded-full p-4 shadow-md shadow-black'
@@ -54,10 +54,10 @@ export default function MiniSidebar({
           {shouldOpenSideBar ? (
             <motion.div
               key='sidebar'
-              variants={Variants.slideVariant(-30, 0)}
-              initial={slideVariantKeys.hidden}
-              animate={slideVariantKeys.visible}
-              exit={slideVariantKeys.safelyHidden}
+              variants={Variants.slide.variant(-30, 0)}
+              initial={Variants.slide.key.hidden}
+              animate={Variants.slide.key.visible}
+              exit={Variants.slide.key.safelyHidden}
               transition={{ type: 'spring' }}
               ref={outsideRef}
               className='fixed inset-x-0 inset-y-0 z-1000 backdrop-blur-xs'

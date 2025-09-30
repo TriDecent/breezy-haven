@@ -29,7 +29,11 @@ const scaleVariant = (): Readonly<Record<ScaleVariantKey, Variant>> => {
   return {
     hidden: { scale: 0, opacity: 0 },
     visible: { scale: 1, opacity: 1 },
-    exit: { scale: 0, opacity: 0 },
+    exit: {
+      scale: 0,
+      opacity: 0,
+      transitionEnd: { display: 'none' },
+    },
   };
 };
 
@@ -37,18 +41,36 @@ const fadeVariant = (): Readonly<Record<FadeVariantKey, Variant>> => {
   return {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
-    exit: { opacity: 0 },
+    exit: {
+      opacity: 0,
+      transitionEnd: { display: 'none' },
+    },
   };
 };
 
 const flipVariant = (
   axis: 'x' | 'y' = 'y'
 ): Readonly<Record<FlipVariantKey, Variant>> => {
-  const rotateKey = axis === 'x' ? 'rotateX' : 'rotateY';
+  if (axis === 'x') {
+    return {
+      hidden: { rotateX: -90, opacity: 0 },
+      visible: { rotateX: 0, opacity: 1 },
+      exit: {
+        rotateX: 90,
+        opacity: 0,
+        transitionEnd: { display: 'none' },
+      },
+    };
+  }
+
   return {
-    hidden: { [rotateKey]: -90, opacity: 0 },
-    visible: { [rotateKey]: 0, opacity: 1 },
-    exit: { [rotateKey]: 90, opacity: 0 },
+    hidden: { rotateY: -90, opacity: 0 },
+    visible: { rotateY: 0, opacity: 1 },
+    exit: {
+      rotateY: 90,
+      opacity: 0,
+      transitionEnd: { display: 'none' },
+    },
   };
 };
 
@@ -65,7 +87,12 @@ const bounceVariant = (): Readonly<Record<BounceVariantKey, Variant>> => {
         damping: 10,
       },
     },
-    exit: { scale: 0, opacity: 0, y: 20 },
+    exit: {
+      scale: 0,
+      opacity: 0,
+      y: 20,
+      transitionEnd: { display: 'none' },
+    },
   };
 };
 
@@ -90,7 +117,11 @@ const swipeVariant = (
   return {
     hidden: { ...offset, opacity: 0 },
     visible: { x: 0, y: 0, opacity: 1 },
-    exit: { ...offset, opacity: 0 },
+    exit: {
+      ...offset,
+      opacity: 0,
+      transitionEnd: { display: 'none' },
+    },
   };
 };
 
@@ -98,7 +129,12 @@ const zoomRotateVariant = (): Readonly<Record<ScaleVariantKey, Variant>> => {
   return {
     hidden: { scale: 0, rotate: -180, opacity: 0 },
     visible: { scale: 1, rotate: 0, opacity: 1 },
-    exit: { scale: 0, rotate: 180, opacity: 0 },
+    exit: {
+      scale: 0,
+      rotate: 180,
+      opacity: 0,
+      transitionEnd: { display: 'none' },
+    },
   };
 };
 
@@ -114,57 +150,52 @@ const elasticVariant = (): Readonly<Record<ScaleVariantKey, Variant>> => {
         damping: 8,
       },
     },
-    exit: { scale: 0, opacity: 0 },
+    exit: {
+      scale: 0,
+      opacity: 0,
+      transitionEnd: { display: 'none' },
+    },
   };
 };
 
-export const slideVariantKeys: Readonly<
-  Record<SlideVariantKey, SlideVariantKey>
-> = {
+const slideVariantKeys: Readonly<Record<SlideVariantKey, SlideVariantKey>> = {
   hidden: 'hidden',
   visible: 'visible',
   safelyHidden: 'safelyHidden',
 };
 
-export const scaleVariantKeys: Readonly<
-  Record<ScaleVariantKey, ScaleVariantKey>
-> = {
+const scaleVariantKeys: Readonly<Record<ScaleVariantKey, ScaleVariantKey>> = {
   hidden: 'hidden',
   visible: 'visible',
   exit: 'exit',
 };
 
-export const fadeVariantKeys: Readonly<Record<FadeVariantKey, FadeVariantKey>> =
+const fadeVariantKeys: Readonly<Record<FadeVariantKey, FadeVariantKey>> = {
+  hidden: 'hidden',
+  visible: 'visible',
+  exit: 'exit',
+};
+
+const flipVariantKeys: Readonly<Record<FlipVariantKey, FlipVariantKey>> = {
+  hidden: 'hidden',
+  visible: 'visible',
+  exit: 'exit',
+};
+
+const bounceVariantKeys: Readonly<Record<BounceVariantKey, BounceVariantKey>> =
   {
     hidden: 'hidden',
     visible: 'visible',
     exit: 'exit',
   };
 
-export const flipVariantKeys: Readonly<Record<FlipVariantKey, FlipVariantKey>> =
-  {
-    hidden: 'hidden',
-    visible: 'visible',
-    exit: 'exit',
-  };
-
-export const bounceVariantKeys: Readonly<
-  Record<BounceVariantKey, BounceVariantKey>
-> = {
+const swipeVariantKeys: Readonly<Record<SwipeVariantKey, SwipeVariantKey>> = {
   hidden: 'hidden',
   visible: 'visible',
   exit: 'exit',
 };
 
-export const swipeVariantKeys: Readonly<
-  Record<SwipeVariantKey, SwipeVariantKey>
-> = {
-  hidden: 'hidden',
-  visible: 'visible',
-  exit: 'exit',
-};
-
-export const zoomRotateVariantKeys: Readonly<
+const zoomRotateVariantKeys: Readonly<
   Record<ScaleVariantKey, ScaleVariantKey>
 > = {
   hidden: 'hidden',
@@ -172,24 +203,45 @@ export const zoomRotateVariantKeys: Readonly<
   exit: 'exit',
 };
 
-export const elasticVariantKeys: Readonly<
-  Record<ScaleVariantKey, ScaleVariantKey>
-> = {
+const elasticVariantKeys: Readonly<Record<ScaleVariantKey, ScaleVariantKey>> = {
   hidden: 'hidden',
   visible: 'visible',
   exit: 'exit',
 };
 
-// TODO: refactor this object
 const Variants = {
-  slideVariant,
-  scaleVariant,
-  fadeVariant,
-  flipVariant,
-  bounceVariant,
-  swipeVariant,
-  zoomRotateVariant,
-  elasticVariant,
+  slide: {
+    key: slideVariantKeys,
+    variant: slideVariant,
+  },
+  scale: {
+    key: scaleVariantKeys,
+    variant: scaleVariant,
+  },
+  fade: {
+    key: fadeVariantKeys,
+    variant: fadeVariant,
+  },
+  flip: {
+    key: flipVariantKeys,
+    variant: flipVariant,
+  },
+  bounce: {
+    key: bounceVariantKeys,
+    variant: bounceVariant,
+  },
+  swipe: {
+    key: swipeVariantKeys,
+    variant: swipeVariant,
+  },
+  zoomRotate: {
+    key: zoomRotateVariantKeys,
+    variant: zoomRotateVariant,
+  },
+  elastic: {
+    key: elasticVariantKeys,
+    variant: elasticVariant,
+  },
 } as const;
 
 export default Variants;

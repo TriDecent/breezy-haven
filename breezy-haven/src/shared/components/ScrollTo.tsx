@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowUp } from 'lucide-react';
-import Variants, { slideVariantKeys } from '../animations/Variants';
+import Variants from '../animations/Variants';
 import useScrollDirection from '../hooks/useScrollDirection';
 import { Button } from './ui/button';
 
@@ -12,10 +12,10 @@ export function ScrollTo({ id }: { id: string }) {
     <AnimatePresence>
       {direction === 'down' ? (
         <motion.aside
-          variants={Variants.slideVariant(0, 50)}
-          initial={slideVariantKeys.hidden}
-          animate={slideVariantKeys.visible}
-          exit={slideVariantKeys.safelyHidden}
+          variants={Variants.slide.variant(0, 50)}
+          initial={Variants.slide.key.hidden}
+          animate={Variants.slide.key.visible}
+          exit={Variants.slide.key.safelyHidden}
           transition={{ type: 'spring' }}
         >
           <Button

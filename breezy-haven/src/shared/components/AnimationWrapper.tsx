@@ -1,6 +1,6 @@
 'use client';
 
-import { slideVariantKeys, Variants } from '@/shared/animations';
+import { Variants } from '@/shared/animations';
 import { motion } from 'framer-motion';
 import type { ReactNode } from 'react';
 
@@ -13,11 +13,11 @@ export function AnimationWrapper({
 }) {
   return (
     <motion.div
-      variants={Variants.slideVariant(0, 30)}
-      initial={slideVariantKeys.hidden}
-      whileInView={slideVariantKeys.visible}
+      variants={Variants.slide.variant(0, 30)}
+      initial={Variants.slide.key.hidden}
+      whileInView={Variants.slide.key.visible}
+      exit={Variants.slide.key.safelyHidden}
       viewport={{ amount: 0.3 }}
-      exit={slideVariantKeys.safelyHidden}
       transition={{ type: 'spring' }}
       className={className}
     >
