@@ -101,7 +101,7 @@ function TodayActivitySection({
       </CardHeader>
 
       <CardContent className='px-2'>
-        <ScrollArea className='h-75'>
+        <ScrollArea className='h-70'>
           <ScrollBar orientation='vertical' />
           <TodayActivity bookings={todayBookings} />
         </ScrollArea>

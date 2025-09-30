@@ -7,7 +7,8 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from '@/shared/components';
-import { useEffect, useState } from 'react';
+import { useInView } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 import { Cell, Pie, PieChart } from 'recharts';
 
 export type StayDurationPie = Readonly<{
@@ -55,6 +56,10 @@ export function StayDurationChart({
 }: {
   pieData: readonly StayDurationPie[];
 }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, {
+    margin: '50px',
+  });
   const [isMobile, setIsMobile] = useState(true);
 
   useEffect(() => {
@@ -65,42 +70,46 @@ export function StayDurationChart({
   }, []);
 
   return (
-    <ChartContainer
-      config={chartConfig}
-      className='min-h-96 w-full md:min-h-0'
-    >
-      <PieChart accessibilityLayer>
-        <ChartTooltip content={<ChartTooltipContent />} />
-        {isMobile ? (
-          <ChartLegend
-            content={
-              <ChartLegendContent className='flex flex-row flex-wrap justify-center gap-x-4 gap-y-2' />
-            }
-            verticalAlign='bottom'
-          />
-        ) : (
-          <ChartLegend
-            content={<ChartLegendContent className='flex flex-col' />}
-            layout='vertical'
-            align='right'
-            verticalAlign='middle'
-          />
-        )}
-
-        <Pie
-          data={[...pieData]}
-          dataKey='value'
-          nameKey='name'
-          innerRadius={60}
-          outerRadius={90}
-          paddingAngle={2}
-          label
+    <div ref={ref}>
+      {isInView ? (
+        <ChartContainer
+          config={chartConfig}
+          className='min-h-96 w-full md:min-h-0'
         >
-          {pieData.map(pie => (
-            <Cell key={pie.name} fill={chartConfig[pie.name].color} />
-          ))}
-        </Pie>
-      </PieChart>
-    </ChartContainer>
+          <PieChart accessibilityLayer>
+            <ChartTooltip content={<ChartTooltipContent />} />
+            {isMobile ? (
+              <ChartLegend
+                content={
+                  <ChartLegendContent className='flex flex-row flex-wrap justify-center gap-x-4 gap-y-2' />
+                }
+                verticalAlign='bottom'
+              />
+            ) : (
+              <ChartLegend
+                content={<ChartLegendContent className='flex flex-col' />}
+                layout='vertical'
+                align='right'
+                verticalAlign='middle'
+              />
+            )}
+
+            <Pie
+              data={[...pieData]}
+              dataKey='value'
+              nameKey='name'
+              innerRadius={60}
+              outerRadius={90}
+              paddingAngle={2}
+              label
+            >
+              {pieData.map(pie => (
+                <Cell key={pie.name} fill={chartConfig[pie.name].color} />
+              ))}
+            </Pie>
+          </PieChart>
+        </ChartContainer>
+      ) : null}
+    </div>
   );
 }
