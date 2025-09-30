@@ -40,5 +40,6 @@ export * from './ui/popover';
 export * from './ui/scroll-area';
 export * from './ui/select';
 export * from './ui/sonner';
+export * from './ui/switch';
 export * from './ui/table';
 export * from './ui/textarea';

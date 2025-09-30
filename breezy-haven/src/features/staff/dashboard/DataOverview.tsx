@@ -17,6 +17,7 @@ import { format, isToday, isWithinInterval, parseISO, subDays } from 'date-fns';
 import type { Booking } from '@/shared/schemas';
 
 import type { BookingQuery } from './BookingQuerySchema';
+import { DataRefresh } from './DataRefresh';
 import { SalesChart, type Sale } from './SalesChart';
 import { Stats } from './Stats';
 import { StayDurationChart, type StayDurationPie } from './StayDurationChart';
@@ -44,6 +45,10 @@ export async function DataOverview({ queryDays }: { queryDays: BookingQuery }) {
 
   return (
     <div className='space-y-16'>
+      <AnimationWrapper>
+        <DataRefresh />
+      </AnimationWrapper>
+
       <AnimationWrapper>
         <StatsSection
           bookings={filteredBookings}
