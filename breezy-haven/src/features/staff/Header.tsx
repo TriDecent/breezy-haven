@@ -1,16 +1,6 @@
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  ThemeToggle,
-} from '@/shared/components';
-
-import { ROUTES } from '@/shared/constants';
-import { LogOut, Menu, UserCircle } from 'lucide-react';
-import Link from 'next/link';
-import { logoutAction } from './logoutAction';
+import { ThemeToggle } from '@/shared/components';
 import { StaffBadge } from './StaffBadge';
+import { SubMenu } from './SubMenu';
 
 export function Header() {
   return (
@@ -22,25 +12,5 @@ export function Header() {
         <ThemeToggle />
       </div>
     </div>
-  );
-}
-
-export function SubMenu() {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger>
-        <Menu size={32} />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align='end'>
-        <DropdownMenuItem asChild>
-          <Link href={ROUTES.staff.nested.profile.href}>
-            <UserCircle /> My Profile
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={logoutAction}>
-          <LogOut /> Log out
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
   );
 }
