@@ -7,10 +7,9 @@ export default function Error({
 }) {
   const isProd = process.env.NODE_ENV === 'production';
 
-  const displayMessage =
-    isProd && message.includes('Server Components render')
-      ? 'An error occurred while loading the page. Please try again later.'
-      : message;
+  const displayMessage = isProd
+    ? 'An error occurred while loading the page. Please try again later.'
+    : message;
 
   return (
     <div className='flex flex-1 flex-col items-center justify-center gap-4'>

@@ -2,6 +2,7 @@
 import NextForm from 'next/form';
 import { useActionState, useEffect, type ReactNode } from 'react';
 import type { ActionResponse } from '../actions';
+import { useShakeError } from '../hooks/use-shake-errors';
 import { Button } from './ui/button';
 import { CardAction } from './ui/card';
 
@@ -29,9 +30,10 @@ export function Form<T extends FormResponse>({
 }: FormProps<T>) {
   const [state, dispatch, isPending] = useActionState(action, initialState);
   useForm(state, onFormSuccess, onFormError);
+  const scope = useShakeError(state.errors);
 
   return (
-    <NextForm action={dispatch} className='space-y-6'>
+    <NextForm ref={scope} action={dispatch} className='space-y-6'>
       {renderFields(state, isPending)}
 
       <CardAction className='flex w-full flex-col gap-4 self-end md:w-fit md:flex-row'>

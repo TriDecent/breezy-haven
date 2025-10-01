@@ -11,14 +11,7 @@ export const config: MiddlewareConfig = {
     '/guest/api/auth/callback/google',
     '/guest',
 
-    '/staff',
-    '/staff/dashboard',
-    '/staff/bookings',
-    '/staff/cabins',
-    '/staff/guests',
-    '/staff/settings',
-    '/staff/user',
-    '/staff/profile',
+    '/staff/:path*',
   ],
 };
 

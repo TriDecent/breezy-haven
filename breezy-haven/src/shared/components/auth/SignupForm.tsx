@@ -1,6 +1,7 @@
 'use client';
 import type { ActionResponse } from '@/shared/actions';
 import { Button, CardAction, FormRow } from '@/shared/components';
+import { useShakeError } from '@/shared/hooks/use-shake-errors';
 import type { SignUp } from '@/shared/schemas';
 import { Pen } from 'lucide-react';
 import Form from 'next/form';
@@ -36,8 +37,10 @@ export function SignupForm<TResponse extends SignupResponse>({
 
   useSignup(state, onSignupSuccess, onSignupFailed);
 
+  const scope = useShakeError(state.errors);
+
   return (
-    <Form action={dispatch} className='flex flex-col gap-6'>
+    <Form ref={scope} action={dispatch} className='flex flex-col gap-6'>
       <FormRow
         id='fullName'
         name='fullName'

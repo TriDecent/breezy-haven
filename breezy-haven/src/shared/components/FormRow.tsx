@@ -1,7 +1,7 @@
-import type {
-  ComponentProps,
-  InputHTMLAttributes,
-  TextareaHTMLAttributes,
+import {
+  type ComponentProps,
+  type InputHTMLAttributes,
+  type TextareaHTMLAttributes,
 } from 'react';
 import { cn } from '../utils/utils';
 import { Input } from './ui/input';
@@ -55,7 +55,11 @@ function InputField({
         id={id}
         name={name}
         {...props}
-        className={cn('flex-2 read-only:cursor-not-allowed', className)}
+        className={cn(
+          'flex-2 read-only:cursor-not-allowed',
+          error ? 'error border-red-600/75' : '',
+          className
+        )}
       />
       {error ? (
         <p className='flex-1 text-red-500 first-letter:capitalize'>{error}</p>
@@ -88,7 +92,11 @@ function TextareaField({
       <Textarea
         id={id}
         name={name}
-        className={cn('flex-2 read-only:cursor-not-allowed', className)}
+        className={cn(
+          'flex-2 read-only:cursor-not-allowed',
+          error ? 'error border-red-600/75' : '',
+          className
+        )}
         {...props}
       />
       {error ? (
