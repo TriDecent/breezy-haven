@@ -103,8 +103,6 @@ async function handleWithoutImageUploadAsync(
 ): Promise<Result<Cabin, FailedResponse<SafeUpdateCabinInput>>> {
   const [updatedCabin] = await updateCabinAsync(cabin.id, cabin);
 
-  console.log(updatedCabin);
-
   if (!updatedCabin)
     return [
       null,

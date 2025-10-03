@@ -128,7 +128,6 @@ const useSignup = <TResponse extends SignupResponse>(
 
   useEffect(() => {
     if (!state.errors) return;
-    console.log(state.errors);
     onSignupFailed(state);
   }, [onSignupFailed, state]);
 };

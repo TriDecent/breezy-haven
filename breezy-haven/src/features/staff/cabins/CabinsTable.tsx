@@ -236,7 +236,7 @@ function DeleteAction({ cabinId }: { cabinId: Cabin['id'] }) {
               toast.promise(deleteCabinAction(cabinId), {
                 loading: 'Deleting...',
                 success: `Cabin ${cabinId} has been deleted!`,
-                error: 'An error has  occurred!',
+                error: `Failed to delete cabin ${cabinId}: possibly referenced in existing bookings`,
               }),
           },
         })
