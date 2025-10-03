@@ -50,13 +50,7 @@ export function CabinForm<T extends SafeAddCabinInput | SafeUpdateCabinInput>({
 
   return (
     <form
-      action={formData => {
-        const image = formData.get('image');
-
-        if (image instanceof File && image.size === 0) formData.delete('image');
-
-        dispatch(formData);
-      }}
+      action={dispatch}
       className='space-y-4'
     >
       <Toaster id='cabin-operation' richColors position='top-right' />

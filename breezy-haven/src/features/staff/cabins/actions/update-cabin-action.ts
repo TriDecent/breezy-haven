@@ -8,6 +8,7 @@ import { revalidatePath } from 'next/cache';
 import path from 'path';
 import z from 'zod';
 import {
+  ImageValidator,
   SafeUpdateCabinInput,
   UpdateCabinSchema,
   type FailedResponse,
@@ -25,17 +26,20 @@ export async function updateCabinAction(
 
   const [parsedInput, failed] = validateInput(input);
 
-  const userEnteredWithoutImage = Object.fromEntries(
-    Object.entries(input).filter(([key]) => key !== 'image')
-  );
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { image, ...userEnteredWithoutImage } = input;
 
   if (failed) return { ...failed, userEntered: userEnteredWithoutImage };
 
+  const isImageValid = ImageValidator.safeParse(parsedInput.image).success;
+
   let updatedCabin: Cabin | undefined = undefined;
 
-  if (!parsedInput.image) {
+  if (!isImageValid) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { image, ...rest } = parsedInput;
     const [cabin, failed] = await handleWithoutImageUploadAsync(
-      parsedInput,
+      rest,
       userEnteredWithoutImage
     );
 
@@ -44,7 +48,7 @@ export async function updateCabinAction(
     updatedCabin = cabin;
   }
 
-  if (parsedInput.image) {
+  if (isImageValid) {
     const [cabin, failed] = await handleWithImageUploadAsync(
       { ...parsedInput, image: parsedInput.image }, // don't even know why Ts cannot infer that parsedInput has image is File but File | undefined, that's why spread is needed
       userEnteredWithoutImage
@@ -98,6 +102,8 @@ async function handleWithoutImageUploadAsync(
   input: Record<string, FormDataEntryValue>
 ): Promise<Result<Cabin, FailedResponse<SafeUpdateCabinInput>>> {
   const [updatedCabin] = await updateCabinAsync(cabin.id, cabin);
+
+  console.log(updatedCabin);
 
   if (!updatedCabin)
     return [

@@ -5,34 +5,27 @@ export type Result<S, F> =
   | readonly [success: S, failed: null]
   | readonly [success: null, failed: F];
 
+export const ImageValidator = z
+  .file({ error: 'Image must be File' })
+  .refine(
+    file => ['image/png', 'image/jpeg', 'image/webp'].includes(file.type),
+    { error: 'Image file must be png, jpg or webp' }
+  );
+
 export const AddCabinSchema = CabinSchema.omit({
   id: true,
   created_at: true,
-})
-  .extend({
-    image: z
-      .file({ error: 'Image must be File' })
-      .refine(
-        file => ['image/png', 'image/jpeg', 'image/webp'].includes(file.type),
-        { error: 'Image file must be png, jpg or webp' }
-      ),
-  })
-  .strip();
+}).extend({
+  image: ImageValidator,
+});
+
 export type SafeAddCabinInput = z.infer<typeof AddCabinSchema>;
 
 export const UpdateCabinSchema = CabinSchema.omit({
   created_at: true,
-})
-  .extend({
-    image: z
-      .file({ error: 'Image must be File' })
-      .refine(
-        file => ['image/png', 'image/jpeg', 'image/webp'].includes(file.type),
-        { error: 'Image file must be png, jpg or webp' }
-      )
-      .optional(),
-  })
-  .strip();
+}).extend({
+  image: z.file({ error: 'Image must be File' }),
+});
 
 export type SafeUpdateCabinInput = z.infer<typeof UpdateCabinSchema>;
 

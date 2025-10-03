@@ -31,12 +31,13 @@ export function SideNavigation() {
 
   return (
     <div className='sticky top-0 flex h-full flex-col gap-8 py-4'>
-      <div className='flex flex-col items-center gap-4'>
+      <div className='flex flex-col items-center gap-4 select-none'>
         <Image
           src={breezyHavenLogo}
           width={69}
           height={69}
           alt='The Breezy Haven logo'
+          draggable={false}
           priority
         />
         <p>
