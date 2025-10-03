@@ -54,17 +54,24 @@ export async function updatePasswordAction(
   });
   if (errors)
     return {
-      userEntered: input,
-      errors: {
-        unexpected:
-          'An error has occurred while trying to update your password',
+      type: 'error',
+      payload: {
+        userEntered: input,
+        errors: {
+          unexpected:
+            'An error has occurred while trying to update your password',
+        },
+        isSuccess: false,
       },
     };
 
   return {
-    userEntered: null,
-    errors: null,
-    isSuccess: true,
+    type: 'success',
+    payload: {
+      userEntered: null,
+      errors: null,
+      isSuccess: true,
+    },
   };
 }
 
@@ -81,8 +88,12 @@ function validateInput(
   return {
     type: 'error',
     payload: {
-      userEntered: input,
-      errors: z.flattenError(parsedResult.error).fieldErrors,
+      type: 'error',
+      payload: {
+        userEntered: input,
+        errors: z.flattenError(parsedResult.error).fieldErrors,
+        isSuccess: false,
+      },
     },
   };
 }

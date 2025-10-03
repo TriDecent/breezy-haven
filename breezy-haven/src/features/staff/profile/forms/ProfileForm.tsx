@@ -74,8 +74,10 @@ export function ProfileForm({ defaultProfile }: ProfileFormProps) {
           name='fullName'
           labelText='Full name'
           labelClassname='min-w-20'
-          defaultValue={state.userEntered?.fullName ?? defaultProfile.fullName}
-          error={state.errors?.fullName?.[0]}
+          defaultValue={
+            state.payload.userEntered?.fullName ?? defaultProfile.fullName
+          }
+          error={state.payload.errors?.fullName?.[0]}
           disabled={isPending}
         />
 
@@ -87,7 +89,7 @@ export function ProfileForm({ defaultProfile }: ProfileFormProps) {
           name='avatar'
           labelText='Avatar'
           labelClassname='min-w-20'
-          error={state.errors?.avatar?.[0]}
+          error={state.payload.errors?.avatar?.[0]}
           disabled={isPending}
           onChange={handleFileChange}
         />
@@ -112,8 +114,8 @@ export function ProfileForm({ defaultProfile }: ProfileFormProps) {
 
   const handleRenderUnexpectedErrors = useCallback(
     (state: UpdateProfileResponse) =>
-      state.errors?.unexpected ? (
-        <p className='text-red-500'>{state.errors.unexpected}</p>
+      state.payload.errors?.unexpected ? (
+        <p className='text-red-500'>{state.payload.errors.unexpected}</p>
       ) : null,
     []
   );
@@ -121,7 +123,10 @@ export function ProfileForm({ defaultProfile }: ProfileFormProps) {
   return (
     <Form
       action={updateProfileAction}
-      initialState={{ userEntered: null, errors: null }}
+      initialState={{
+        type: 'initial',
+        payload: { userEntered: null, errors: null },
+      }}
       onFormSuccess={handleFormSuccess}
       onFormError={handleFormError}
       submitNode={

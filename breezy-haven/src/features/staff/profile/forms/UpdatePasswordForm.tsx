@@ -30,8 +30,8 @@ export function UpdatePasswordForm() {
           type='password'
           autoComplete='new-password webauthn'
           labelClassname='min-w-36'
-          defaultValue={state.userEntered?.password}
-          error={state.errors?.password?.at(0)}
+          defaultValue={state.payload.userEntered?.password}
+          error={state.payload.errors?.password?.at(0)}
           disabled={isPending}
         />
 
@@ -42,8 +42,8 @@ export function UpdatePasswordForm() {
           labelText='Confirm password'
           type='password'
           labelClassname='min-w-36'
-          defaultValue={state.userEntered?.confirmedPassword}
-          error={state.errors?.confirmedPassword?.at(0)}
+          defaultValue={state.payload.userEntered?.confirmedPassword}
+          error={state.payload.errors?.confirmedPassword?.at(0)}
           disabled={isPending}
         />
       </>
@@ -53,8 +53,8 @@ export function UpdatePasswordForm() {
 
   const handleRenderUnexpectedErrors = useCallback(
     (state: UpdatePasswordResponse) =>
-      state.errors?.unexpected ? (
-        <p className='text-red-500'>{state.errors.unexpected}</p>
+      state.payload.errors?.unexpected ? (
+        <p className='text-red-500'>{state.payload.errors.unexpected}</p>
       ) : null,
     []
   );
@@ -66,7 +66,10 @@ export function UpdatePasswordForm() {
       onFormError={handleFormError}
       renderUnexpectedErrors={handleRenderUnexpectedErrors}
       renderFields={handleRenderFields}
-      initialState={{ userEntered: null, errors: null }}
+      initialState={{
+        type: 'initial',
+        payload: { userEntered: null, errors: null },
+      }}
       submitNode={
         <>
           <SaveIcon />
