@@ -1,7 +1,9 @@
 'use client';
 import NextForm from 'next/form';
 import { useActionState, useEffect, type ReactNode } from 'react';
-import type { ActionResponse } from '../actions';
+import type {
+  ActionResponse,
+} from '../actions';
 import { useShakeError } from '../hooks/use-shake-errors';
 import { Button } from './ui/button';
 import { CardAction } from './ui/card';
@@ -11,7 +13,7 @@ interface FormProps<T> {
   readonly initialState: Awaited<T>;
   readonly renderFields: (state: Awaited<T>, isPending: boolean) => ReactNode;
   readonly renderUnexpectedErrors: (state: Awaited<T>) => ReactNode;
-  readonly onFormSuccess: () => void;
+  readonly onFormSuccess: (state: Awaited<T>) => void;
   readonly onFormError: () => void;
 
   readonly submitNode: ReactNode;
@@ -30,7 +32,7 @@ export function Form<T extends FormResponse>({
 }: FormProps<T>) {
   const [state, dispatch, isPending] = useActionState(action, initialState);
   useForm(state, onFormSuccess, onFormError);
-  const scope = useShakeError(state.errors);
+  const scope = useShakeError(state.payload.errors);
 
   return (
     <NextForm ref={scope} action={dispatch} className='space-y-6'>
@@ -62,16 +64,16 @@ export function Form<T extends FormResponse>({
 
 const useForm = <T extends FormResponse>(
   state: Awaited<T>,
-  onFormSuccess: () => void,
-  onFormFail: () => void
+  onFormSuccess: (state: Awaited<T>) => void,
+  onFormFail: (state: Awaited<T>) => void
 ) => {
   useEffect(() => {
-    if (!state.isSuccess) return;
-    onFormSuccess();
+    if (state.type !== 'success') return;
+    onFormSuccess(state);
   }, [onFormSuccess, state]);
 
   useEffect(() => {
-    if (!state.errors) return;
-    onFormFail();
+    if (state.type !== 'error') return;
+    onFormFail(state);
   }, [onFormFail, state]);
 };
