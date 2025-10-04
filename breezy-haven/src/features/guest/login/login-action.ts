@@ -31,7 +31,7 @@ export async function loginAction(
 ): Promise<LoginActionResponse> {
   const validateResult = validateFormData(formData);
 
-  if (validateResult.type === 'response') return validateResult;
+  if (validateResult.type === 'response') return validateResult.payload;
 
   const safeInput = validateResult.parsed;
 
@@ -65,25 +65,34 @@ export async function loginAction(
   );
 
   return {
-    userEntered: null,
-    errors: null,
-    isSuccess: true,
+    type: 'success',
+    payload: {
+      userEntered: null,
+      errors: null,
+      isSuccess: true,
+    },
   };
 }
 
 function validateFormData(
   formData: FormData
 ):
-  | ({ type: 'response' } & LoginActionResponse)
-  | ({ type: 'validate' } & { parsed: SafeLoginInput }) {
+  | { type: 'response'; payload: LoginActionResponse }
+  | { type: 'validate'; parsed: SafeLoginInput } {
   const input = Object.fromEntries(formData.entries());
   const parsedResult = LoginInputSchema.safeParse(input);
 
   if (!parsedResult.success)
     return {
       type: 'response',
-      errors: z.flattenError(parsedResult.error).fieldErrors,
-      userEntered: input,
+      payload: {
+        type: 'error',
+        payload: {
+          userEntered: input,
+          errors: z.flattenError(parsedResult.error).fieldErrors,
+          isSuccess: false,
+        },
+      },
     };
 
   return {
@@ -96,10 +105,14 @@ function createUnexpectedResponse(
   userEntered: SafeLoginInput
 ): LoginActionResponse {
   return {
-    userEntered,
-    errors: {
-      unexpected:
-        'Login unsuccessful. Please try again or check your email and password.',
+    type: 'error',
+    payload: {
+      userEntered,
+      errors: {
+        unexpected:
+          'Login unsuccessful. Please try again or check your email and password.',
+      },
+      isSuccess: false,
     },
   };
 }

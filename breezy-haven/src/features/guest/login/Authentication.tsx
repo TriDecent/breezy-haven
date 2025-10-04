@@ -85,7 +85,10 @@ export function SignupCard({ onGoBackAction }: { onGoBackAction: () => void }) {
       <CardContent>
         <SignupForm
           action={signupAction}
-          initialState={{ userEntered: null, errors: null }}
+          initialState={{
+            type: 'initial',
+            payload: { userEntered: null, errors: null },
+          }}
           signUpText={'Sign up'}
           onSignupSuccessAction={handleSignupSuccess}
           onSignupFailedAction={handleSignupFailed}

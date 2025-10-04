@@ -1,10 +1,8 @@
 'use client';
+import type { ActionResponse } from '@/shared/actions';
+import { useShakeError } from '@/shared/hooks';
 import NextForm from 'next/form';
 import { useActionState, useEffect, type ReactNode } from 'react';
-import type {
-  ActionResponse,
-} from '../actions';
-import { useShakeError } from '../hooks/use-shake-errors';
 import { Button } from './ui/button';
 import { CardAction } from './ui/card';
 

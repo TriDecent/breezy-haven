@@ -12,14 +12,22 @@ export async function signupAction(
   const parsed = SignUpSchema.safeParse(input);
   if (!parsed.success)
     return {
-      userEntered: input,
-      errors: z.flattenError(parsed.error).fieldErrors,
+      type: 'error',
+      payload: {
+        userEntered: input,
+        errors: z.flattenError(parsed.error).fieldErrors,
+        isSuccess: false,
+      },
     };
 
   return {
-    userEntered: input,
-    errors: {
-      unexpected: 'This feature is not available yet',
+    type: 'error',
+    payload: {
+      userEntered: parsed.data,
+      errors: {
+        unexpected: 'This feature is not available yet',
+      },
+      isSuccess: false,
     },
   };
 }

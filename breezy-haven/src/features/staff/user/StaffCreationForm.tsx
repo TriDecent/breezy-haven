@@ -60,7 +60,7 @@ export function StaffCreationForm() {
           disabled={isPending}
           labelClassname='min-w-36'
           accept='.png, .jpg, .jpeg'
-          error={state.errors?.avatar?.[0]}
+          error={state.payload.errors?.avatar?.[0]}
           onChange={handleFileChange}
         />
 
@@ -83,8 +83,11 @@ export function StaffCreationForm() {
     <SignupForm
       action={createStaffAction}
       initialState={{
-        errors: null,
-        userEntered: null,
+        type: 'initial',
+        payload: {
+          errors: null,
+          userEntered: null,
+        },
       }}
       signUpText={'Create new staff'}
       onSignupSuccessAction={handleSignupSuccess}
