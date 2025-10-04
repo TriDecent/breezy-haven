@@ -1,294 +1,236 @@
 'use client';
 
-import {
-  Button,
-  CardAction,
-  Input,
-  ScrollArea,
-  Textarea,
-  Toaster,
-} from '@/shared/components';
+import { Form, FormRow, ScrollArea, Toaster } from '@/shared/components';
 import { cabinFormActions, type RootState } from '@/shared/store';
 import { CirclePlus } from 'lucide-react';
 import Image from 'next/image';
-import {
-  useActionState,
-  useEffect,
-  useState,
-  type InputHTMLAttributes,
-  type TextareaHTMLAttributes,
-} from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'sonner';
 import type {
-  ActionResponse,
+  CabinOperationResponse,
   SafeAddCabinInput,
   SafeUpdateCabinInput,
 } from './actions/types';
+
+const toasterId = 'cabin-operation';
 
 export function CabinForm<T extends SafeAddCabinInput | SafeUpdateCabinInput>({
   action,
 }: {
   action: (
-    currentState: ActionResponse<T>,
+    currentState: CabinOperationResponse<T>,
     formData: FormData
-  ) => Promise<ActionResponse<T>>;
+  ) => Promise<CabinOperationResponse<T>>;
 }) {
-  const {
-    state,
-    action: dispatch,
-    isPending,
-    defaultCabin,
-  } = useCabinForm(action);
-
-  const {
-    previewImageURL,
-    setPreviewImageURL,
-    isImageSizeExceeded,
-    setIsImageSizeExceeded,
-  } = usePreviewImage(defaultCabin?.image ?? null, state);
-
-  return (
-    <form
-      action={dispatch}
-      className='space-y-4'
-    >
-      <Toaster id='cabin-operation' richColors position='top-right' />
-      <ScrollArea className='h-96 px-4' type='always'>
-        <div className='space-y-4 md:space-y-8'>
-          {defaultCabin?.id ? (
-            <input type='hidden' name='id' value={defaultCabin.id} />
-          ) : null}
-          <InputField
-            id='name'
-            name='name'
-            labelText='Name'
-            placeholder='Enter the cabin name...'
-            defaultValue={state.userEntered?.name ?? defaultCabin?.name}
-            error={state.error?.name?.[0] ?? ''}
-            autoComplete='off'
-          />
-          <InputField
-            id='maxCapacity'
-            name='maxCapacity'
-            labelText='Max Capacity'
-            placeholder='Enter max capacity...'
-            defaultValue={
-              state.userEntered?.maxCapacity ?? defaultCabin?.maxCapacity
-            }
-            error={state.error?.maxCapacity?.[0] ?? ''}
-            autoComplete='off'
-          />
-          <InputField
-            id='regularPrice'
-            name='regularPrice'
-            labelText='Price'
-            placeholder='Enter regular price...'
-            defaultValue={
-              state.userEntered?.regularPrice ?? defaultCabin?.regularPrice
-            }
-            error={state.error?.regularPrice?.[0] ?? ''}
-            autoComplete='off'
-          />
-          <InputField
-            id='discount'
-            name='discount'
-            labelText='Discount'
-            placeholder='Enter discount...'
-            defaultValue={
-              state.userEntered?.discount ?? defaultCabin?.discount ?? 0
-            }
-            error={state.error?.discount?.[0] ?? ''}
-            autoComplete='off'
-          />
-          <TextareaField
-            id='description'
-            name='description'
-            labelText='Description'
-            placeholder='Enter description...'
-            defaultValue={
-              state.userEntered?.description ?? defaultCabin?.description
-            }
-            error={state.error?.description?.[0] ?? ''}
-            autoComplete='off'
-          />
-
-          <InputField
-            id='image'
-            name='image'
-            labelText='Image (< 1MB)'
-            placeholder='Enter image URL...'
-            accept='image/png, image/jpeg, image/webp'
-            error={state.error?.image?.[0] ?? ''}
-            type='file'
-            autoComplete='off'
-            onChange={e => {
-              const file = e.target.files?.[0];
-              if (!file) {
-                setPreviewImageURL(null);
-                return;
-              }
-
-              if (file.size >= 1024 * 1024) {
-                e.target.value = '';
-                setIsImageSizeExceeded(true);
-                return;
-              }
-              setPreviewImageURL(URL.createObjectURL(file));
-              setIsImageSizeExceeded(false);
-            }}
-          />
-          {isImageSizeExceeded ? (
-            <p className='text-red-500'>Image size must be less than 1MB.</p>
-          ) : null}
-
-          {previewImageURL ? (
-            <Image
-              src={previewImageURL ?? defaultCabin?.image}
-              alt='Cabin preview'
-              width='256'
-              height='256'
-              style={{ width: 'auto', height: 'auto' }}
-              className='ml-auto aspect-video h-36 rounded-lg mask-y-from-75% mask-x-from-95% object-cover'
-            />
-          ) : null}
-        </div>
-      </ScrollArea>
-
-      <CardAction className='flex items-center gap-4'>
-        <Button
-          variant='outline'
-          className='hover:cursor-pointer'
-          disabled={isPending}
-        >
-          <CirclePlus />
-          Add
-        </Button>
-        <Button
-          variant='ghost'
-          className='hover:cursor-pointer disabled:cursor-not-allowed'
-          type='reset'
-          disabled={isPending}
-        >
-          Cancel
-        </Button>
-      </CardAction>
-      {state.error?.unexpected ? (
-        <p className='mt-4 text-center text-red-500'>
-          {state.error.unexpected}
-        </p>
-      ) : null}
-    </form>
-  );
-}
-
-const useCabinForm = <T,>(
-  action: (
-    currentState: ActionResponse<T>,
-    formData: FormData
-  ) => Promise<ActionResponse<T>>
-) => {
   const defaultCabin = useSelector(
     (state: RootState) => state.cabinForm.defaultCabin
   );
-  const dispatch = useDispatch();
-  const [formState, formDispatch, isPending] = useActionState<
-    ActionResponse<T>,
-    FormData
-  >(action, {
-    userEntered: null,
-    error: null,
-  });
-
   const mode = useSelector((state: RootState) => state.cabinForm.mode);
-
-  useEffect(() => {
-    if (formState.error)
-      toast.error('An error has occurred!', { toasterId: 'cabin-operation' });
-    if (formState.success) {
-      toast.success('Upload cabin successfully!', {
-        toasterId: 'cabin-operation',
-      });
-      if (mode === 'update' && formState.updatedCabin)
-        dispatch(cabinFormActions.openUpdateForm(formState.updatedCabin));
-    }
-  }, [formDispatch, mode, formState, dispatch]);
-
-  return {
-    state: formState,
-    action: formDispatch,
-    isPending,
-    defaultCabin,
-  };
-};
-
-const usePreviewImage = <T,>(
-  defaultImage: string | null,
-  state: ActionResponse<T>
-) => {
-  const mode = useSelector((state: RootState) => state.cabinForm.mode);
-  const [isImageSizeExceeded, setIsImageSizeExceeded] = useState(false);
   const [previewImageURL, setPreviewImageURL] = useState<string | null>(
-    defaultImage
+    defaultCabin?.image ?? null
   );
 
-  useEffect(() => {
-    if (!state?.success) return;
+  const dispatch = useDispatch();
 
-    if (mode !== 'update') setPreviewImageURL(null);
-  }, [mode, state]);
-
-  return {
-    previewImageURL,
-    setPreviewImageURL,
-    isImageSizeExceeded,
-
-    setIsImageSizeExceeded,
-  };
-};
-
-function InputField({
-  id,
-  name,
-  labelText,
-  error,
-  ...props
-}: {
-  id: string;
-  name: string;
-  labelText: string;
-  error: string;
-} & InputHTMLAttributes<HTMLInputElement>) {
-  return (
-    <div className='flex flex-col gap-1 md:flex-row md:items-center md:gap-4'>
-      <label htmlFor={id} className='min-w-28'>
-        {labelText}
-      </label>
-      <Input id={id} name={name} {...props} className='flex-2' />
-      {error ? <p className='flex-1 text-red-500'>{error}</p> : null}
-    </div>
+  const initialState = useMemo(
+    () =>
+      ({
+        type: 'initial',
+        payload: {
+          userEntered: null,
+          errors: null,
+        },
+      }) as const,
+    []
   );
-}
 
-function TextareaField({
-  id,
-  name,
-  labelText,
-  error,
-  ...props
-}: {
-  id: string;
-  name: string;
-  labelText: string;
-  error: string;
-} & TextareaHTMLAttributes<HTMLTextAreaElement>) {
+  const renderUnexpectedErrors = useCallback(
+    (state: CabinOperationResponse<T>) =>
+      state.payload.errors?.unexpected ? (
+        <p className='mt-4 text-center text-red-500'>
+          {state.payload.errors.unexpected}
+        </p>
+      ) : null,
+    []
+  );
+
+  const onFormSuccess = useCallback(
+    (state: CabinOperationResponse<T>) => {
+      toast.success('Upload cabin successfully!', {
+        toasterId,
+      });
+      if (
+        mode === 'update' &&
+        state.type === 'success' &&
+        state.payload.updatedCabin
+      )
+        dispatch(cabinFormActions.openUpdateForm(state.payload.updatedCabin));
+      setPreviewImageURL(null);
+    },
+    [dispatch, mode]
+  );
+
+  const onFormError = useCallback(
+    () => toast.error('An error has occurred!', { toasterId }),
+    []
+  );
+
+  const renderFields = useCallback(
+    (state: CabinOperationResponse<T>) => (
+      <>
+        <Toaster id={toasterId} richColors position='top-right' />
+        <ScrollArea className='h-78 px-4' type='always'>
+          <div className='space-y-4 md:space-y-8'>
+            {defaultCabin?.id ? (
+              <input type='hidden' name='id' value={defaultCabin.id} />
+            ) : null}
+            <FormRow
+              kind='input'
+              id='name'
+              name='name'
+              labelText='Name'
+              placeholder='Enter the cabin name...'
+              labelClassname='min-w-28'
+              defaultValue={
+                state.payload.userEntered?.name ?? defaultCabin?.name
+              }
+              error={state.payload.errors?.name?.[0] ?? ''}
+              autoComplete='off'
+            />
+            <FormRow
+              kind='input'
+              id='maxCapacity'
+              name='maxCapacity'
+              labelText='Max Capacity'
+              placeholder='Enter max capacity...'
+              labelClassname='min-w-28'
+              defaultValue={
+                state.payload.userEntered?.maxCapacity ??
+                defaultCabin?.maxCapacity
+              }
+              error={state.payload.errors?.maxCapacity?.[0] ?? ''}
+              autoComplete='off'
+            />
+            <FormRow
+              kind='input'
+              id='regularPrice'
+              name='regularPrice'
+              labelText='Price'
+              placeholder='Enter regular price...'
+              labelClassname='min-w-28'
+              defaultValue={
+                state.payload.userEntered?.regularPrice ??
+                defaultCabin?.regularPrice
+              }
+              error={state.payload.errors?.regularPrice?.[0] ?? ''}
+              autoComplete='off'
+            />
+            <FormRow
+              kind='input'
+              id='discount'
+              name='discount'
+              labelText='Discount'
+              labelClassname='min-w-28'
+              placeholder='Enter discount...'
+              defaultValue={
+                state.payload.userEntered?.discount ??
+                defaultCabin?.discount ??
+                0
+              }
+              error={state.payload.errors?.discount?.[0] ?? ''}
+              autoComplete='off'
+            />
+            <FormRow
+              kind='textarea'
+              id='description'
+              name='description'
+              labelText='Description'
+              labelClassname='min-w-28'
+              placeholder='Enter description...'
+              defaultValue={
+                state.payload.userEntered?.description ??
+                defaultCabin?.description
+              }
+              error={state.payload.errors?.description?.[0] ?? ''}
+              autoComplete='off'
+            />
+
+            <FormRow
+              kind='input'
+              id='image'
+              name='image'
+              labelText='Image (< 1MB)'
+              labelClassname='min-w-28'
+              placeholder='Enter image URL...'
+              accept='image/png, image/jpeg, image/webp'
+              error={state.payload.errors?.image?.[0] ?? ''}
+              type='file'
+              autoComplete='off'
+              onChange={e => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                if (file.size > 1024 * 1024) {
+                  e.target.value = '';
+                  toast.warning('Image size must not exceed 1MB', {
+                    toasterId,
+                  });
+                  return;
+                }
+                if (
+                  !file.type.startsWith('image/') ||
+                  !['image/jpg', 'image/jpeg', 'image/png'].includes(file.type)
+                ) {
+                  e.target.value = '';
+                  toast.warning('Only JPG, PNG and JPEG images are allowed', {
+                    toasterId,
+                  });
+                  return;
+                }
+                setPreviewImageURL(URL.createObjectURL(file));
+              }}
+            />
+
+            {previewImageURL ? (
+              <Image
+                src={previewImageURL ?? defaultCabin?.image}
+                alt='Cabin preview'
+                width='256'
+                height='256'
+                style={{ width: 'auto', height: 'auto' }}
+                className='ml-auto aspect-video h-36 rounded-lg mask-y-from-75% mask-x-from-95% object-cover'
+              />
+            ) : null}
+          </div>
+        </ScrollArea>
+      </>
+    ),
+    [
+      defaultCabin?.description,
+      defaultCabin?.discount,
+      defaultCabin?.id,
+      defaultCabin?.image,
+      defaultCabin?.maxCapacity,
+      defaultCabin?.name,
+      defaultCabin?.regularPrice,
+      previewImageURL,
+    ]
+  );
+
   return (
-    <div className='flex flex-col gap-1 md:flex-row md:items-center md:gap-4'>
-      <label htmlFor={id} className='min-w-28'>
-        {labelText}
-      </label>
-      <Textarea id={id} name={name} className='flex-2' {...props} />
-      {error ? <p className='flex-1 text-red-500'>{error}</p> : null}
-    </div>
+    <Form
+      action={action}
+      initialState={initialState}
+      renderUnexpectedErrors={renderUnexpectedErrors}
+      onFormSuccess={onFormSuccess}
+      onFormError={onFormError}
+      submitNode={
+        <>
+          <CirclePlus />
+          Add
+        </>
+      }
+      renderFields={renderFields}
+    />
   );
 }

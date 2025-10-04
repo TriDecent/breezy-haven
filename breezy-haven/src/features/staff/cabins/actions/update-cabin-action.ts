@@ -29,7 +29,15 @@ export async function updateCabinAction(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { image, ...userEnteredWithoutImage } = input;
 
-  if (failed) return { ...failed, userEntered: userEnteredWithoutImage };
+  if (failed)
+    return {
+      type: 'error',
+      payload: {
+        ...failed,
+        userEntered: userEnteredWithoutImage,
+        isSuccess: false,
+      },
+    };
 
   const isImageValid = ImageValidator.safeParse(parsedInput.image).success;
 
@@ -43,7 +51,8 @@ export async function updateCabinAction(
       userEnteredWithoutImage
     );
 
-    if (failed) return failed;
+    if (failed)
+      return { type: 'error', payload: { ...failed, isSuccess: false } };
 
     updatedCabin = cabin;
   }
@@ -54,7 +63,8 @@ export async function updateCabinAction(
       userEnteredWithoutImage
     );
 
-    if (failed) return failed;
+    if (failed)
+      return { type: 'error', payload: { ...failed, isSuccess: false } };
 
     updatedCabin = cabin;
   }
@@ -64,10 +74,13 @@ export async function updateCabinAction(
   revalidatePath(`${ROUTES.cabins.href}/${parsedInput.id}`);
 
   return {
-    userEntered: null,
-    error: null,
-    success: true,
-    updatedCabin,
+    type: 'success',
+    payload: {
+      userEntered: null,
+      errors: null,
+      isSuccess: true,
+      updatedCabin,
+    },
   };
 }
 
@@ -89,7 +102,7 @@ function validateInput(
       null,
       {
         userEntered: input,
-        error: errors,
+        errors: errors,
       },
     ];
   }
@@ -108,7 +121,7 @@ async function handleWithoutImageUploadAsync(
       null,
       {
         userEntered: input,
-        error: {
+        errors: {
           unexpected:
             'An error occurred while trying to update the cabin. Please try again!',
         },
@@ -131,7 +144,7 @@ async function handleWithImageUploadAsync(
       null,
       {
         userEntered: input,
-        error: {
+        errors: {
           unexpected:
             'An error has occurred while trying to upload your image!',
         },
@@ -152,7 +165,7 @@ async function handleWithImageUploadAsync(
       null,
       {
         userEntered: input,
-        error: {
+        errors: {
           unexpected:
             'An error occurred while trying to update the cabin. Please try again!',
         },

@@ -1,3 +1,4 @@
+import type { ActionResponse } from '@/shared/actions';
 import { CabinSchema, type Cabin } from '@/shared/schemas';
 import z from 'zod';
 
@@ -31,14 +32,14 @@ export type SafeUpdateCabinInput = z.infer<typeof UpdateCabinSchema>;
 
 export type SuccessResponse = Readonly<{
   userEntered: null;
-  error: null;
+  errors: null;
   success?: true;
   updatedCabin?: Cabin;
 }>;
 
 export type FailedResponse<T> = Readonly<{
   userEntered: Readonly<Partial<Omit<T, 'image'>>>;
-  error: Readonly<
+  errors: Readonly<
     Partial<
       Record<keyof T, string[]> & {
         unexpected: string;
@@ -48,7 +49,21 @@ export type FailedResponse<T> = Readonly<{
   success?: false;
 }>;
 
-export type ActionResponse<T> = Readonly<SuccessResponse | FailedResponse<T>>;
+export type CabinOperationResponse<T> =
+  ActionResponse<
+    Readonly<Partial<Omit<T, 'image'>>>,
+    Readonly<
+      Partial<
+        Record<keyof T, string[]> & {
+          unexpected: string;
+        }
+      >
+    >
+  > extends infer U
+    ? U extends { type: 'success'; payload: object }
+      ? U & { payload: U['payload'] & { updatedCabin?: Cabin } }
+      : U
+    : never;
 
-export type AddActionResponse = ActionResponse<SafeAddCabinInput>;
-export type UpdateActionResponse = ActionResponse<SafeUpdateCabinInput>;
+export type AddActionResponse = CabinOperationResponse<SafeAddCabinInput>;
+export type UpdateActionResponse = CabinOperationResponse<SafeUpdateCabinInput>;

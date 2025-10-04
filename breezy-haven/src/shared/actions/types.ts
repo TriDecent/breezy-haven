@@ -1,19 +1,18 @@
 import type { Result } from '@/shared/types';
 
-export type ActionResponse<T1, T2> = Readonly<
+export type ActionResponse<TInput, TError> =
   | Result<
       { userEntered: null; errors: null; isSuccess: true },
       {
-        userEntered: T1;
-        errors: T2;
+        userEntered: TInput;
+        errors: TError;
         isSuccess: false;
       }
     >
-  | {
+  | Readonly<{
       type: 'initial';
       payload: Readonly<{
         userEntered: null;
         errors: null;
       }>;
-    }
->;
+    }>;

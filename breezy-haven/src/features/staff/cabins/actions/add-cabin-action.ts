@@ -23,8 +23,12 @@ export async function addCabinAction(
     const errors = z.flattenError(parsedInput.error).fieldErrors;
 
     return {
-      userEntered: input,
-      error: errors,
+      type: 'error',
+      payload: {
+        userEntered: input,
+        errors: errors,
+        isSuccess: false,
+      },
     };
   }
 
@@ -37,9 +41,13 @@ export async function addCabinAction(
   );
   if (!uploadResult)
     return {
-      userEntered: userEnteredWithoutImage,
-      error: {
-        image: ['Upload image failed!.'],
+      type: 'error',
+      payload: {
+        userEntered: userEnteredWithoutImage,
+        errors: {
+          image: ['Upload image failed!.'],
+        },
+        isSuccess: false,
       },
     };
 
@@ -53,10 +61,14 @@ export async function addCabinAction(
 
   if (!doesCreateCabinSuccess)
     return {
-      userEntered: userEnteredWithoutImage,
-      error: {
-        unexpected:
-          'An error occurred while trying to add a new a cabin. Please try again!',
+      type: 'error',
+      payload: {
+        userEntered: userEnteredWithoutImage,
+        errors: {
+          unexpected:
+            'An error occurred while trying to add a new a cabin. Please try again!',
+        },
+        isSuccess: false,
       },
     };
 
@@ -64,9 +76,12 @@ export async function addCabinAction(
   revalidatePath(ROUTES.cabins.href);
 
   return {
-    userEntered: null,
-    error: null,
-    success: true,
+    type: 'success',
+    payload: {
+      userEntered: null,
+      errors: null,
+      isSuccess: true,
+    },
   };
 }
 
