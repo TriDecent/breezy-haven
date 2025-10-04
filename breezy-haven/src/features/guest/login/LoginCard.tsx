@@ -7,21 +7,14 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/components';
+import { ROUTES } from '@/shared/constants';
 import { cn } from '@/shared/utils';
+import Link from 'next/link';
+import type { ComponentProps } from 'react';
+import GoogleLogin from './GoogleLogin';
+import { LoginForm } from './LoginForm';
 
-import { type JSX } from 'react';
-
-export function LoginCard({
-  renderLoginByProviders,
-  renderLoginByEmailPassword,
-  onSignupClick,
-  className,
-  ...props
-}: React.ComponentProps<'div'> & {
-  onSignupClick: () => void;
-  renderLoginByProviders: JSX.Element;
-  renderLoginByEmailPassword: JSX.Element;
-}) {
+export function LoginCard({ className, ...props }: ComponentProps<'div'>) {
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
@@ -31,14 +24,16 @@ export function LoginCard({
         </CardHeader>
         <CardContent>
           <div className='grid gap-6'>
-            <div className='flex flex-col gap-4'>{renderLoginByProviders}</div>
+            <div className='flex flex-col gap-4'>
+              <GoogleLogin />
+            </div>
             <div className='after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t'>
               <span className='bg-card text-muted-foreground relative z-10 px-2'>
                 Or continue with
               </span>
             </div>
 
-            {renderLoginByEmailPassword}
+            <LoginForm />
           </div>
         </CardContent>
         <CardFooter className='justify-center text-sm'>
@@ -48,9 +43,15 @@ export function LoginCard({
           <Button
             variant='link'
             className='animate-pulse dark:underline'
-            onClick={onSignupClick}
+            asChild
           >
-            Sign up
+            <Link
+              href={`${ROUTES.login.href}?mode=signup`}
+              replace
+              scroll={false}
+            >
+              Sign up
+            </Link>
           </Button>
         </CardFooter>
       </Card>

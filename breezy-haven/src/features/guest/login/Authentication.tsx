@@ -1,14 +1,24 @@
 'use client';
 import { Variants } from '@/shared/animations';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useState } from 'react';
-import GoogleLogin from './GoogleLogin';
+import { useMemo } from 'react';
+
+import { useSearchParams } from 'next/navigation';
+import z from 'zod';
 import { LoginCard } from './LoginCard';
-import { LoginForm } from './LoginForm';
 import { SignupCard } from './SignupCard';
 
+const AuthValidator = z.literal(['login', 'signup']);
+type AuthMode = z.infer<typeof AuthValidator>;
+
 export function Authentication() {
-  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
+  const searchParams = useSearchParams();
+  const authMode = useMemo<AuthMode>(() => {
+    const parsed = AuthValidator.safeParse(searchParams.get('mode'));
+    if (parsed.success) return parsed.data;
+
+    return 'login';
+  }, [searchParams]);
 
   return (
     <AnimatePresence mode='wait'>
@@ -21,11 +31,7 @@ export function Authentication() {
           exit={Variants.slide.key.safelyHidden}
           className='w-full max-w-xl'
         >
-          <LoginCard
-            renderLoginByProviders={<GoogleLogin />}
-            renderLoginByEmailPassword={<LoginForm />}
-            onSignupClick={() => setAuthMode('signup')}
-          />
+          <LoginCard />
         </motion.div>
       ) : (
         <motion.div
@@ -36,7 +42,7 @@ export function Authentication() {
           exit={Variants.slide.key.safelyHidden}
           className='w-full max-w-xl'
         >
-          <SignupCard onGoBackAction={() => setAuthMode('login')} />
+          <SignupCard />
         </motion.div>
       )}
     </AnimatePresence>

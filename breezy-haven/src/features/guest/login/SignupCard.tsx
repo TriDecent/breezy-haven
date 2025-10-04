@@ -5,10 +5,12 @@ import {
   CardContent,
   CardHeader,
 } from '@/shared/components';
+import { ROUTES } from '@/shared/constants';
 import { ArrowLeft, UserPen } from 'lucide-react';
+import Link from 'next/link';
 import { SignupForm } from './SignupForm';
 
-export function SignupCard({ onGoBackAction }: { onGoBackAction: () => void }) {
+export function SignupCard() {
   return (
     <Card className='mx-auto max-w-5xl'>
       <CardHeader>
@@ -16,12 +18,14 @@ export function SignupCard({ onGoBackAction }: { onGoBackAction: () => void }) {
           <UserPen /> Sign up
         </span>
         <CardAction>
-          <Button
-            onClick={onGoBackAction}
-            variant='gradient'
-            className='animate-pulse'
-          >
-            <ArrowLeft /> Log in
+          <Button variant='gradient' className='animate-pulse' asChild>
+            <Link
+              href={`${ROUTES.login.href}?mode=login`}
+              replace
+              scroll={false}
+            >
+              <ArrowLeft /> Log in
+            </Link>
           </Button>
         </CardAction>
       </CardHeader>
