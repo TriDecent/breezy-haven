@@ -1,13 +1,15 @@
 'use client';
 import type { ActionResponse } from '@/shared/actions';
 import { useShakeError } from '@/shared/hooks';
+import { cn } from '@/shared/utils';
+import type { ClassValue } from 'clsx';
 import NextForm from 'next/form';
 import { useActionState, useEffect, type ReactNode } from 'react';
 import { Button } from './ui/button';
 import { CardAction } from './ui/card';
 
 interface FormProps<T> {
-  readonly action: (state: T, formData: FormData) => Promise<T>;
+  readonly action: (state: Awaited<T>, formData: FormData) => Promise<T>;
   readonly initialState: Awaited<T>;
   readonly renderFields: (state: Awaited<T>, isPending: boolean) => ReactNode;
   readonly renderUnexpectedErrors: (state: Awaited<T>) => ReactNode;
@@ -15,6 +17,7 @@ interface FormProps<T> {
   readonly onFormError: () => void;
 
   readonly submitNode: ReactNode;
+  readonly className?: ClassValue;
 }
 
 type FormResponse = ActionResponse<unknown, unknown>;
@@ -27,13 +30,18 @@ export function Form<T extends FormResponse>({
   onFormSuccess,
   onFormError,
   submitNode,
+  className,
 }: FormProps<T>) {
   const [state, dispatch, isPending] = useActionState(action, initialState);
   useForm(state, onFormSuccess, onFormError);
   const scope = useShakeError(state.payload.errors);
 
   return (
-    <NextForm ref={scope} action={dispatch} className='space-y-6'>
+    <NextForm
+      ref={scope}
+      action={dispatch}
+      className={cn(`space-y-6`, className)}
+    >
       {renderFields(state, isPending)}
 
       <CardAction className='flex w-full flex-col gap-4 self-end md:w-fit md:flex-row'>

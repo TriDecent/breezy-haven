@@ -1,8 +1,13 @@
 'use server';
 
-import type { SignupResponse } from '@/shared/components/auth';
-import { SignUpSchema } from '@/shared/schemas';
+import type { ActionResponse } from '@/shared/actions';
+import { SignUpSchema, type SignUp } from '@/shared/schemas';
 import z from 'zod';
+
+export type SignupError = Partial<
+  Record<keyof SignUp, string[]> & { unexpected?: string }
+>;
+export type SignupResponse = ActionResponse<Partial<SignUp>, SignupError>;
 
 export async function signupAction(
   _state: SignupResponse,
