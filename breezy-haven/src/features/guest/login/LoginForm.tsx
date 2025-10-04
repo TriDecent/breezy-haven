@@ -1,7 +1,8 @@
 'use client';
 
-import { Button, Input, Label } from '@/shared/components';
+import { Button, FormRow } from '@/shared/components';
 import { ROUTES } from '@/shared/constants';
+import { stagger, useAnimate } from 'framer-motion';
 import Form from 'next/form';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useActionState, useEffect } from 'react';
@@ -21,6 +22,7 @@ export function LoginForm() {
   });
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [scope, animate] = useAnimate<HTMLFormElement>();
 
   useEffect(() => {
     if (state.type === 'initial' || !state.payload.isSuccess) return;
@@ -33,43 +35,45 @@ export function LoginForm() {
   useEffect(() => {
     if (!state.payload.errors) return;
     toast.error('An error has occurred while trying to login!');
-  }, [state]);
+
+    const elements = scope.current?.querySelectorAll('input.error');
+    if (!elements || elements.length === 0) return;
+    animate(
+      elements,
+      {
+        x: [-10, 5, 0, 5, 10, 5, 0],
+      },
+      { type: 'keyframes', delay: stagger(0.3) }
+    );
+  }, [animate, scope, state]);
 
   return (
-    <Form action={dispatch} className='grid gap-6'>
-      <div className='grid gap-3'>
-        <Label htmlFor='email'>Email</Label>
-        <Input
-          id='email'
-          type='email'
-          name='email'
-          placeholder='m@example.com'
-          autoComplete='email webauthn'
-          defaultValue={state.payload.userEntered?.email}
-          disabled={isPending}
-        />
-        {state.payload.errors?.email ? (
-          <p className='text-red-500'>{state.payload.errors.email}</p>
-        ) : null}
-      </div>
-      <div className='grid gap-3'>
-        <Label htmlFor='password'>Password</Label>
-        <Input
-          id='password'
-          type='password'
-          name='password'
-          disabled={isPending}
-        />
-        {state.payload.errors?.password ? (
-          <p className='text-red-500'>
-            {state.payload.errors.password.map(error => (
-              <span key={error} className='flex flex-col gap-2'>
-                {error}
-              </span>
-            ))}
-          </p>
-        ) : null}
-      </div>
+    <Form ref={scope} action={dispatch} className='grid gap-8'>
+      <FormRow
+        kind='input'
+        id='email'
+        type='email'
+        name='email'
+        placeholder='m@example.com'
+        autoComplete='email webauthn'
+        error={state.payload.errors?.email?.at(0)}
+        defaultValue={state.payload.userEntered?.email}
+        disabled={isPending}
+        labelText='Email'
+        labelClassname='min-w-18'
+      />
+
+      <FormRow
+        kind='input'
+        id='password'
+        type='password'
+        name='password'
+        disabled={isPending}
+        labelText='Password'
+        labelClassname='min-w-18'
+        error={state.payload.errors?.password?.at(0)}
+      />
+
       <Button
         type='submit'
         variant='secondary'

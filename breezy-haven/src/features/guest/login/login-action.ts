@@ -11,7 +11,7 @@ import z from 'zod';
 
 const LoginInputSchema = z.object({
   email: z.email({ message: 'Email must be a valid email' }).trim(),
-  password: z.string().trim(),
+  password: z.string().min(8).trim(),
 });
 
 type SafeLoginInput = z.infer<typeof LoginInputSchema>;
