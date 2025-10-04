@@ -86,9 +86,12 @@ export async function createStaffAction(
   }
 
   return {
-    userEntered: null,
-    errors: null,
-    isSuccess: true,
+    type: 'success',
+    payload: {
+      userEntered: null,
+      errors: null,
+      isSuccess: true,
+    },
   };
 }
 
@@ -136,8 +139,12 @@ function validateInput(
     return {
       type: 'error',
       payload: {
-        userEntered: input,
-        errors: z.flattenError(parsed.error).fieldErrors,
+        type: 'error',
+        payload: {
+          userEntered: input,
+          errors: z.flattenError(parsed.error).fieldErrors,
+          isSuccess: false,
+        },
       },
     };
 
@@ -152,10 +159,14 @@ function createErrorResponse(
   errors: CreateStaffError
 ): CreateStaffResponse {
   return {
-    userEntered: {
-      ...input,
-      avatar: undefined,
+    type: 'error',
+    payload: {
+      userEntered: {
+        ...input,
+        avatar: undefined,
+      },
+      errors,
+      isSuccess: false,
     },
-    errors,
   };
 }

@@ -1,6 +1,6 @@
 'use client';
-import { FormRow } from '@/shared/components';
-import { SignupForm } from '@/shared/components/auth';
+import { Form, FormRow } from '@/shared/components';
+import { UserPlus2 } from 'lucide-react';
 import Image from 'next/image';
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
@@ -48,9 +48,65 @@ export function StaffCreationForm() {
     []
   );
 
+  const renderUnexpectedErrors = useCallback(
+    (state: CreateStaffResponse) =>
+      state.payload.errors?.unexpected ? (
+        <p className='text-red-500'>{state.payload.errors.unexpected}</p>
+      ) : null,
+    []
+  );
+
   const renderOtherFields = useCallback(
     (state: CreateStaffResponse, isPending: boolean) => (
       <>
+        <FormRow
+          id='fullName'
+          name='fullName'
+          labelText='Full name'
+          kind='input'
+          type='text'
+          disabled={isPending}
+          autoComplete='name webauthn'
+          labelClassname='min-w-36'
+          defaultValue={state.payload.userEntered?.fullName}
+          error={state.payload.errors?.fullName?.[0]}
+        />
+        <FormRow
+          id='email'
+          name='email'
+          labelText='Email'
+          kind='input'
+          type='email'
+          disabled={isPending}
+          autoComplete='email webauthn'
+          labelClassname='min-w-36'
+          defaultValue={state.payload.userEntered?.email}
+          error={state.payload.errors?.email?.[0]}
+        />
+        <FormRow
+          id='password'
+          name='password'
+          labelText='Password'
+          kind='input'
+          type='password'
+          disabled={isPending}
+          autoComplete='new-password webauthn'
+          labelClassname='min-w-36'
+          defaultValue={state.payload.userEntered?.password}
+          error={state.payload.errors?.password?.[0]}
+        />
+        <FormRow
+          id='confirmedPassword'
+          name='confirmedPassword'
+          labelText='Repeat password'
+          kind='input'
+          type='password'
+          disabled={isPending}
+          labelClassname='min-w-36'
+          defaultValue={state.payload.userEntered?.confirmedPassword}
+          error={state.payload.errors?.confirmedPassword?.[0]}
+        />
+
         <FormRow
           id='avatar'
           name='avatar'
@@ -80,7 +136,7 @@ export function StaffCreationForm() {
   );
 
   return (
-    <SignupForm
+    <Form<CreateStaffResponse>
       action={createStaffAction}
       initialState={{
         type: 'initial',
@@ -89,10 +145,15 @@ export function StaffCreationForm() {
           userEntered: null,
         },
       }}
-      signUpText={'Create new staff'}
-      onSignupSuccessAction={handleSignupSuccess}
-      onSignupFailedAction={handleSignupFailed}
-      renderOtherFieldsAction={renderOtherFields}
+      onFormSuccess={handleSignupSuccess}
+      onFormError={handleSignupFailed}
+      renderUnexpectedErrors={renderUnexpectedErrors}
+      submitNode={
+        <>
+          <UserPlus2 /> Create new staff
+        </>
+      }
+      renderFields={renderOtherFields}
     />
   );
 }
