@@ -45,6 +45,12 @@ const cabinInfoColumn: ColumnDef<BookingTableProps['bookings'][number]> = {
   header: 'Cabin Info',
   columns: [
     {
+      accessorKey: 'cabinId',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title={'Cabin ID'} />
+      ),
+    },
+    {
       id: 'name',
       accessorFn: ({ cabin }) => cabin.name,
       header: ({ column }) => (
@@ -118,6 +124,12 @@ const guestInfoColumn: ColumnDef<BookingTableProps['bookings'][number]> = {
 const bookingInfoColumn: ColumnDef<BookingTableProps['bookings'][number]> = {
   header: 'Booking Info',
   columns: [
+    {
+      accessorKey: 'id',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title={'Booking ID'} />
+      ),
+    },
     {
       accessorKey: 'status',
       header: ({ column }) => (

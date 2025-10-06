@@ -15,6 +15,7 @@ interface FormProps<T> {
   readonly renderUnexpectedErrors: (state: Awaited<T>) => ReactNode;
   readonly onFormSuccess: (state: Awaited<T>) => void;
   readonly onFormError: () => void;
+  readonly onFormPending?: () => void;
 
   readonly submitNode: ReactNode;
   readonly className?: ClassValue;
@@ -29,11 +30,12 @@ export function Form<T extends FormResponse>({
   renderUnexpectedErrors,
   onFormSuccess,
   onFormError,
+  onFormPending,
   submitNode,
   className,
 }: FormProps<T>) {
   const [state, dispatch, isPending] = useActionState(action, initialState);
-  useForm(state, onFormSuccess, onFormError);
+  useForm(state, isPending, onFormSuccess, onFormError, onFormPending);
   const scope = useShakeError(state.payload.errors);
 
   return (
@@ -70,8 +72,10 @@ export function Form<T extends FormResponse>({
 
 const useForm = <T extends FormResponse>(
   state: Awaited<T>,
+  isPending: boolean,
   onFormSuccess: (state: Awaited<T>) => void,
-  onFormFail: (state: Awaited<T>) => void
+  onFormFail: (state: Awaited<T>) => void,
+  onFormPending?: () => void
 ) => {
   useEffect(() => {
     if (state.type !== 'success') return;
@@ -82,4 +86,9 @@ const useForm = <T extends FormResponse>(
     if (state.type !== 'error') return;
     onFormFail(state);
   }, [onFormFail, state]);
+
+  useEffect(() => {
+    if (!isPending) return;
+    onFormPending?.();
+  }, [isPending, onFormPending]);
 };

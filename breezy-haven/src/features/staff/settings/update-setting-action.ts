@@ -37,8 +37,12 @@ export async function updateSettingAction(
     const errors = z.flattenError(parsedResult.error).fieldErrors;
 
     return {
-      userEntered: input,
-      errors,
+      type: 'error',
+      payload: {
+        userEntered: input,
+        errors,
+        isSuccess: false,
+      },
     };
   }
 
@@ -46,18 +50,25 @@ export async function updateSettingAction(
 
   if (isFailed)
     return {
-      userEntered: input,
-      errors: {
-        unexpected: ['An error has occurred while trying to update settings'],
+      type: 'error',
+      payload: {
+        userEntered: input,
+        errors: {
+          unexpected: ['An error has occurred while trying to update settings'],
+        },
+        isSuccess: false,
       },
     };
 
   revalidatePath(ROUTES.staff.nested.settings.href);
 
   return {
-    userEntered: null,
-    errors: null,
-    isSuccess: true,
+    type: 'success',
+    payload: {
+      userEntered: null,
+      errors: null,
+      isSuccess: true,
+    },
   };
 }
 

@@ -27,8 +27,8 @@ import Image from 'next/image';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'sonner';
-import { duplicateCabinAction } from './actions/duplicate-cabin-action';
 import { deleteCabinAction } from './actions/delete-cabin-action';
+import { duplicateCabinAction } from './actions/duplicate-cabin-action';
 
 const columns: ColumnDef<Cabin>[] = [
   {
@@ -54,6 +54,12 @@ const columns: ColumnDef<Cabin>[] = [
   {
     header: 'Cabin Info',
     columns: [
+      {
+        accessorKey: 'id',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title={'ID'} />
+        ),
+      },
       {
         accessorKey: 'image',
         header: '',

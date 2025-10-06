@@ -1,8 +1,8 @@
 'use client';
 
-import { Button, CardAction, FormRow } from '@/shared/components';
+import { Form, FormRow } from '@/shared/components';
 import type { Setting } from '@/shared/schemas';
-import { useActionState, useEffect, useRef } from 'react';
+import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import {
   updateSettingAction,
@@ -10,123 +10,123 @@ import {
 } from './update-setting-action';
 
 export function SettingForm({ defaultSetting }: { defaultSetting: Setting }) {
-  const { state, dispatch, isPending } = useFormState();
+  const [toasterId, setToasterId] = useState<string | number | null>(null);
 
-  usePendingNotification(isPending);
+  const onFormPending = useCallback(() => {
+    const currentToasterId = toast.loading('Updating settings...');
+    setToasterId(currentToasterId);
+  }, []);
+
+  const onFormSuccess = useCallback(() => {
+    if (!toasterId) return;
+    toast.success('Update settings successfully!');
+    toast.dismiss(toasterId);
+    setToasterId(null);
+  }, [toasterId]);
+
+  const onFormError = useCallback(() => {
+    if (!toasterId) return;
+    toast.error('An error has occurred!.');
+    toast.dismiss(toasterId);
+    setToasterId(null);
+  }, [toasterId]);
+
+  const renderUnexpectedErrors = useCallback(
+    (state: UpdateSettingResponse) =>
+      state.payload.errors?.unexpected ? (
+        <p className='text-red-500'>{state.payload.errors.unexpected}</p>
+      ) : null,
+    []
+  );
+
+  const renderFields = useCallback(
+    (state: UpdateSettingResponse) => (
+      <>
+        <input type='hidden' name='id' value={defaultSetting.id} />
+        <FormRow
+          kind='input'
+          id='maxBookingLength'
+          name='maxBookingLength'
+          labelText='Max nights per booking'
+          defaultValue={
+            state.payload.userEntered?.maxBookingLength ??
+            defaultSetting.maxBookingLength
+          }
+          error={state.payload.errors?.maxBookingLength?.at(0)}
+          labelClassname='min-w-48'
+          autoComplete='off'
+          className='max-w-2xs'
+        />
+        <FormRow
+          kind='input'
+          id='minBookingLength'
+          name='minBookingLength'
+          labelText='Min nights per booking'
+          defaultValue={
+            state.payload.userEntered?.minBookingLength ??
+            defaultSetting.minBookingLength
+          }
+          error={state.payload.errors?.minBookingLength?.at(0)}
+          labelClassname='min-w-48'
+          autoComplete='off'
+          className='max-w-2xs'
+        />
+        <FormRow
+          kind='input'
+          id='maxGuestPerBooking'
+          name='maxGuestPerBooking'
+          labelText='Max guests per booking'
+          defaultValue={
+            state.payload.userEntered?.maxGuestPerBooking ??
+            defaultSetting.maxGuestPerBooking
+          }
+          error={state.payload.errors?.maxGuestPerBooking?.at(0)}
+          labelClassname='min-w-48'
+          autoComplete='off'
+          className='max-w-2xs'
+        />
+        <FormRow
+          kind='input'
+          id='breakfastPrice'
+          name='breakfastPrice'
+          labelText='Breakfast price'
+          defaultValue={
+            state.payload.userEntered?.breakfastPrice ??
+            defaultSetting.breakfastPrice
+          }
+          error={state.payload.errors?.breakfastPrice?.at(0)}
+          labelClassname='min-w-48'
+          autoComplete='off'
+          className='max-w-2xs'
+        />
+      </>
+    ),
+    [
+      defaultSetting.breakfastPrice,
+      defaultSetting.id,
+      defaultSetting.maxBookingLength,
+      defaultSetting.maxGuestPerBooking,
+      defaultSetting.minBookingLength,
+    ]
+  );
 
   return (
-    <form action={dispatch} className='flex flex-col gap-y-4'>
-      <input type='hidden' name='id' value={defaultSetting.id} />
-      <FormRow
-        kind='input'
-        id='maxBookingLength'
-        name='maxBookingLength'
-        labelText='Max nights per booking'
-        defaultValue={
-          state.userEntered?.maxBookingLength ?? defaultSetting.maxBookingLength
-        }
-        error={state.errors?.maxBookingLength?.at(0)}
-        labelClassname='min-w-48'
-        autoComplete='off'
-        className='max-w-2xs'
-      />
-      <FormRow
-        kind='input'
-        id='minBookingLength'
-        name='minBookingLength'
-        labelText='Min nights per booking'
-        defaultValue={
-          state.userEntered?.minBookingLength ?? defaultSetting.minBookingLength
-        }
-        error={state.errors?.minBookingLength?.at(0)}
-        labelClassname='min-w-48'
-        autoComplete='off'
-        className='max-w-2xs'
-      />
-      <FormRow
-        kind='input'
-        id='maxGuestPerBooking'
-        name='maxGuestPerBooking'
-        labelText='Max guests per booking'
-        defaultValue={
-          state.userEntered?.maxGuestPerBooking ??
-          defaultSetting.maxGuestPerBooking
-        }
-        error={state.errors?.maxGuestPerBooking?.at(0)}
-        labelClassname='min-w-48'
-        autoComplete='off'
-        className='max-w-2xs'
-      />
-      <FormRow
-        kind='input'
-        id='breakfastPrice'
-        name='breakfastPrice'
-        labelText='Breakfast price'
-        defaultValue={
-          state.userEntered?.breakfastPrice ?? defaultSetting.breakfastPrice
-        }
-        error={state.errors?.breakfastPrice?.at(0)}
-        labelClassname='min-w-48'
-        autoComplete='off'
-        className='max-w-2xs'
-      />
-      <CardAction className='self-center md:self-end'>
-        <Button
-          type='submit'
-          variant='outline'
-          disabled={isPending}
-          className='hover:cursor-pointer'
-        >
-          Update
-        </Button>
-        {state.errors?.unexpected ? (
-          <p className='text-red-500'>{state.errors.unexpected}</p>
-        ) : null}
-      </CardAction>
-    </form>
+    <Form
+      action={updateSettingAction}
+      initialState={{
+        type: 'initial',
+        payload: {
+          userEntered: null,
+          errors: null,
+        },
+      }}
+      onFormSuccess={onFormSuccess}
+      onFormError={onFormError}
+      onFormPending={onFormPending}
+      renderUnexpectedErrors={renderUnexpectedErrors}
+      renderFields={renderFields}
+      submitNode={'Update'}
+      className='flex flex-col gap-y-4'
+    />
   );
 }
-
-const useFormState = () => {
-  const [state, dispatch, isPending] = useActionState<
-    UpdateSettingResponse,
-    FormData
-  >(updateSettingAction, {
-    userEntered: null,
-    errors: null,
-  });
-
-  useEffect(() => {
-    if (state.errors) {
-      toast.error('An error has occurred!.');
-      return;
-    }
-
-    if (state.isSuccess) {
-      toast.success('Update settings successfully!');
-      return;
-    }
-  }, [state]);
-
-  return {
-    state,
-    dispatch,
-    isPending,
-  };
-};
-
-const usePendingNotification = (isPending: boolean) => {
-  const toastIdRef = useRef<string | number | undefined>(undefined);
-
-  useEffect(() => {
-    if (isPending) {
-      toastIdRef.current = toast.loading('Updating settings...');
-      return;
-    }
-
-    if (!isPending) {
-      toast.dismiss(toastIdRef.current);
-      return;
-    }
-  }, [isPending]);
-};
