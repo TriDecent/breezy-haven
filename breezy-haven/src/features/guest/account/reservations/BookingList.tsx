@@ -4,7 +4,7 @@ import Variants from '@/shared/animations/Variants';
 import { ROUTES } from '@/shared/constants';
 import { PriorityProvider } from '@/shared/providers';
 import { GetByGuestIdBookingSchema } from '@/shared/schemas';
-import { differenceInDays, isPast, parseISO } from 'date-fns';
+import { differenceInDays, isPast, isToday, parseISO } from 'date-fns';
 import { AnimatePresence, motion, stagger } from 'framer-motion';
 import Link from 'next/link';
 import { useOptimistic } from 'react';
@@ -52,8 +52,8 @@ export default function BookingList({ bookings }: Props) {
       const dateA = parseISO(a.startDate);
       const dateB = parseISO(b.startDate);
 
-      const aIsPast = isPast(dateA);
-      const bIsPast = isPast(dateB);
+      const aIsPast = isPast(dateA) && !isToday(dateA);
+      const bIsPast = isPast(dateB) && !isToday(dateB);
 
       if (aIsPast && !bIsPast) return 1;
       if (!aIsPast && bIsPast) return -1;

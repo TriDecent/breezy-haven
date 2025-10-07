@@ -35,7 +35,7 @@ export function ReservationInformation({
           numNights={booking.numNights}
           cabinId={cabin.id}
           cabinName={cabin.name}
-          shouldRenderPast={isPast(booking.startDate)}
+          shouldRenderPast={isPast(booking.startDate) && !isToday(booking.startDate)}
         />
 
         <p className='text-primary-300 text-lg'>
