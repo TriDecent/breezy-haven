@@ -6,7 +6,6 @@ import type { ActionResponse } from '@/shared/actions';
 import { SignUpSchema } from '@/shared/schemas';
 import type { Result } from '@/shared/types';
 import { hash } from 'bcrypt';
-import path from 'path';
 import z from 'zod';
 
 const StaffSignUpSchema = SignUpSchema.extend({
@@ -71,10 +70,7 @@ export async function createStaffAction(
     email: credential.email,
     fullName: credential.fullName,
     hash_password: hashPassword,
-    avatarUrl: path.posix.join(
-      process.env.SUPABASE_BUCKET!,
-      uploadResult.payload.fullPath
-    ),
+    avatarUrl: `${process.env.SUPABASE_BUCKET}/${uploadResult.payload.fullPath}`,
   });
 
   if (errors) {

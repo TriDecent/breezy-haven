@@ -7,7 +7,6 @@ import { COOKIES_CONFIG } from '@/shared/constants';
 import { SignUpSchema } from '@/shared/schemas';
 import type { Result } from '@/shared/types';
 import { cookies } from 'next/headers';
-import path from 'path';
 import z from 'zod';
 
 const UpdateProfileSchema = SignUpSchema.omit({
@@ -106,10 +105,7 @@ async function updateProfileWithAvatarAsync(
     });
   }
 
-  const newAvatarUrl = path.posix.join(
-    process.env.SUPABASE_BUCKET!,
-    uploadResult.payload.fullPath
-  );
+  const newAvatarUrl = `${process.env.SUPABASE_BUCKET}/${uploadResult.payload.fullPath}`;
 
   const [{ errors }, tokens] = await Promise.all([
     staffService.update(Number(refreshPayload.userId), {

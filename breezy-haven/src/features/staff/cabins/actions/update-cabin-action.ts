@@ -5,7 +5,6 @@ import { fileService, staffCabinService } from '@/services';
 import { ROUTES } from '@/shared/constants';
 import type { Cabin } from '@/shared/schemas';
 import { revalidatePath } from 'next/cache';
-import path from 'path';
 import z from 'zod';
 import {
   ImageValidator,
@@ -153,10 +152,7 @@ async function handleWithImageUploadAsync(
 
   const [updatedCabin] = await updateCabinAsync(cabin.id, {
     ...cabin,
-    image: path.posix.join(
-      process.env.SUPABASE_BUCKET ?? '',
-      uploadResult.fullPath
-    ),
+    image: `${process.env.SUPABASE_BUCKET}/${uploadResult.fullPath}`,
   });
 
   if (!updatedCabin) {
