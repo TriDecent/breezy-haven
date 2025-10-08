@@ -26,7 +26,8 @@ export default function NavItem({
     .split('/')
     .filter(segment => segment !== '')
     .map(segment => `/${segment}`);
-  const [firstSegment] = pathSegments;
+  const [firstSegment, secondSegment] = pathSegments;
+  const isRouteActive = `${firstSegment}${secondSegment}` === routeHref;
 
   const shouldShowBadge = shouldRenderAuthRoute && isAuthenticated && authName;
   const shouldShowAccountText =
@@ -37,7 +38,7 @@ export default function NavItem({
       <Link
         href={routeHref}
         className={`hover:text-accent-400 transition-colors ${
-          firstSegment === routeHref ? 'text-accent-500' : ''
+          isRouteActive ? 'text-accent-500' : ''
         }`}
       >
         {shouldShowBadge ? (
@@ -51,7 +52,7 @@ export default function NavItem({
         )}
       </Link>
 
-      {firstSegment === routeHref ? (
+      {isRouteActive ? (
         <motion.hr
           layoutId='route-indicator'
           className='border-accent-600 border'
