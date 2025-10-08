@@ -10,6 +10,7 @@ import {
 
 import { Shimmer } from '@/shared/components';
 import { ROUTES } from '@/shared/constants';
+import { motion } from 'framer-motion';
 import { SettingsIcon } from 'lucide-react';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -32,14 +33,21 @@ export function SideNavigation() {
   return (
     <div className='sticky top-0 flex h-full flex-col gap-8 py-4'>
       <div className='flex flex-col items-center gap-4 select-none'>
-        <Image
-          src={breezyHavenLogo}
-          width={69}
-          height={69}
-          alt='The Breezy Haven logo'
-          draggable={false}
-          priority
-        />
+        <motion.div
+          transition={{ type: 'spring' }}
+          whileHover={{ rotate: 360 }}
+          whileTap={{ rotate: 360 }}
+        >
+          <Image
+            src={breezyHavenLogo}
+            width={69}
+            height={69}
+            alt='The Breezy Haven logo'
+            draggable={false}
+            priority
+          />
+        </motion.div>
+
         <p>
           <Shimmer className='text-xl'>The Breezy Haven</Shimmer>
         </p>

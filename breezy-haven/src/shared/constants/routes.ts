@@ -280,6 +280,14 @@ export const ROUTES = {
         metadata: {
           title: 'Bookings',
         },
+        nested: {
+          ['create-new-booking']: defineRoute({
+            href: '/staff/bookings/create-new-booking',
+            metadata: {
+              title: 'Add a new booking',
+            },
+          }),
+        },
       }),
       cabins: defineRoute({
         href: '/staff/cabins',

@@ -189,7 +189,7 @@ const actionColumn: ColumnDef<BookingTableProps['bookings'][number]> = {
               <MoreHorizontalIcon />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
+          <DropdownMenuContent align='end'>
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <CopyAction booking={row.original} />

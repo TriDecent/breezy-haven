@@ -30,7 +30,8 @@ export function CabinOperations() {
       </div>
 
       <Button
-        className='w-fit justify-self-end bg-green-500 text-white select-none'
+        variant='green'
+        className='w-fit justify-self-end'
         onClick={() => dispatch(cabinFormActions.openAddForm())}
       >
         <SquarePenIcon />

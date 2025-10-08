@@ -148,7 +148,7 @@ const columns: ColumnDef<Cabin>[] = [
                 <MoreHorizontalIcon />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent align='end'>
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <CopyAction cabin={row.original} />

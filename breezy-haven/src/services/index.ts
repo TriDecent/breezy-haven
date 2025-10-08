@@ -62,6 +62,10 @@ export const unauthGuestService = new GuestService(
   new BaseService(guestRepository, verifyUnauthAsync, GuestSchema)
 );
 
+export const staffGuestService = new GuestService(
+  new BaseService(guestRepository, verifyStaffAuthAsync, GuestSchema)
+);
+
 export const staffCabinService = new CabinService(
   new BaseService(cabinRepository, verifyStaffAuthAsync, CabinSchema)
 );
