@@ -1,8 +1,10 @@
 'use client';
 import { Form, FormRow } from '@/shared/components';
+import authApi from '@/shared/store/auth-api';
 import { Save } from 'lucide-react';
 import Image from 'next/image';
 import { useCallback, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { toast } from 'sonner';
 import {
   updateProfileAction,
@@ -21,11 +23,14 @@ export function ProfileForm({ defaultProfile }: ProfileFormProps) {
   const [previewImgUrl, setPreviewImgUrl] = useState<string>(
     defaultProfile.avatarUrl
   );
+  const dispatch = useDispatch();
 
-  const handleFormSuccess = useCallback(
-    () => toast.success('Update profile successfully'),
-    []
-  );
+  const handleFormSuccess = useCallback(() => {
+    toast.success('Update profile successfully');
+    dispatch(
+      authApi.util.invalidateTags([{ type: 'StaffAuth', id: 'CURRENT' }])
+    );
+  }, [dispatch]);
 
   const handleFormError = useCallback(
     () => toast.error('Update profile failed'),
