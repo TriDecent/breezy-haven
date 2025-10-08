@@ -118,7 +118,9 @@ function SelectField({
   labelText,
   placeholder,
   renderSelectItems,
+  className,
   labelClassName,
+  error,
   ...props
 }: {
   id: string;
@@ -126,7 +128,9 @@ function SelectField({
   labelText: string;
   placeholder: string;
   renderSelectItems: ReactNode;
+  className?: string;
   labelClassName?: string;
+  error?: string;
 } & ComponentProps<typeof Select>) {
   return (
     <div className='space-y-2'>
@@ -134,11 +138,21 @@ function SelectField({
         {labelText}
       </Label>
       <Select name={name} {...props}>
-        <SelectTrigger id={id} className='w-full'>
+        <SelectTrigger
+          id={id}
+          className={cn(
+            'w-full',
+            `${error ? 'error border-red-600/75' : ''}`,
+            className
+          )}
+        >
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>{renderSelectItems}</SelectContent>
       </Select>
+      {error ? (
+        <p className='flex-1 text-red-500 first-letter:capitalize'>{error}</p>
+      ) : null}
     </div>
   );
 }

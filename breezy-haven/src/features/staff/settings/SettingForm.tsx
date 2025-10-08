@@ -2,7 +2,7 @@
 
 import { Form, FormRow } from '@/shared/components';
 import type { Setting } from '@/shared/schemas';
-import { useCallback, useState } from 'react';
+import { useCallback, useRef } from 'react';
 import { toast } from 'sonner';
 import {
   updateSettingAction,
@@ -10,25 +10,25 @@ import {
 } from './update-setting-action';
 
 export function SettingForm({ defaultSetting }: { defaultSetting: Setting }) {
-  const [toasterId, setToasterId] = useState<string | number | null>(null);
+  const toasterId = useRef<string | number | null>(null);
 
   const onFormPending = useCallback(() => {
     const currentToasterId = toast.loading('Updating settings...');
-    setToasterId(currentToasterId);
+    toasterId.current = currentToasterId;
   }, []);
 
   const onFormSuccess = useCallback(() => {
-    if (!toasterId) return;
+    if (!toasterId.current) return;
     toast.success('Update settings successfully!');
-    toast.dismiss(toasterId);
-    setToasterId(null);
+    toast.dismiss(toasterId.current);
+    toasterId.current = null;
   }, [toasterId]);
 
   const onFormError = useCallback(() => {
-    if (!toasterId) return;
+    if (!toasterId.current) return;
     toast.error('An error has occurred!.');
-    toast.dismiss(toasterId);
-    setToasterId(null);
+    toast.dismiss(toasterId.current);
+    toasterId.current = null;
   }, [toasterId]);
 
   const renderUnexpectedErrors = useCallback(
