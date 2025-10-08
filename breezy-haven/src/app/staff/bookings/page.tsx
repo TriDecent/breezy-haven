@@ -3,10 +3,12 @@ import {
   BookingQuerySchema,
   BookingsList,
 } from '@/features/staff/bookings';
-import { QueryButton, Spinner } from '@/shared/components';
+import { Button, QueryButton, Spinner } from '@/shared/components';
 import { ROUTES } from '@/shared/constants';
+import { PencilLine } from 'lucide-react';
 
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { Suspense } from 'react';
 
 export const metadata: Metadata = ROUTES.staff.nested.bookings.metadata;
@@ -19,7 +21,7 @@ export default async function BookingsPage({
   const parsedResult = BookingQuerySchema.safeParse(await searchParams);
 
   return (
-    <section className='space-y-4'>
+    <section className='space-y-6'>
       <h1 className='text-accent-500 text-2xl font-semibold tracking-widest'>
         Bookings
       </h1>
@@ -38,6 +40,18 @@ export default async function BookingsPage({
             <span className='uppercase'>{query}</span>
           </QueryButton>
         ))}
+      </div>
+
+      <div className='ml-auto w-fit'>
+        <Button variant='green' asChild>
+          <Link
+            href={
+              ROUTES.staff.nested.bookings.nested['create-new-booking'].href
+            }
+          >
+            <PencilLine /> Add A Booking
+          </Link>
+        </Button>
       </div>
 
       <Suspense fallback={<Spinner />}>
