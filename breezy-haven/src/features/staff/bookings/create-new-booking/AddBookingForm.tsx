@@ -12,10 +12,12 @@ import {
   PopoverTrigger,
   SelectItem,
 } from '@/shared/components';
+import { ROUTES } from '@/shared/constants';
 import type { Cabin, Guest, Setting } from '@/shared/schemas';
 import { dateHelper } from '@/shared/utils';
 import { format } from 'date-fns';
 import { Calendar as CalendarIcon, CirclePlus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import {
   useCallback,
   useEffect,
@@ -49,6 +51,7 @@ export function AddBookingForm({
   setting,
 }: AddBookingFormProps) {
   const toasterIdRef = useRef<string | number | null>(null);
+  const router = useRouter();
 
   const renderFields = useCallback(
     (state: AddBookingResponse, isPending: boolean) => (
@@ -84,12 +87,20 @@ export function AddBookingForm({
     []
   );
 
-  const onFormSuccess = useCallback(() => {
-    if (!toasterIdRef.current) return;
-    toast.success('Add booking successfully');
-    toast.dismiss(toasterIdRef.current);
-    toasterIdRef.current = null;
-  }, []);
+  const onFormSuccess = useCallback(
+    (state: AddBookingResponse) => {
+      if (!toasterIdRef.current) return;
+      toast.success('Add booking successfully');
+      toast.dismiss(toasterIdRef.current);
+      toasterIdRef.current = null;
+
+      if (state.type !== 'success') return;
+      router.push(
+        `${ROUTES.staff.nested.bookings.href}/${state.payload.createdBookingId}`
+      );
+    },
+    [router]
+  );
 
   const onFormErrors = useCallback(() => {
     if (!toasterIdRef.current) return;
@@ -169,8 +180,6 @@ function Selects() {
       <CabinSelect onCabinSelect={handleSelectCabin} />
 
       <GuestCountSelect selectedCabin={selectedCabin} />
-
-      <BookingStatusSelect />
 
       <DateSelect
         alreadyBookedDates={bookedDates}
@@ -287,38 +296,6 @@ function GuestCountSelect({ selectedCabin }: { selectedCabin: Cabin | null }) {
       }
       disabled={isPending || !!!selectedCabin}
       error={state.payload.errors?.numGuests?.at(0)}
-      renderSelectItems={renderSelectItems}
-    />
-  );
-}
-
-function BookingStatusSelect() {
-  const { isPending, state } = useAddBookingForm();
-
-  useEffect(() => {
-    console.log(state);
-  }, [state]);
-
-  const renderSelectItems = useMemo(
-    () => (
-      <>
-        <SelectItem value='unconfirmed'>Unconfirmed</SelectItem>
-        <SelectItem value='checked-in'>Checked In</SelectItem>
-        <SelectItem value='checked-out'>Checked Out</SelectItem>
-      </>
-    ),
-    []
-  );
-
-  return (
-    <FormRow
-      kind='select'
-      id='status'
-      name='status'
-      labelText='Booking Status'
-      placeholder={'Booking status'}
-      disabled={isPending}
-      error={state.payload.errors?.status?.at(0)}
       renderSelectItems={renderSelectItems}
     />
   );
