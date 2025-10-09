@@ -1,7 +1,5 @@
 import { IRepository } from '@/repositories';
-import type { DTORow } from '@/repositories/types';
 
-import type { Schemas } from '@/shared/schemas';
 import { PostgrestError } from '@supabase/supabase-js';
 import { z } from 'zod';
 import type {
@@ -28,7 +26,7 @@ export interface IService<DTOType, SchemaType> {
   ): GetAllServiceReturnType<SchemaType>;
 }
 
-export class BaseService<DTOType extends DTORow, SchemaType extends Schemas>
+export class BaseService<DTOType, SchemaType>
   implements IService<DTOType, SchemaType>
 {
   constructor(

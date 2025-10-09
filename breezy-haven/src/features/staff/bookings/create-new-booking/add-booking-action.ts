@@ -1,7 +1,7 @@
 'use server';
 
 import { Auth } from '@/features/auth';
-import { bookingService, unauthCabinService } from '@/services';
+import { staffBookingService, unauthCabinService } from '@/services';
 import type { ActionResponse } from '@/shared/actions';
 import { BookingSchema, type Booking, type Cabin } from '@/shared/schemas';
 import type { Result } from '@/shared/types';
@@ -78,7 +78,7 @@ export async function addBookingAction(
     nightsCount * (bookedCabin.regularPrice - bookedCabin.discount);
 
   const { data: createdBooking, errors: bookingErrors } =
-    await bookingService.create({
+    await staffBookingService.create({
       guestId: validatedBooking.guestId,
       cabinId: bookedCabin.id,
       totalPrice,
@@ -188,7 +188,7 @@ async function validateBookingAsync(
     };
 
   const { data: alreadyBookedDates, errors: bookedDatesErrors } =
-    await bookingService.getBookedDatesByCabinId(cabin.id);
+    await staffBookingService.getBookedDatesByCabinId(cabin.id);
 
   if (bookedDatesErrors)
     return {
