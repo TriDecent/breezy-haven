@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, QueryButton } from '@/shared/components';
+import { Button, DownloadButton, QueryButton } from '@/shared/components';
 import { cabinFormActions } from '@/shared/store';
 import { SquarePenIcon } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
@@ -29,14 +29,22 @@ export function CabinOperations() {
         ))}
       </div>
 
-      <Button
-        variant='green'
-        className='w-fit justify-self-end'
-        onClick={() => dispatch(cabinFormActions.openAddForm())}
-      >
-        <SquarePenIcon />
-        Add new cabin
-      </Button>
+      <div className='flex w-fit flex-col items-center gap-4 justify-self-end lg:flex-row'>
+        <Button
+          variant='green'
+          onClick={() => dispatch(cabinFormActions.openAddForm())}
+          className='w-full lg:w-fit'
+        >
+          <SquarePenIcon />
+          Add new cabin
+        </Button>
+
+        <DownloadButton
+          link='/api/downloads/cabins'
+          text={'Download cabins as CSV'}
+          className='w-full lg:w-fit'
+        />
+      </div>
     </div>
   );
 }
