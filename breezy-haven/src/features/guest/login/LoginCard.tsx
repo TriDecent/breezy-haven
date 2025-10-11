@@ -55,6 +55,22 @@ export function LoginCard({ className, ...props }: ComponentProps<'div'>) {
           </Button>
         </CardFooter>
       </Card>
+
+      <div className='text-muted-foreground px-4 text-sm'>
+        <p>
+          In case you login successfully as a staff but are not redirected,
+          please{' '}
+          <Button variant='link' asChild>
+            <Link
+              href={ROUTES.staff.nested.dashboard.href}
+              replace
+              className='underline'
+            >
+              click here
+            </Link>
+          </Button>{' '}
+        </p>
+      </div>
     </div>
   );
 }
