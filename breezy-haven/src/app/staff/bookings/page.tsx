@@ -3,7 +3,12 @@ import {
   BookingQuerySchema,
   BookingsList,
 } from '@/features/staff/bookings';
-import { Button, QueryButton, Spinner } from '@/shared/components';
+import {
+  Button,
+  DownloadButton,
+  QueryButton,
+  Spinner,
+} from '@/shared/components';
 import { ROUTES } from '@/shared/constants';
 import { PencilLine } from 'lucide-react';
 
@@ -42,7 +47,7 @@ export default async function BookingsPage({
         ))}
       </div>
 
-      <div className='ml-auto w-fit'>
+      <div className='flex flex-col items-end justify-end gap-4 md:flex-row'>
         <Button variant='green' asChild>
           <Link
             href={
@@ -52,6 +57,12 @@ export default async function BookingsPage({
             <PencilLine /> Add A Booking
           </Link>
         </Button>
+
+        <DownloadButton
+          link='/api/downloads/bookings'
+          text='Download bookings as CSV'
+          className='w-fit'
+        />
       </div>
 
       <Suspense fallback={<Spinner />}>
