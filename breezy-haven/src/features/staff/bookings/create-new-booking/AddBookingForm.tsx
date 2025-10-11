@@ -39,7 +39,6 @@ import {
 import { getBookedDatesByCabinIdAction } from './get-booked-dates-by-cabin-id-action';
 
 export type AddBookingFormProps = Readonly<{
-  state: AddBookingResponse;
   guests: Guest[];
   cabins: Cabin[];
   setting: Setting;

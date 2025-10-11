@@ -18,6 +18,7 @@ import {
 } from '@/shared/components';
 import type { BookingActionResponse } from '@/shared/schemas';
 import { dateHelper } from '@/shared/utils';
+import { Book } from 'lucide-react';
 import {
   useActionState,
   useEffect,
@@ -102,9 +103,14 @@ export default function BookingEditForm({
           {renderError(state.errors?.observations)}
         </div>
 
-        <PrimaryButton disabled={isPending} className='self-center md:w-fit'>
+        <PrimaryButton
+          disabled={isPending}
+          className='flex items-center gap-2 self-center md:w-fit'
+        >
           {!isPending ? (
-            'Reserve now'
+            <>
+              <Book /> Reserve now
+            </>
           ) : (
             <div className='border-t-accent-500 border-accent-100 mx-auto h-8 w-8 animate-spin rounded-full border-2'></div>
           )}

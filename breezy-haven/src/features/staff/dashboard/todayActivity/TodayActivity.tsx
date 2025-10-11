@@ -1,7 +1,7 @@
 'use client';
 import type { BookingWithRelations } from '@/services';
 import { Variants } from '@/shared/animations';
-import { Button } from '@/shared/components';
+import { Button, ScrollArea, ScrollBar } from '@/shared/components';
 import { ROUTES } from '@/shared/constants';
 import type { Booking } from '@/shared/schemas';
 import { AnimatePresence, motion, stagger } from 'framer-motion';
@@ -72,11 +72,13 @@ export function TodayActivityList({
       className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-y-8 lg:grid-cols-1'
     >
       {bookings.map(booking => (
-        <TodayActivityItem
-          key={booking.id}
-          booking={booking}
-          onOptimisticUpdateAction={onOptimisticUpdateAction}
-        />
+        <ScrollArea key={booking.id}>
+          <ScrollBar orientation='horizontal' />
+          <TodayActivityItem
+            booking={booking}
+            onOptimisticUpdateAction={onOptimisticUpdateAction}
+          />
+        </ScrollArea>
       ))}
     </motion.ul>
   );

@@ -1,6 +1,7 @@
 'use client';
 
 import { Input, PrimaryButton } from '@/shared/components';
+import { Pencil } from 'lucide-react';
 import { InputHTMLAttributes, useActionState, type ReactElement } from 'react';
 import type { GuestForm } from './GuestFormSchema';
 import { updateProfileAction } from './update-profile-action';
@@ -62,9 +63,11 @@ export default function UpdateProfileForm({
       </div>
 
       <div className='md:w-fit md:self-center'>
-        <PrimaryButton disabled={isPending}>
+        <PrimaryButton disabled={isPending} className='flex items-center gap-2'>
           {!isPending ? (
-            'Update profile'
+            <>
+              <Pencil /> Update Profile
+            </>
           ) : (
             <div className='border-accent-500 mx-auto h-5 w-5 animate-spin rounded-full border-2 border-t-transparent'></div>
           )}
