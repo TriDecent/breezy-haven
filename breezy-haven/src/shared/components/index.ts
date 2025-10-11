@@ -4,6 +4,7 @@ export { default as Counter } from './Counter';
 export * from './DataTable';
 export { default as DataTable } from './DataTable';
 export { default as DateSelector } from './DateSelector';
+export { DownloadButton } from './DownloadButton';
 export { default as Error } from './Error';
 export { Form } from './Form';
 export { FormRow } from './FormRow';
