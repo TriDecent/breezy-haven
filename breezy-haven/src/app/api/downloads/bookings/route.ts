@@ -2,7 +2,9 @@ import { Auth } from '@/features/auth';
 import { staffBookingService } from '@/services';
 import { NextResponse, type NextRequest } from 'next/server';
 import { EOL } from 'os';
-import { Readable } from 'stream';
+import { Readable, Writable } from 'stream';
+import { pipeline } from 'stream/promises';
+import { createGzip } from 'zlib';
 
 export async function GET(request: NextRequest) {
   await Auth.staff.ensureStaffIsAuthenticatedFromRequestAsync(request);
@@ -37,12 +39,18 @@ export async function GET(request: NextRequest) {
     result.push(item);
   });
 
-  const resultStream = Readable.toWeb(Readable.from(result)) as ReadableStream;
+  const { readable, writable } = new TransformStream();
 
-  return new NextResponse(resultStream, {
+  pipeline(
+    Readable.from(result),
+    createGzip(),
+    Writable.fromWeb(writable)
+  ).catch(error => console.log('Pipeline error:', error));
+
+  return new NextResponse(readable, {
     headers: {
-      'Content-Type': 'text/csv',
-      'Content-Disposition': 'attachment; filename="bookings.csv"',
+      'Content-Type': 'application/gzip',
+      'Content-Disposition': 'attachment; filename="bookings.csv.gz"',
     },
   });
 }

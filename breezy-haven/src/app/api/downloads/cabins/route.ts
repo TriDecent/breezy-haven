@@ -2,7 +2,9 @@ import { Auth } from '@/features/auth';
 import { staffCabinService } from '@/services';
 import { NextResponse, type NextRequest } from 'next/server';
 import { EOL } from 'os';
-import { Readable } from 'stream';
+import { PassThrough, Readable } from 'stream';
+import { pipeline } from 'stream/promises';
+import { createGzip } from 'zlib';
 
 export async function GET(request: NextRequest) {
   await Auth.staff.ensureStaffIsAuthenticatedFromRequestAsync(request);
@@ -30,12 +32,18 @@ export async function GET(request: NextRequest) {
     result.push(item);
   });
 
-  const resultStream = Readable.toWeb(Readable.from(result)) as ReadableStream;
+  const outputStream = new PassThrough();
 
-  return new NextResponse(resultStream, {
+  pipeline(Readable.from(result), createGzip(), outputStream).catch(error => {
+    console.error('Pipeline error:', error);
+  });
+
+  const webStream = Readable.toWeb(outputStream) as ReadableStream;
+
+  return new NextResponse(webStream, {
     headers: {
-      'Content-Type': 'text/csv',
-      'Content-Disposition': 'attachment; filename="cabins.csv"',
+      'Content-Type': 'application/gzip',
+      'Content-Disposition': 'attachment; filename="cabins.csv.gz"',
     },
   });
 }
