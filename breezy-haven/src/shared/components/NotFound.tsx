@@ -1,14 +1,41 @@
-export default function NotFound() {
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/shared/components';
+import { ROUTES } from '@/shared/constants';
+import { Bird, LinkIcon } from 'lucide-react';
+import Link from 'next/link';
+
+export default function NotFound({
+  goBackToHref = ROUTES.home.href,
+}: {
+  goBackToHref?: string;
+}) {
   return (
-    <div className='flex flex-1 items-center justify-center space-x-6 py-8'>
-      <h1 className='border-r border-black pr-6 text-3xl leading-relaxed font-semibold dark:border-white'>
-        404
-      </h1>
-      <div>
-        <h2 className='m-0 text-base leading-normal font-normal'>
-          This page could not be found
-        </h2>
-      </div>
-    </div>
+    <Empty>
+      <EmptyHeader>
+        <EmptyMedia>
+          <Bird />
+        </EmptyMedia>
+        <EmptyTitle>Page Not Found</EmptyTitle>
+        <EmptyDescription>
+          The page you&apos;re looking for doesn&apos;t exist. Return to the
+          homepage.
+        </EmptyDescription>
+      </EmptyHeader>
+      <EmptyContent>
+        <Link
+          href={goBackToHref}
+          replace
+          className='text-accent-500 animate-pulse underline hover:cursor-pointer'
+        >
+          <LinkIcon />
+        </Link>
+      </EmptyContent>
+    </Empty>
   );
 }

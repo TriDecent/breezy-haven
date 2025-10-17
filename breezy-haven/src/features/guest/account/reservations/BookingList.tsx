@@ -1,11 +1,20 @@
 'use client';
 
 import Variants from '@/shared/animations/Variants';
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/shared/components';
 import { ROUTES } from '@/shared/constants';
 import { PriorityProvider } from '@/shared/providers';
 import { GetByGuestIdBookingSchema } from '@/shared/schemas';
 import { differenceInDays, isPast, isToday, parseISO } from 'date-fns';
 import { AnimatePresence, motion, stagger } from 'framer-motion';
+import { Bird } from 'lucide-react';
 import Link from 'next/link';
 import { useOptimistic } from 'react';
 import type { $ZodIssue } from 'zod/v4/core';
@@ -115,7 +124,7 @@ export default function BookingList({ bookings }: Props) {
 
 function EmptyBooking() {
   return (
-    <motion.p
+    <motion.div
       variants={Variants.slide.variant(0, -30)}
       initial={Variants.slide.key.hidden}
       animate={Variants.slide.key.visible}
@@ -123,14 +132,26 @@ function EmptyBooking() {
       key='fallback'
       className='text-lg'
     >
-      You have no reservations yet. Check out our{' '}
-      <Link
-        href={ROUTES.cabins.href}
-        className='text-accent-500 animate-pulse underline'
-      >
-        luxury cabins &rarr;
-      </Link>
-    </motion.p>
+      <Empty>
+        <EmptyHeader>
+          <EmptyMedia>
+            <Bird />
+          </EmptyMedia>
+          <EmptyTitle>No reservations yet</EmptyTitle>
+          <EmptyDescription>
+            You have no reservations yet. Check out our luxury cabins.
+          </EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent>
+          <Link
+            href={ROUTES.cabins.href}
+            className='text-accent-500 animate-pulse underline'
+          >
+            luxury cabins &rarr;
+          </Link>
+        </EmptyContent>
+      </Empty>
+    </motion.div>
   );
 }
 
