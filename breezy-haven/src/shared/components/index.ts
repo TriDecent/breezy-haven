@@ -37,6 +37,7 @@ export * from './ui/chart';
 export * from './ui/checkbox';
 export * from './ui/dropdown-menu';
 export * from './ui/empty';
+export * from './ui/field';
 export * from './ui/input';
 export * from './ui/input-group';
 export * from './ui/label';

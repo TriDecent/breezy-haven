@@ -42,7 +42,7 @@ export function Form<T extends FormResponse>({
     <NextForm
       ref={scope}
       action={dispatch}
-      className={cn(`space-y-6`, className)}
+      className={cn('space-y-6', className)}
     >
       {renderFields(state, isPending)}
 
