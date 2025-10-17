@@ -1,5 +1,5 @@
 'use client';
-import { Form, FormRow } from '@/shared/components';
+import { FieldGroup, FieldSet, Form, FormRow } from '@/shared/components';
 import { UserPlus2 } from 'lucide-react';
 import Image from 'next/image';
 import { useCallback, useState } from 'react';
@@ -29,7 +29,6 @@ export function StaffCreationForm() {
       if (file.size > 1024 * 1024) {
         e.target.value = '';
         setPreviewImageUrl(null);
-
         toast.warning('Image size must not exceed 1MB');
         return;
       }
@@ -58,79 +57,84 @@ export function StaffCreationForm() {
 
   const renderOtherFields = useCallback(
     (state: CreateStaffResponse, isPending: boolean) => (
-      <>
-        <FormRow
-          id='fullName'
-          name='fullName'
-          labelText='Full name'
-          kind='input'
-          type='text'
-          disabled={isPending}
-          autoComplete='name webauthn'
-          labelClassname='min-w-36'
-          defaultValue={state.payload.userEntered?.fullName}
-          error={state.payload.errors?.fullName?.[0]}
-        />
-        <FormRow
-          id='email'
-          name='email'
-          labelText='Email'
-          kind='input'
-          type='email'
-          disabled={isPending}
-          autoComplete='email webauthn'
-          labelClassname='min-w-36'
-          defaultValue={state.payload.userEntered?.email}
-          error={state.payload.errors?.email?.[0]}
-        />
-        <FormRow
-          id='password'
-          name='password'
-          labelText='Password'
-          kind='input'
-          type='password'
-          disabled={isPending}
-          autoComplete='new-password webauthn'
-          labelClassname='min-w-36'
-          defaultValue={state.payload.userEntered?.password}
-          error={state.payload.errors?.password?.[0]}
-        />
-        <FormRow
-          id='confirmedPassword'
-          name='confirmedPassword'
-          labelText='Repeat password'
-          kind='input'
-          type='password'
-          disabled={isPending}
-          labelClassname='min-w-36'
-          defaultValue={state.payload.userEntered?.confirmedPassword}
-          error={state.payload.errors?.confirmedPassword?.[0]}
-        />
+      <FieldSet>
+        <FieldGroup>
+          <FormRow
+            id='fullName'
+            name='fullName'
+            labelText='Full name'
+            kind='input'
+            type='text'
+            disabled={isPending}
+            autoComplete='name webauthn'
+            orientation='responsive'
+            defaultValue={state.payload.userEntered?.fullName}
+            error={state.payload.errors?.fullName?.[0]}
+          />
 
-        <FormRow
-          id='avatar'
-          name='avatar'
-          labelText='Avatar'
-          kind='input'
-          type='file'
-          disabled={isPending}
-          labelClassname='min-w-36'
-          accept='.png, .jpg, .jpeg'
-          error={state.payload.errors?.avatar?.[0]}
-          onChange={handleFileChange}
-        />
+          <FormRow
+            id='email'
+            name='email'
+            labelText='Email'
+            kind='input'
+            type='email'
+            disabled={isPending}
+            autoComplete='email webauthn'
+            orientation='responsive'
+            defaultValue={state.payload.userEntered?.email}
+            error={state.payload.errors?.email?.[0]}
+          />
 
-        {previewImageUrl ? (
-          <div className='relative aspect-video overflow-hidden rounded-lg md:min-w-2xs md:self-end'>
-            <Image
-              src={previewImageUrl}
-              alt='staff avatar'
-              fill
-              className='mask-y-from-95% mask-x-from-80% object-cover'
-            />
-          </div>
-        ) : null}
-      </>
+          <FormRow
+            id='password'
+            name='password'
+            labelText='Password'
+            kind='input'
+            type='password'
+            disabled={isPending}
+            autoComplete='new-password webauthn'
+            orientation='responsive'
+            defaultValue={state.payload.userEntered?.password}
+            error={state.payload.errors?.password?.[0]}
+          />
+
+          <FormRow
+            id='confirmedPassword'
+            name='confirmedPassword'
+            labelText='Repeat password'
+            kind='input'
+            type='password'
+            disabled={isPending}
+            orientation='responsive'
+            defaultValue={state.payload.userEntered?.confirmedPassword}
+            error={state.payload.errors?.confirmedPassword?.[0]}
+          />
+
+          <FormRow
+            id='avatar'
+            name='avatar'
+            labelText='Avatar'
+            kind='input'
+            type='file'
+            disabled={isPending}
+            accept='.png, .jpg, .jpeg'
+            orientation='responsive'
+            error={state.payload.errors?.avatar?.[0]}
+            onChange={handleFileChange}
+          />
+
+          {previewImageUrl ? (
+            <div className='relative aspect-video overflow-hidden rounded-lg md:col-start-2 md:row-start-5'>
+              <Image
+                src={previewImageUrl}
+                alt='staff avatar'
+                fill
+                className='mask-y-from-95% mask-x-from-80% object-cover'
+              />
+            </div>
+          ) : null}
+        </FieldGroup>
+      </FieldSet>
     ),
     [previewImageUrl, handleFileChange]
   );

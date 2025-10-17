@@ -12,7 +12,7 @@ import { SignupForm } from './SignupForm';
 
 export function SignupCard() {
   return (
-    <Card className='mx-auto max-w-5xl'>
+    <Card>
       <CardHeader>
         <span className='flex items-center gap-2 text-lg font-medium'>
           <UserPen /> Sign up

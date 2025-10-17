@@ -1,6 +1,13 @@
 'use client';
 
-import { Form, FormRow, ScrollArea, Toaster } from '@/shared/components';
+import {
+  FieldGroup,
+  FieldSet,
+  Form,
+  FormRow,
+  ScrollArea,
+  Toaster,
+} from '@/shared/components';
 import { cabinFormActions, type RootState } from '@/shared/store';
 import { CirclePlus } from 'lucide-react';
 import Image from 'next/image';
@@ -81,127 +88,133 @@ export function CabinForm<T extends SafeAddCabinInput | SafeUpdateCabinInput>({
       <>
         <Toaster id={toasterId} richColors position='top-right' />
         <ScrollArea className='h-78 px-4' type='always'>
-          <div className='space-y-4 md:space-y-8'>
-            {defaultCabin?.id ? (
-              <input type='hidden' name='id' value={defaultCabin.id} />
-            ) : null}
-            <FormRow
-              kind='input'
-              id='name'
-              name='name'
-              labelText='Name'
-              placeholder='Enter the cabin name...'
-              labelClassname='min-w-28'
-              defaultValue={
-                state.payload.userEntered?.name ?? defaultCabin?.name
-              }
-              error={state.payload.errors?.name?.[0] ?? ''}
-              autoComplete='off'
-            />
-            <FormRow
-              kind='input'
-              id='maxCapacity'
-              name='maxCapacity'
-              labelText='Max Capacity'
-              placeholder='Enter max capacity...'
-              labelClassname='min-w-28'
-              defaultValue={
-                state.payload.userEntered?.maxCapacity ??
-                defaultCabin?.maxCapacity
-              }
-              error={state.payload.errors?.maxCapacity?.[0] ?? ''}
-              autoComplete='off'
-            />
-            <FormRow
-              kind='input'
-              id='regularPrice'
-              name='regularPrice'
-              labelText='Price'
-              placeholder='Enter regular price...'
-              labelClassname='min-w-28'
-              defaultValue={
-                state.payload.userEntered?.regularPrice ??
-                defaultCabin?.regularPrice
-              }
-              error={state.payload.errors?.regularPrice?.[0] ?? ''}
-              autoComplete='off'
-            />
-            <FormRow
-              kind='input'
-              id='discount'
-              name='discount'
-              labelText='Discount'
-              labelClassname='min-w-28'
-              placeholder='Enter discount...'
-              defaultValue={
-                state.payload.userEntered?.discount ??
-                defaultCabin?.discount ??
-                0
-              }
-              error={state.payload.errors?.discount?.[0] ?? ''}
-              autoComplete='off'
-            />
-            <FormRow
-              kind='textarea'
-              id='description'
-              name='description'
-              labelText='Description'
-              labelClassname='min-w-28'
-              placeholder='Enter description...'
-              defaultValue={
-                state.payload.userEntered?.description ??
-                defaultCabin?.description
-              }
-              error={state.payload.errors?.description?.[0] ?? ''}
-              autoComplete='off'
-            />
+          <FieldSet>
+            <FieldGroup>
+              {defaultCabin?.id ? (
+                <input type='hidden' name='id' value={defaultCabin.id} />
+              ) : null}
 
-            <FormRow
-              kind='input'
-              id='image'
-              name='image'
-              labelText='Image (< 1MB)'
-              labelClassname='min-w-28'
-              placeholder='Enter image URL...'
-              accept='image/png, image/jpeg, image/webp'
-              error={state.payload.errors?.image?.[0] ?? ''}
-              type='file'
-              autoComplete='off'
-              onChange={e => {
-                const file = e.target.files?.[0];
-                if (!file) return;
-                if (file.size > 1024 * 1024) {
-                  e.target.value = '';
-                  toast.warning('Image size must not exceed 1MB', {
-                    toasterId,
-                  });
-                  return;
+              <FormRow
+                kind='input'
+                id='name'
+                name='name'
+                labelText='Name'
+                placeholder='Enter the cabin name...'
+                labelClassname='min-w-28'
+                defaultValue={
+                  state.payload.userEntered?.name ?? defaultCabin?.name
                 }
-                if (
-                  !file.type.startsWith('image/') ||
-                  !['image/jpg', 'image/jpeg', 'image/png'].includes(file.type)
-                ) {
-                  e.target.value = '';
-                  toast.warning('Only JPG, PNG and JPEG images are allowed', {
-                    toasterId,
-                  });
-                  return;
-                }
-                setPreviewImageURL(URL.createObjectURL(file));
-              }}
-            />
-
-            {previewImageURL ? (
-              <Image
-                src={previewImageURL ?? defaultCabin?.image}
-                alt='Cabin preview'
-                width='256'
-                height='256'
-                style={{ width: 'auto', height: 'auto' }}
-                className='ml-auto aspect-video h-36 rounded-lg mask-y-from-75% mask-x-from-95% object-cover'
+                error={state.payload.errors?.name?.[0] ?? ''}
+                autoComplete='off'
               />
-            ) : null}
-          </div>
+              <FormRow
+                kind='input'
+                id='maxCapacity'
+                name='maxCapacity'
+                labelText='Max Capacity'
+                placeholder='Enter max capacity...'
+                labelClassname='min-w-28'
+                defaultValue={
+                  state.payload.userEntered?.maxCapacity ??
+                  defaultCabin?.maxCapacity
+                }
+                error={state.payload.errors?.maxCapacity?.[0] ?? ''}
+                autoComplete='off'
+              />
+              <FormRow
+                kind='input'
+                id='regularPrice'
+                name='regularPrice'
+                labelText='Price'
+                placeholder='Enter regular price...'
+                labelClassname='min-w-28'
+                defaultValue={
+                  state.payload.userEntered?.regularPrice ??
+                  defaultCabin?.regularPrice
+                }
+                error={state.payload.errors?.regularPrice?.[0] ?? ''}
+                autoComplete='off'
+              />
+              <FormRow
+                kind='input'
+                id='discount'
+                name='discount'
+                labelText='Discount'
+                labelClassname='min-w-28'
+                placeholder='Enter discount...'
+                defaultValue={
+                  state.payload.userEntered?.discount ??
+                  defaultCabin?.discount ??
+                  0
+                }
+                error={state.payload.errors?.discount?.[0] ?? ''}
+                autoComplete='off'
+              />
+              <FormRow
+                kind='textarea'
+                id='description'
+                name='description'
+                labelText='Description'
+                labelClassname='min-w-28'
+                placeholder='Enter description...'
+                defaultValue={
+                  state.payload.userEntered?.description ??
+                  defaultCabin?.description
+                }
+                error={state.payload.errors?.description?.[0] ?? ''}
+                autoComplete='off'
+              />
+
+              <FormRow
+                kind='input'
+                id='image'
+                name='image'
+                labelText='Image (< 1MB)'
+                labelClassname='min-w-28'
+                placeholder='Enter image URL...'
+                description='Image must be under 1MB'
+                accept='image/png, image/jpeg, image/webp'
+                error={state.payload.errors?.image?.[0] ?? ''}
+                type='file'
+                autoComplete='off'
+                onChange={e => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  if (file.size > 1024 * 1024) {
+                    e.target.value = '';
+                    toast.warning('Image size must not exceed 1MB', {
+                      toasterId,
+                    });
+                    return;
+                  }
+                  if (
+                    !file.type.startsWith('image/') ||
+                    !['image/jpg', 'image/jpeg', 'image/png'].includes(
+                      file.type
+                    )
+                  ) {
+                    e.target.value = '';
+                    toast.warning('Only JPG, PNG and JPEG images are allowed', {
+                      toasterId,
+                    });
+                    return;
+                  }
+                  setPreviewImageURL(URL.createObjectURL(file));
+                }}
+              />
+
+              {previewImageURL ? (
+                <Image
+                  src={previewImageURL ?? defaultCabin?.image}
+                  alt='Cabin preview'
+                  width='256'
+                  height='256'
+                  style={{ width: 'auto', height: 'auto' }}
+                  className='ml-auto aspect-video h-36 rounded-lg mask-y-from-75% mask-x-from-95% object-cover'
+                />
+              ) : null}
+            </FieldGroup>
+          </FieldSet>
         </ScrollArea>
       </>
     ),

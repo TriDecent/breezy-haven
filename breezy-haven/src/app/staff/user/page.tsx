@@ -13,7 +13,7 @@ export default async function UserPage() {
         Create a new user
       </h1>
 
-      <Card className='mx-auto max-w-5xl'>
+      <Card className='mx-auto max-w-3xs md:max-w-xl'>
         <CardHeader>
           <span className='flex items-center gap-2 text-lg font-medium'>
             <UserPen /> User Details

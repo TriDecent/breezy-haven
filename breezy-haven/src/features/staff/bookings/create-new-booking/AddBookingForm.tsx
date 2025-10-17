@@ -4,6 +4,10 @@ import {
   Button,
   Calendar,
   Checkbox,
+  FieldGroup,
+  FieldLegend,
+  FieldSeparator,
+  FieldSet,
   Form,
   FormRow,
   Label,
@@ -57,20 +61,42 @@ export function AddBookingForm({
       <AddBookingFormContext
         value={{ guests, cabins, setting, state, isPending }}
       >
-        <Selects />
+        <FieldGroup>
+          <FieldSet>
+            <FieldLegend>Booking Details</FieldLegend>
+            <FieldGroup>
+              <Selects />
+            </FieldGroup>
+          </FieldSet>
 
-        <FormRow
-          kind='textarea'
-          id='observations'
-          name='observations'
-          labelText='Observations'
-          labelClassname='min-w-24'
-          defaultValue={state.payload.userEntered?.observations}
-          placeholder='Any special requests, allergies, or notes...'
-          disabled={isPending}
-        />
+          <FieldSeparator />
 
-        <Checkboxes />
+          <FieldSet>
+            <FieldLegend>Additional Information</FieldLegend>
+            <FieldGroup>
+              <FormRow
+                kind='textarea'
+                id='observations'
+                name='observations'
+                labelText='Observations'
+                orientation='vertical'
+                labelClassname='min-w-24'
+                defaultValue={state.payload.userEntered?.observations}
+                placeholder='Any special requests, allergies, or notes...'
+                disabled={isPending}
+              />
+            </FieldGroup>
+          </FieldSet>
+
+          <FieldSeparator />
+
+          <FieldSet>
+            <FieldLegend>Extras</FieldLegend>
+            <Checkboxes />
+          </FieldSet>
+
+          <FieldSeparator />
+        </FieldGroup>
       </AddBookingFormContext>
     ),
     [guests, cabins, setting]
@@ -79,7 +105,7 @@ export function AddBookingForm({
   const renderUnexpectedErrors = useCallback(
     (state: AddBookingResponse) =>
       state.payload.errors?.unexpected ? (
-        <p className='text-center text-red-500'>
+        <p className='text-destructive text-center text-sm'>
           {state.payload.errors.unexpected}
         </p>
       ) : null,
@@ -211,6 +237,7 @@ function GuestSelect({}) {
       id='guestId'
       name='guestId'
       labelText='Guest'
+      orientation='vertical'
       placeholder={'Select a Guest'}
       disabled={isPending}
       error={state.payload.errors?.guestId?.at(0)}
@@ -254,6 +281,7 @@ function CabinSelect({
       id='cabinId'
       name='cabinId'
       labelText='Cabin'
+      orientation='vertical'
       placeholder={'Select a Cabin'}
       disabled={isPending}
       error={state.payload.errors?.cabinId?.at(0)}
@@ -293,6 +321,7 @@ function GuestCountSelect({ selectedCabin }: { selectedCabin: Cabin | null }) {
       placeholder={
         selectedCabin ? 'Select number of guests' : 'Select a cabin first'
       }
+      orientation='vertical'
       disabled={isPending || !!!selectedCabin}
       error={state.payload.errors?.numGuests?.at(0)}
       renderSelectItems={renderSelectItems}
@@ -331,7 +360,7 @@ function DateSelect({
   }, [isPending]);
 
   return (
-    <div className='space-y-2'>
+    <div className='space-y-4'>
       {/* Not sure why it must be converted into ISO date; otherwise the date gets mismatched */}
       <input
         type='hidden'
@@ -350,7 +379,7 @@ function DateSelect({
             id='staying-dates'
             variant={'outline'}
             disabled={isPending || !hasSelectedCabin}
-            className={`text-muted-foreground w-full justify-between text-xs transition-all ${state.payload.errors?.startDate || state.payload.errors?.endDate ? 'error ring ring-red-600/75' : ''}`}
+            className={`text-muted-foreground w-full justify-between text-xs transition-all ${state.payload.errors?.startDate || state.payload.errors?.endDate ? 'error ring-destructive ring' : ''}`}
           >
             {buttonText}
             <CalendarIcon />
@@ -374,7 +403,7 @@ function DateSelect({
         </PopoverContent>
       </Popover>
       {state.payload.errors?.startDate || state.payload.errors?.endDate ? (
-        <p className='flex-1 text-red-500 first-letter:capitalize'>
+        <p className='text-destructive flex-1 text-sm first-letter:capitalize'>
           {state.payload.errors?.startDate ?? state.payload.errors?.endDate}
         </p>
       ) : null}

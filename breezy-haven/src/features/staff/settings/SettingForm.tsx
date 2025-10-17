@@ -1,6 +1,6 @@
 'use client';
 
-import { Form, FormRow } from '@/shared/components';
+import { FieldGroup, FieldSet, Form, FormRow } from '@/shared/components';
 import type { Setting } from '@/shared/schemas';
 import { useCallback, useRef } from 'react';
 import { toast } from 'sonner';
@@ -41,65 +41,59 @@ export function SettingForm({ defaultSetting }: { defaultSetting: Setting }) {
 
   const renderFields = useCallback(
     (state: UpdateSettingResponse) => (
-      <>
-        <input type='hidden' name='id' value={defaultSetting.id} />
-        <FormRow
-          kind='input'
-          id='maxBookingLength'
-          name='maxBookingLength'
-          labelText='Max nights per booking'
-          defaultValue={
-            state.payload.userEntered?.maxBookingLength ??
-            defaultSetting.maxBookingLength
-          }
-          error={state.payload.errors?.maxBookingLength?.at(0)}
-          labelClassname='min-w-48'
-          autoComplete='off'
-          className='max-w-2xs'
-        />
-        <FormRow
-          kind='input'
-          id='minBookingLength'
-          name='minBookingLength'
-          labelText='Min nights per booking'
-          defaultValue={
-            state.payload.userEntered?.minBookingLength ??
-            defaultSetting.minBookingLength
-          }
-          error={state.payload.errors?.minBookingLength?.at(0)}
-          labelClassname='min-w-48'
-          autoComplete='off'
-          className='max-w-2xs'
-        />
-        <FormRow
-          kind='input'
-          id='maxGuestPerBooking'
-          name='maxGuestPerBooking'
-          labelText='Max guests per booking'
-          defaultValue={
-            state.payload.userEntered?.maxGuestPerBooking ??
-            defaultSetting.maxGuestPerBooking
-          }
-          error={state.payload.errors?.maxGuestPerBooking?.at(0)}
-          labelClassname='min-w-48'
-          autoComplete='off'
-          className='max-w-2xs'
-        />
-        <FormRow
-          kind='input'
-          id='breakfastPrice'
-          name='breakfastPrice'
-          labelText='Breakfast price'
-          defaultValue={
-            state.payload.userEntered?.breakfastPrice ??
-            defaultSetting.breakfastPrice
-          }
-          error={state.payload.errors?.breakfastPrice?.at(0)}
-          labelClassname='min-w-48'
-          autoComplete='off'
-          className='max-w-2xs'
-        />
-      </>
+      <FieldSet>
+        <FieldGroup>
+          <input type='hidden' name='id' value={defaultSetting.id} />
+          <FormRow
+            kind='input'
+            id='maxBookingLength'
+            name='maxBookingLength'
+            labelText='Max nights per booking'
+            defaultValue={
+              state.payload.userEntered?.maxBookingLength ??
+              defaultSetting.maxBookingLength
+            }
+            error={state.payload.errors?.maxBookingLength?.at(0)}
+            autoComplete='off'
+          />
+          <FormRow
+            kind='input'
+            id='minBookingLength'
+            name='minBookingLength'
+            labelText='Min nights per booking'
+            defaultValue={
+              state.payload.userEntered?.minBookingLength ??
+              defaultSetting.minBookingLength
+            }
+            error={state.payload.errors?.minBookingLength?.at(0)}
+            autoComplete='off'
+          />
+          <FormRow
+            kind='input'
+            id='maxGuestPerBooking'
+            name='maxGuestPerBooking'
+            labelText='Max guests per booking'
+            defaultValue={
+              state.payload.userEntered?.maxGuestPerBooking ??
+              defaultSetting.maxGuestPerBooking
+            }
+            error={state.payload.errors?.maxGuestPerBooking?.at(0)}
+            autoComplete='off'
+          />
+          <FormRow
+            kind='input'
+            id='breakfastPrice'
+            name='breakfastPrice'
+            labelText='Breakfast price'
+            defaultValue={
+              state.payload.userEntered?.breakfastPrice ??
+              defaultSetting.breakfastPrice
+            }
+            error={state.payload.errors?.breakfastPrice?.at(0)}
+            autoComplete='off'
+          />
+        </FieldGroup>
+      </FieldSet>
     ),
     [
       defaultSetting.breakfastPrice,

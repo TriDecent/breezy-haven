@@ -174,7 +174,11 @@ function SelectField({
         <Select name={name} {...props}>
           <SelectTrigger
             id={id}
-            className={cn(error ? 'border-destructive error' : '', className)}
+            className={cn(
+              'w-full',
+              error ? 'border-destructive error' : '',
+              className
+            )}
           >
             <SelectValue placeholder={placeholder} />
           </SelectTrigger>

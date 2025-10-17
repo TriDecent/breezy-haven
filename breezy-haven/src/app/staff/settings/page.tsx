@@ -21,7 +21,7 @@ export default async function SettingsPage() {
         Settings
       </h1>
 
-      <Card className='mx-auto w-fit min-w-2xs'>
+      <Card className='mx-auto w-full max-w-xl'>
         <CardHeader>
           <CardTitle>Update Settings</CardTitle>
           <CardDescription>
