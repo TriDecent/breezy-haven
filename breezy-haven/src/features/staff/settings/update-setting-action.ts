@@ -11,7 +11,16 @@ import { z } from 'zod';
 
 const UpdateSettingSchema = SettingSchema.omit({
   created_at: true,
-});
+})
+  .refine(data => data.minBookingLength < data.maxBookingLength, {
+    error: 'minBookingLength must be less than maxBookingLength',
+    path: ['maxBookingLength'],
+  })
+  .refine(data => data.minBookingLength < data.maxBookingLength, {
+    error: 'minBookingLength must be less than maxBookingLength',
+    path: ['minBookingLength'],
+  });
+
 type SafeUpdateUpdateSettingInput = z.infer<typeof UpdateSettingSchema>;
 
 export type UpdateSettingResponse = ActionResponse<
