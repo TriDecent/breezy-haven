@@ -1,10 +1,21 @@
 'use client';
 
 import { Variants } from '@/shared/animations';
-import { Button, Input } from '@/shared/components';
+import {
+  Button,
+  ButtonGroup,
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/shared/components';
 import { ROUTES } from '@/shared/constants';
 import { useScrollDirection } from '@/shared/hooks';
 import { uiActions, type RootState } from '@/shared/store';
+import { InformationCircleIcon } from '@heroicons/react/24/solid';
+
 import { AnimatePresence, motion } from 'framer-motion';
 import { Search } from 'lucide-react';
 import Form from 'next/form';
@@ -39,16 +50,41 @@ export default function SearchBar() {
           animate={Variants.slide.key.visible}
           exit={Variants.slide.key.safelyHidden}
           transition={{ type: 'spring' }}
-          className='fixed inset-x-0 top-4 z-100 mx-auto w-fit min-w-2xs backdrop-blur-md'
+          className='fixed inset-x-0 top-4 z-100 mx-auto w-fit'
         >
           <Form action={ROUTES.cabins.href} className='flex'>
-            <Input
-              onChange={handleSearchChange}
-              defaultValue={query ?? ''}
-              name='query'
-              placeholder='Enter your keywords here...'
-              className='text-accent-300 w-full'
-            />
+            <ButtonGroup>
+              <ButtonGroup className='min-w-2xs rounded backdrop-blur-xs'>
+                <InputGroup>
+                  <InputGroupAddon>
+                    <Search />
+                  </InputGroupAddon>
+                  <InputGroupInput
+                    onChange={handleSearchChange}
+                    defaultValue={query ?? ''}
+                    name='query'
+                    placeholder='Enter your keywords here...'
+                    className='text-accent-300'
+                  />
+                  <InputGroupAddon align='inline-end'>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <InformationCircleIcon />
+                      </TooltipTrigger>
+                      <TooltipContent align='end' className='font-medium'>
+                        Try searching using the cabin&apos;s name?
+                      </TooltipContent>
+                    </Tooltip>
+                  </InputGroupAddon>
+                </InputGroup>
+              </ButtonGroup>
+
+              <ButtonGroup className='backdrop-blur-xs'>
+                <Button variant='outline'>
+                  <Search />
+                </Button>
+              </ButtonGroup>
+            </ButtonGroup>
           </Form>
         </motion.div>
       ) : null}
