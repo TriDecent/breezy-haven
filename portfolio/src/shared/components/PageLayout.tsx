@@ -12,7 +12,7 @@ export const PageLayout = ({ children }: Props) => {
 
 PageLayout.Header = function Header({ children }: Props) {
   return (
-    <header className="bg-background/80 sticky z-50 top-0 backdrop-blur-sm">
+    <header className="bg-background/80 sticky top-0 z-50 backdrop-blur-sm">
       {children}
     </header>
   );

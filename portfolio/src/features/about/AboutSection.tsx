@@ -1,26 +1,29 @@
-export default function AboutSection() {
+import { ScrollArea, ScrollBar } from "@/shared/components";
+import { Education } from "./Education";
+import { Hero } from "./Hero";
+import { MyJourney } from "./MyJourney";
+import { SkillsAndExpertise } from "./SkillsAndExpertise";
+import { ContactCTA } from "./ContactCTA";
+
+export function AboutSection() {
   return (
-    <section className="py-16">
-      <h2 className="text-primary mb-8 text-3xl font-bold">Về tôi</h2>
-      <div className="grid gap-8 md:grid-cols-2">
-        <div>
-          <h3 className="text-accent mb-2 text-xl font-semibold">Kỹ năng</h3>
-          <ul className="text-muted-foreground ml-6 list-disc">
-            <li>Next.js, React, TypeScript</li>
-            <li>Tailwind CSS, shadcn/ui</li>
-            <li>Framer Motion, UI/UX</li>
-          </ul>
-        </div>
-        <div>
-          <h3 className="text-accent mb-2 text-xl font-semibold">
-            Học vấn & Kinh nghiệm
-          </h3>
-          <ul className="text-muted-foreground ml-6 list-disc">
-            <li>Cử nhân Công nghệ thông tin</li>
-            <li>2+ năm kinh nghiệm phát triển web</li>
-          </ul>
-        </div>
+    <ScrollArea className="h-screen" type="always">
+      <ScrollBar orientation="vertical" />
+      <div className="min-h-screen snap-start">
+        <Hero />
       </div>
-    </section>
+      <div className="min-h-screen snap-start">
+        <MyJourney />
+      </div>
+      <div className="min-h-screen snap-start">
+        <SkillsAndExpertise />
+      </div>
+      <div className="min-h-screen snap-start">
+        <Education />
+      </div>
+      <div className="min-h-screen snap-start">
+        <ContactCTA />
+      </div>
+    </ScrollArea>
   );
 }

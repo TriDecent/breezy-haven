@@ -8,10 +8,10 @@ const inter = Inter({
 });
 
 import { MainLayout } from "@/features/layout";
-import { siteMetadata } from "@/shared/metadata";
+import { SITE_METADATA } from "@/shared/metadata";
 import { ThemeProvider } from "next-themes";
 
-export const metadata = siteMetadata;
+export const metadata = SITE_METADATA.base.metadata;
 
 export default function RootLayout({
   children,

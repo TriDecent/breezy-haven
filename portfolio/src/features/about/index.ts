@@ -1,1 +1,1 @@
-export { default as AboutSection } from "./AboutSection";
+export { AboutSection } from "./AboutSection";
