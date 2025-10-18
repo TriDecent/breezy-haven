@@ -2,31 +2,80 @@ import type { Metadata } from "next";
 import { FaFacebook, FaGithub } from "react-icons/fa6";
 import { IoMail } from "react-icons/io5";
 
-export const siteMetadata: Metadata = {
-  title: "Portfolio cá nhân | Next.js",
-  description:
-    "Website portfolio hiện đại với Next.js, Tailwind, shadcn/ui, dark mode, animation.",
-  icons: {
-    icon: "/favicon.ico",
-  },
-  openGraph: {
-    title: "Portfolio cá nhân | Next.js",
-    description:
-      "Website portfolio hiện đại với Next.js, Tailwind, shadcn/ui, dark mode, animation.",
-    url: "https://yourdomain.com",
-    siteName: "Portfolio cá nhân",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Portfolio cá nhân | Next.js",
+const BASE_URL = process.env.BASE_URL ?? "http://localhost:3000";
+
+export const SITE_METADATA = {
+  base: defineRouteMetadata({
+    href: "/",
+    metadata: {
+      metadataBase: new URL(BASE_URL),
+      title: {
+        template: "%s - Trí's Portfolio",
+        default: "Trí Decent",
       },
-    ],
-    locale: "vi_VN",
-    type: "website",
-  },
+      icons: "/avatar.ico",
+    },
+  }),
+  home: defineRouteMetadata({
+    href: "/",
+    metadata: {
+      title: "Trí Decent",
+      description:
+        "A modern portfolio website built with Next.js, Tailwind, shadcn/ui, dark mode, and animations.",
+      openGraph: {
+        title: "Personal Portfolio",
+        description:
+          "A modern portfolio website built with Next.js, Tailwind, shadcn/ui, dark mode, and animations.",
+        url: BASE_URL,
+        siteName: "Personal Portfolio",
+        images: [
+          {
+            url: "/og-image.png",
+            width: 1200,
+            height: 630,
+            alt: "Personal Portfolio",
+          },
+        ],
+        locale: "en_US",
+        type: "website",
+      },
+    },
+  }),
+  about: defineRouteMetadata({
+    href: "/about",
+    metadata: {
+      title: "About",
+      description:
+        "Learn more about Trí Decent, a passionate software engineer focused on building scalable and efficient full-stack applications.",
+      openGraph: {
+        title: "About - Trí Decent",
+        description:
+          "Discover the background, skills, and experience of Trí Decent, a modern web developer.",
+        url: `${BASE_URL}/about`,
+        siteName: "Personal Portfolio",
+        images: [
+          {
+            url: "/og-image.png",
+            width: 1200,
+            height: 630,
+            alt: "About Trí Decent",
+          },
+        ],
+        locale: "en_US",
+        type: "profile",
+      },
+    },
+  }),
 } as const;
+
+type RouteMetadata = Readonly<{
+  href: string;
+  metadata: Metadata;
+}>;
+
+function defineRouteMetadata<T extends RouteMetadata>(routeMetadata: T): T {
+  return routeMetadata;
+}
 
 export const personalInfo = {
   name: "Trần Vũ Anh Trí",
@@ -73,3 +122,33 @@ export const featuredProjects = [
     image: `https://placehold.co/1280x720/1a1a1a/FFFFFF?text=ServiceHub+API`,
   },
 ] as const;
+
+export const skillsData = {
+  languages: ["TypeScript", "C#", "JavaScript"],
+  frontend: [
+    "React",
+    "Next.js",
+    "Redux Toolkit",
+    "RTK Query",
+    "Framer Motion",
+    "Tailwind CSS",
+    "shadcn/ui",
+  ],
+  backend: ["Node.js", "NestJS (Learning)", "gRPC (Learning)"],
+  databases: ["PostgreSQL (Learning)", "Prisma (Learning)", "Redis (Learning)"],
+  security: [
+    "JWT (JSON Web Tokens)",
+    "Data Encryption (RSA, AES)",
+    "Password Hashing (bcrypt)",
+  ],
+  architecture: [
+    "SOLID Principles",
+    "DRY Principle",
+    "Immutable Patterns",
+    "Composition over Inheritance",
+    "Design Patterns (Strategy, Decorator, Observer, Provider)",
+    "DDD",
+    "REST API Design",
+  ],
+  tools: ["Git", "Zod", "Docker"],
+} as const;
