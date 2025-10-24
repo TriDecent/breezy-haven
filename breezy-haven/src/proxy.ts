@@ -1,9 +1,9 @@
-import { MiddlewareConfig, NextRequest, NextResponse } from 'next/server';
+import { ProxyConfig, NextRequest, NextResponse } from 'next/server';
 
 import { Auth } from '@/features/auth';
 import { ROUTES } from '@/shared/constants';
 
-export const config: MiddlewareConfig = {
+export const config: ProxyConfig = {
   matcher: [
     '/guest/account/:path*',
     '/guest/login',
@@ -15,7 +15,7 @@ export const config: MiddlewareConfig = {
   ],
 };
 
-export async function middleware(request: NextRequest): Promise<NextResponse> {
+export async function proxy(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith('/guest')) return handleGuestRouteAsync(request);

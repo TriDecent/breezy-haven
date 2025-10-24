@@ -15,6 +15,14 @@ const nextConfig: NextConfig = {
       ),
     ],
   },
+  cacheComponents: true,
+  cacheLife: {
+    'default-strategy': {
+      stale: 300, // 5 mins
+      revalidate: 604800, // 1 week
+      expire: 2592000, // 30 days
+    },
+  },
   // output: 'export',
 };
 
