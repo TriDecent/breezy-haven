@@ -1,13 +1,21 @@
+'use cache';
 import { Header, SideNavigation } from '@/features/staff';
 import { MiniSidebar, PageLayout, Toaster } from '@/shared/components';
 import { ROUTES } from '@/shared/constants';
 
 import type { Metadata } from 'next';
+import { cacheLife } from 'next/cache';
 import type { ReactNode } from 'react';
 
 export const metadata: Metadata = ROUTES.staff.metadata;
 
-export default function StaffLayout({ children }: { children: ReactNode }) {
+export default async function StaffLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  cacheLife('default-strategy');
+
   return (
     <>
       <PageLayout>

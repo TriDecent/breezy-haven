@@ -38,7 +38,7 @@ export default async function ProfilePage() {
           </CardFooter>
         </Card>
 
-        <Card className='mx-auto max-w-xl h-fit'>
+        <Card className='mx-auto h-fit max-w-xl'>
           <CardTitle className='px-6'>
             <p className='mb-2 flex items-center gap-2'>
               <RotateCcwKey /> Change password

@@ -1,14 +1,15 @@
+'use cache';
+
 import { CabinDetail, Reservation } from '@/features/guest/cabins';
 import { unauthCabinService } from '@/services';
 
 import { CabinSchema } from '@/shared/schemas';
 import { errorHelper } from '@/shared/utils';
 import { Metadata } from 'next';
+import { cacheLife } from 'next/cache';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import Loading from './loading';
-
-export const revalidate = 2592000;
 
 interface PageParams {
   readonly params: Promise<{ cabinId: string }>;
@@ -19,6 +20,8 @@ export async function generateStaticParams(): Promise<
     readonly cabinId: string;
   }[]
 > {
+  cacheLife('default-strategy');
+
   const { data: cabins } = await unauthCabinService.getAll();
 
   return cabins
@@ -31,6 +34,8 @@ export async function generateStaticParams(): Promise<
 export async function generateMetadata({
   params,
 }: PageParams): Promise<Metadata> {
+  cacheLife('default-strategy');
+
   const { cabinId } = await params;
   const { data: cabin, errors: cabinError } = await unauthCabinService.getById(
     Number(cabinId)
@@ -50,6 +55,8 @@ export async function generateMetadata({
 }
 
 export default async function Page({ params }: PageParams) {
+  cacheLife('default-strategy');
+
   const { cabinId } = await params;
 
   if (Number.isNaN(Number(cabinId))) notFound();

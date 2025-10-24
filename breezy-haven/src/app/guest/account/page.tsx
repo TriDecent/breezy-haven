@@ -3,7 +3,7 @@ import { ROUTES } from '@/shared/constants';
 
 import { Metadata } from 'next';
 
-export function generateMetadata(): Metadata {
+export async function generateMetadata(): Promise<Metadata> {
   return ROUTES.account.metadata;
 }
 

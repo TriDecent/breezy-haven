@@ -1,15 +1,19 @@
+'use cache';
 import backgroundImage from '@/../public/bg.png';
 import { Logo, PageLayout, ThemeToggle } from '@/shared/components';
 import { ROUTES } from '@/shared/constants';
 import { Navigation } from 'lucide-react';
 
 import type { Metadata } from 'next';
+import { cacheLife } from 'next/cache';
 import Image from 'next/image';
 import Link from 'next/link';
 
 export const metadata: Metadata = ROUTES.home.metadata;
 
-export default function Page() {
+export default async function Page() {
+  cacheLife('default-strategy');
+
   return (
     <PageLayout>
       <PageLayout.Header>

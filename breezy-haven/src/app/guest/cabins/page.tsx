@@ -1,3 +1,5 @@
+'use cache';
+
 import {
   CabinLoading,
   CabinsList,
@@ -8,13 +10,14 @@ import { ScrollTo } from '@/shared/components';
 import { ROUTES } from '@/shared/constants';
 
 import { Metadata } from 'next';
+import { cacheLife } from 'next/cache';
 import { Suspense } from 'react';
-
-export const revalidate = 2592000;
 
 export const metadata: Metadata = ROUTES.cabins.metadata;
 
-export default function Page() {
+export default async function Page() {
+  cacheLife('default-strategy');
+
   return (
     <>
       <h1

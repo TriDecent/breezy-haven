@@ -1,20 +1,24 @@
+'use cache';
+
 import about1Image from '@/../public/about-1.jpg';
 import about2Image from '@/../public/about-2.jpeg';
 import { unauthCabinService } from '@/services';
 import { Spinner } from '@/shared/components';
 import { ROUTES } from '@/shared/constants';
 import { Metadata } from 'next';
+import { cacheLife } from 'next/cache';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
-export const revalidate = 2592000;
-
 export async function generateMetadata(): Promise<Metadata> {
+  cacheLife('default-strategy');
   return ROUTES.about.metadata;
 }
 
 export default async function Page() {
+  cacheLife('default-strategy');
+
   return (
     <section>
       <h1 className='text-accent-400 mb-4 text-end text-2xl tracking-widest lg:text-4xl'>
@@ -94,6 +98,8 @@ export default async function Page() {
 }
 
 async function BreezyHavenIntroduction() {
+  cacheLife('default-strategy');
+
   const getCountResult = await unauthCabinService.getCount();
 
   if (getCountResult.type === 'error')

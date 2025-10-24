@@ -1,3 +1,4 @@
+'use cache';
 import {
   Logo,
   Navigation,
@@ -10,14 +11,17 @@ import { ROUTES } from '@/shared/constants';
 
 import '@/styles/globals.css';
 import { Metadata } from 'next';
+import { cacheLife } from 'next/cache';
 
 export const metadata: Metadata = ROUTES.home.metadata;
 
-export default function GuestLayout({
+export default async function GuestLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  cacheLife('default-strategy');
+
   return (
     <PageLayout>
       <PageLayout.Header>
