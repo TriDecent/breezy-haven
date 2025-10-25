@@ -11,6 +11,7 @@
 !.yarn/versions
 /.idea
 /src/app/staff/test
+/src/app/test
 
 # testing
 /coverage
