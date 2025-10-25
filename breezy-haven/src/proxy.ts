@@ -1,4 +1,4 @@
-import { ProxyConfig, NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse, ProxyConfig } from 'next/server';
 
 import { Auth } from '@/features/auth';
 import { ROUTES } from '@/shared/constants';
@@ -45,9 +45,6 @@ async function handleGuestRouteAsync(request: NextRequest) {
 
   if (pathname.startsWith(ROUTES.account.href))
     return handleAccountRouteAsync(request);
-
-  if (pathname.startsWith(ROUTES.cabins.href))
-    return handleCabinRouteAsync(request);
 
   if (pathname.startsWith('/guest/api/auth/callback/google'))
     return handleGoogleCallback(request);
@@ -110,23 +107,4 @@ async function handleAccountRouteAsync(
     );
 
   return NextResponse.next();
-}
-
-async function handleCabinRouteAsync(
-  request: NextRequest
-): Promise<NextResponse> {
-  if (!/^\/cabins\/\d+$/.test(request.nextUrl.pathname))
-    return NextResponse.next();
-
-  const response = NextResponse.next();
-  response.headers.set(
-    'Cache-Control',
-    'no-store, no-cache, must-revalidate, proxy-revalidate'
-  );
-  response.headers.set('Pragma', 'no-cache');
-  response.headers.set('Expires', '0');
-  response.headers.set('Surrogate-Control', 'no-store');
-  response.headers.set('Vary', 'Accept-Encoding');
-
-  return response;
 }

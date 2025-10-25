@@ -1,3 +1,4 @@
+'use cache';
 import { unauthBookingService, unauthSettingService } from '@/services';
 
 import type { Cabin } from '@/shared/schemas';

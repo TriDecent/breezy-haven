@@ -2,6 +2,7 @@
 
 import { CabinDetail, Reservation } from '@/features/guest/cabins';
 import { unauthCabinService } from '@/services';
+import { Spinner } from '@/shared/components';
 
 import { CabinSchema } from '@/shared/schemas';
 import { errorHelper } from '@/shared/utils';
@@ -9,7 +10,6 @@ import { Metadata } from 'next';
 import { cacheLife } from 'next/cache';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
-import Loading from './loading';
 
 interface PageParams {
   readonly params: Promise<{ cabinId: string }>;
@@ -89,7 +89,7 @@ export default async function Page({ params }: PageParams) {
         </h2>
 
         <div className='flex flex-col gap-4 lg:flex-row'>
-          <Suspense fallback={<Loading />}>
+          <Suspense fallback={<Spinner />}>
             <Reservation cabin={parsedCabin.data} />
           </Suspense>
         </div>
