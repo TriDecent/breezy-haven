@@ -1,5 +1,6 @@
 import { NotFound } from '@/shared/components';
+import { ROUTES } from '@/shared/constants';
 
 export default function GuestNotFound() {
-  return <NotFound />;
+  return <NotFound goBackToHref={ROUTES.cabins.href} />;
 }

@@ -1,11 +1,13 @@
 import { Auth } from '@/features/auth';
-import { NextResponse } from 'next/server';
+import { connection, NextResponse } from 'next/server';
 
 class AuthError {
   constructor(public readonly message: string) {}
 }
 
 export async function GET() {
+  await connection();
+
   try {
     const { main, thirdParty } = await Auth.guest.getFullSessionAsync();
     if (!main) throw new AuthError('You are not authenticated');
