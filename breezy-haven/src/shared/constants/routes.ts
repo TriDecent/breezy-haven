@@ -79,7 +79,7 @@ export const ROUTES = {
         title: 'About The Breezy Haven',
         description:
           'The philosophy behind The Breezy Haven: sustainable, design-forward luxury cabins in the Dolomites.',
-        url: `${BASE_URL}/about`,
+        url: `${BASE_URL}/guest/about`,
         images: [
           {
             url: '/og/about1.jpg',
@@ -100,7 +100,7 @@ export const ROUTES = {
         creator: '@thebreezyhaven',
       },
       robots: 'index, follow',
-      alternates: { canonical: `${BASE_URL}/about` },
+      alternates: { canonical: `${BASE_URL}/guest/about` },
     },
   }),
 
@@ -115,7 +115,7 @@ export const ROUTES = {
         'Manage your profile, reservations, and account settings securely.',
       keywords: ['guest account', 'manage reservations', 'profile settings'],
       robots: 'noindex, follow',
-      alternates: { canonical: `${BASE_URL}/account` },
+      alternates: { canonical: `${BASE_URL}/guest/account` },
     },
     nested: {
       profile: defineRoute({
@@ -124,7 +124,7 @@ export const ROUTES = {
           title: 'My Profile',
           description: 'View and edit your personal details.',
           robots: 'noindex, follow',
-          alternates: { canonical: `${BASE_URL}/account/profile` },
+          alternates: { canonical: `${BASE_URL}/guest/account/profile` },
         },
       }),
       reservations: defineRoute({
@@ -134,7 +134,7 @@ export const ROUTES = {
           description:
             'Track, view, and manage all your cabin bookings at The Breezy Haven.',
           robots: 'noindex, follow',
-          alternates: { canonical: `${BASE_URL}/account/reservations` },
+          alternates: { canonical: `${BASE_URL}/guest/account/reservations` },
         },
         nested: {
           edit: defineRoute({
@@ -144,7 +144,7 @@ export const ROUTES = {
               description: 'Update your cabin booking details.',
               robots: 'noindex, nofollow',
               alternates: {
-                canonical: `${BASE_URL}/account/reservations/edit`,
+                canonical: `${BASE_URL}/guest/account/reservations/edit`,
               },
             },
             nested: {
@@ -180,7 +180,7 @@ export const ROUTES = {
         title: 'Luxury Cabins in the Dolomites | The Breezy Haven',
         description:
           'Choose from eco-friendly luxury cabins designed for comfort, romance, and adventure.',
-        url: `${BASE_URL}/cabins`,
+        url: `${BASE_URL}/guest/cabins`,
         images: [
           {
             url: '/og/cabins.jpg',
@@ -201,7 +201,7 @@ export const ROUTES = {
         creator: '@thebreezyhaven',
       },
       robots: 'index, follow',
-      alternates: { canonical: `${BASE_URL}/cabins` },
+      alternates: { canonical: `${BASE_URL}/guest/cabins` },
     },
     nested: {
       cabinId: defineRoute({
@@ -215,7 +215,7 @@ export const ROUTES = {
             title: 'Cabin Details | The Breezy Haven',
             description:
               'Explore features, design, and booking information for your chosen cabin.',
-            url: `${BASE_URL}/cabins/[cabinId]`,
+            url: `${BASE_URL}/guest/cabins/[cabinId]`,
             images: [
               {
                 url: '/og/cabin-detail.jpg',
@@ -246,7 +246,7 @@ export const ROUTES = {
       title: 'Login',
       description: 'Access your account to manage bookings and profile.',
       robots: 'noindex, nofollow',
-      alternates: { canonical: `${BASE_URL}/login` },
+      alternates: { canonical: `${BASE_URL}/guest/login` },
     },
   }),
 
@@ -256,7 +256,7 @@ export const ROUTES = {
       title: 'Initializing Your Account',
       description: 'We are setting up your guest profile. Please wait...',
       robots: 'noindex, nofollow',
-      alternates: { canonical: `${BASE_URL}/setup-new-guest` },
+      alternates: { canonical: `${BASE_URL}/guest/setup-new-guest` },
     },
   }),
 
