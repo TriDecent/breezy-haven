@@ -15,6 +15,7 @@ export { default as Modal, type ModalHandle } from './Modal';
 export { default as Navigation } from './Navigation';
 export { default as NavTrail } from './NavTrail';
 export { default as NotFound } from './NotFound';
+export { Overlay } from './Overlay';
 export { default as PageLayout } from './PageLayout';
 export { default as PageProgressBar } from './PageProgressBar';
 export { default as PreviewImage } from './PreviewImage';
