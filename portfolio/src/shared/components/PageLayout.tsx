@@ -12,14 +12,14 @@ export const PageLayout = ({ children }: Props) => {
 
 PageLayout.Header = function Header({ children }: Props) {
   return (
-    <header className="bg-background/80 sticky top-0 z-50 backdrop-blur-sm">
+    <header className="bg-background/80 sticky top-0 z-50 backdrop-blur-xs dark:backdrop-blur-sm">
       {children}
     </header>
   );
 };
 
 PageLayout.Main = function Main({ children }: Props) {
-  return <main className="flex-grow pt-16">{children}</main>;
+  return <main className="flex-grow pt-16 backdrop-blur-xs">{children}</main>;
 };
 
 PageLayout.Footer = function Footer({ children }: Props) {

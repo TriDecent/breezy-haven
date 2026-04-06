@@ -4,7 +4,7 @@ const container: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { delayChildren: stagger(0.3) },
+    transition: { type: "tween", delayChildren: stagger(0.3) },
   },
 };
 
@@ -13,7 +13,7 @@ const item: Variants = {
   visible: {
     y: 0,
     opacity: 1,
-    transition: { duration: 1, ease: "easeOut" },
+    transition: { type: "tween", duration: 1, ease: "easeOut" },
   },
 };
 

@@ -41,7 +41,7 @@ export function MyJourney() {
           the way, I was introduced to foundational software engineering
           concepts like <strong>SOLID principles</strong> and{" "}
           <strong>design patterns</strong>. These ideas helped me shift my
-          mindset—not just about writing code, but about designing systems that
+          mindset, not just about writing code, but about designing systems that
           are thoughtful and maintainable.
         </motion.p>
         <motion.p
@@ -54,8 +54,8 @@ export function MyJourney() {
           focusing on backend development, aiming to understand how to build{" "}
           <strong>scalable architectures</strong> and{" "}
           <strong>type-safe data layers</strong>. My hope is to grow into a
-          well-rounded engineer who can contribute meaningfully to building
-          reliable software—from frontend to backend.
+          engineer who can contribute meaningfully to building reliable
+          software, from frontend to backend.
         </motion.p>
       </motion.div>
     </section>

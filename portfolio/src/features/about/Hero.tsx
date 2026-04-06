@@ -25,10 +25,10 @@ export function Hero() {
         className="relative mx-auto w-fit"
       >
         <span
-          className="absolute inset-0 rounded-full bg-gradient-to-tr from-fuchsia-400 via-purple-600 to-blue-400 opacity-60 blur-xl"
+          className="absolute inset-0 rounded-full bg-gradient-to-tr from-fuchsia-300 via-purple-600 to-sky-400 opacity-75 blur-xl"
           aria-hidden="true"
         />
-        <Avatar className="relative h-48 w-48">
+        <Avatar className="relative h-28 w-28">
           <AvatarImage src={avatarImg.src} />
           <AvatarFallback>Trí Decent</AvatarFallback>
         </Avatar>
