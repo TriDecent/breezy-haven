@@ -133,13 +133,27 @@ export const skillsData = {
     "Framer Motion",
     "Tailwind CSS",
     "shadcn/ui",
+    "React Hook Form",
   ],
-  backend: ["Node.js", "NestJS (Learning)", "gRPC (Learning)"],
-  databases: ["PostgreSQL (Learning)", "Prisma (Learning)", "Redis (Learning)"],
+  backend: [
+    "Node.js",
+    "Resend",
+    "LiveKit",
+    "NestJS (Learning)",
+    "gRPC (Learning)",
+    "tRPC (Learning)",
+  ],
+  databases: ["PostgreSQL", "Prisma", "Redis (Learning)"],
+  authAccess: [
+    "Better Auth (Core)",
+    "Better Auth Plugins: Admin (RBAC), Organization, Subscription",
+    "CASL (ABAC)",
+  ],
   security: [
     "JWT (JSON Web Tokens)",
     "Data Encryption (RSA, AES)",
     "Password Hashing (bcrypt)",
+    "Arcjet",
   ],
   architecture: [
     "SOLID Principles",
@@ -149,6 +163,7 @@ export const skillsData = {
     "Design Patterns (Strategy, Decorator, Observer, Provider)",
     "DDD",
     "REST API Design",
+    "Microservices (Learning)",
   ],
   tools: ["Git", "Zod", "Docker"],
 } as const;

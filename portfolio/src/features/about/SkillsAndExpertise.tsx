@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import {
   BrainCircuit,
   Database,
+  KeyRound,
   Languages,
   PenTool,
   Server,
@@ -16,21 +17,26 @@ import type React from "react";
 
 export function SkillsAndExpertise() {
   const skillCategories = [
-    { title: "Languages", icon: Languages, skills: skillsData.languages },
-    { title: "Frontend", icon: PenTool, skills: skillsData.frontend },
+    {
+      title: "Architecture",
+      icon: BrainCircuit,
+      skills: skillsData.architecture,
+    },
     { title: "Backend", icon: Server, skills: skillsData.backend },
+    {
+      title: "Auth & Access Control",
+      icon: KeyRound,
+      skills: skillsData.authAccess,
+    },
+    { title: "Frontend", icon: PenTool, skills: skillsData.frontend },
     {
       title: "Databases & Caching",
       icon: Database,
       skills: skillsData.databases,
     },
     { title: "Security", icon: Shield, skills: skillsData.security },
-    {
-      title: "Architecture",
-      icon: BrainCircuit,
-      skills: skillsData.architecture,
-    },
     { title: "Tools & DevOps", icon: Terminal, skills: skillsData.tools },
+    { title: "Languages", icon: Languages, skills: skillsData.languages },
   ];
 
   return (
