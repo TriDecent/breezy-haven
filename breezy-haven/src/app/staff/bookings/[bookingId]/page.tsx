@@ -23,10 +23,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const bookingId = Number((await params).bookingId);
 
-  if (isNaN(bookingId))
-    return {
-      title: `Booking cannot be found`,
-    };
+  if (isNaN(bookingId)) return { title: `Booking cannot be found` };
 
   const { data, errors } =
     await unauthBookingService.getBookingWithRelationsById(bookingId);
@@ -34,23 +31,9 @@ export async function generateMetadata({
   if (!errors) return { title: `Booking ${data.id}` };
 
   if (errors.type === 'database' && errors.db.code === 'PGRST116')
-    return {
-      title: `Booking ${bookingId} cannot be found`,
-    };
+    return { title: `Booking ${bookingId} cannot be found` };
 
-  return {
-    title: `Something is wrong with booking ${bookingId}`,
-  };
-}
-
-export async function generateStaticParams(): Promise<
-  readonly { readonly bookingId: string }[]
-> {
-  const { data, errors } = await unauthBookingService.getAll();
-
-  if (errors) return [];
-
-  return data.map(booking => ({ bookingId: booking.id.toString() }));
+  return { title: `Something is wrong with booking ${bookingId}` };
 }
 
 export default async function BookingEditPage({
