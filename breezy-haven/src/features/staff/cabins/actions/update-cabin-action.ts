@@ -15,6 +15,8 @@ import {
   type UpdateActionResponse,
 } from './types';
 
+const notAllowedToDeleteIds = [...Array(11).keys()].map(i => 18 + i);
+
 export async function updateCabinAction(
   _currentState: UpdateActionResponse,
   formData: FormData
@@ -37,6 +39,11 @@ export async function updateCabinAction(
         isSuccess: false,
       },
     };
+
+  if (notAllowedToDeleteIds.some(id => id === parsedInput.id))
+    throw new Error(
+      `You are not allowed to update cabin with id ${parsedInput.id}`
+    );
 
   const isImageValid = ImageValidator.safeParse(parsedInput.image).success;
 

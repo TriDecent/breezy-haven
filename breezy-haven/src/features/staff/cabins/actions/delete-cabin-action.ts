@@ -9,7 +9,12 @@ import { revalidatePath } from 'next/cache';
 
 const bucketId = process.env.CABIN_IMAGE_BUCKET_ID!;
 
+const notAllowedToDeleteIds = [...Array(11).keys()].map(i => 18 + i);
+
 export async function deleteCabinAction(cabinId: Cabin['id']) {
+  if (notAllowedToDeleteIds.some(id => id === cabinId))
+    throw new Error(`You are not allowed to delete cabin with id ${cabinId}`);
+
   await Auth.staff.ensureStaffIsAuthenticatedAsync();
 
   const { data: needsDeletedCabin, errors: needsDeletedCabinError } =
