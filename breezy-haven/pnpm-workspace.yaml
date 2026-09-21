@@ -1,0 +1,6 @@
+allowBuilds:
+  '@vercel/speed-insights': true
+  bcrypt: true
+  sharp: true
+  supabase: true
+  unrs-resolver: true

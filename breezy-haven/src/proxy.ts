@@ -10,7 +10,6 @@ export const config: ProxyConfig = {
     '/guest/cabins/:path*',
     '/guest/api/auth/callback/google',
     '/guest',
-
     '/staff/:path*',
   ],
 };

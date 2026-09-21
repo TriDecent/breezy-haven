@@ -1,11 +1,7 @@
 import { Auth } from '@/features/auth';
 import { BookingEditForm } from '@/features/guest/account/profile';
 
-import {
-  bookingService,
-  unauthBookingService,
-  unauthSettingService,
-} from '@/services';
+import { bookingService, unauthSettingService } from '@/services';
 import { errorHelper } from '@/shared/utils';
 
 import { parseISO } from 'date-fns';
@@ -25,19 +21,7 @@ export async function generateMetadata({
 
   if (!paramsResult.success) throw new Error('Invalid booking id');
 
-  return {
-    title: `Editing booking ${paramsResult.data.bookingId}`,
-  };
-}
-
-export async function generateStaticParams() {
-  const { data, errors } = await unauthBookingService.getAll();
-
-  if (errors) throw new Error('Cannot retrieve booking ids');
-
-  return data.map(item => ({
-    bookingId: item.id.toString(),
-  }));
+  return { title: `Editing booking ${paramsResult.data.bookingId}` };
 }
 
 export default async function BookingEditPage({ params }: PageParams) {
