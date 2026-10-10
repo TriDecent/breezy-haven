@@ -9,7 +9,20 @@ The Breezy Haven có hai khu vực chính: giao diện dành cho khách để t�
 cabin và quản lý đặt chỗ, cùng giao diện nội bộ dành cho nhân viên để
 quản lý cabin, đặt chỗ, khách hàng và hoạt động hằng ngày.
 
-**Bản dùng thử:** <https://breezy.tridecent.me>
+**Bản demo:** <https://breezy.tridecent.me>
+
+------------------------------------------------------------------------
+
+## Demo Accounts
+
+Use either account below to try the application. The guest account provides access to the guest-facing booking experience, while the staff account is for the staff management interface.
+
+| Role | Email | Password |
+| --- | --- | --- |
+| Guest | `guest-test@gmail.com` | `Test123@` |
+| Staff | `staff-test@gmail.com` | `Test123@` |
+
+These accounts are for demonstration purposes only. Do not reuse these credentials for any other service.
 
 ------------------------------------------------------------------------
 
@@ -607,8 +620,6 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 ```
-
-Không commit secret hoặc thông tin đăng nhập production lên repository.
 
 ### Chạy môi trường development
 

@@ -12,6 +12,17 @@ daily operations.
 
 **Live Demo:** <https://breezy.tridecent.me/>
 
+## Demo Accounts
+
+Use either account below to try the application. The guest account provides access to the guest-facing booking experience, while the staff account is for the staff management interface.
+
+| Role | Email | Password |
+| --- | --- | --- |
+| Guest | `guest-test@gmail.com` | `Test123@` |
+| Staff | `staff-test@gmail.com` | `Test123@` |
+
+These accounts are for demonstration purposes only. Do not reuse these credentials for any other service.
+
 ------------------------------------------------------------------------
 
 ## Overview
@@ -668,14 +679,14 @@ pnpm start
 
 ## Available Scripts
 
-| Script           | Description                                 |
-|------------------|---------------------------------------------|
-| `pnpm dev`       | Start the development server with Turbopack |
-| `pnpm build`     | Build the application for production        |
-| `pnpm start`     | Start the production server                 |
-| `pnpm lint`      | Run ESLint                                  |
-| `pnpm prod`      | Build and start the production application  |
-| `pnpm analyze`   | Analyze the Next.js production bundle       |
+| Script | Description |
+| --- | --- |
+| `pnpm dev` | Start the development server with Turbopack |
+| `pnpm build` | Build the application for production |
+| `pnpm start` | Start the production server |
+| `pnpm lint` | Run ESLint |
+| `pnpm prod` | Build and start the production application |
+| `pnpm analyze` | Analyze the Next.js production bundle |
 
 ------------------------------------------------------------------------
 
