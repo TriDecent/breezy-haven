@@ -3,22 +3,30 @@ import z from 'zod';
 export async function getCountries(): Promise<Response> {
   try {
     const res = await fetch(
-      'https://restcountries.com/v2/all?fields=name,flag',
+      'https://countries.dev/countries?fields=name%2Cflags%2Cindependent',
       {
         next: { revalidate: 2592000, tags: ['Countries'] },
       }
     );
 
-    const raw = await res.json();
+    const countries = await res.json();
+    const mappedCountries = countries.map(
+      (item: { flags: { svg: string } }) => ({
+        ...item,
+        flag: item.flags.svg,
+      })
+    );
 
     const validCountries: Country[] = [];
-    if (!(raw instanceof Array))
+    if (!(mappedCountries instanceof Array)) {
+      console.log('why then?');
       return {
         data: null,
         error: 'CORRUPTED_DATA',
       };
+    }
 
-    raw.map(item => {
+    mappedCountries.map(item => {
       const parsedCountry = SafeCountrySchema.safeParse(item);
 
       if (!parsedCountry.success) return;
@@ -26,7 +34,7 @@ export async function getCountries(): Promise<Response> {
       validCountries.push(parsedCountry.data);
     });
 
-    if (validCountries.length === 0 && raw.length > 0)
+    if (validCountries.length === 0 && mappedCountries.length > 0)
       return {
         data: null,
         error: 'CORRUPTED_DATA',

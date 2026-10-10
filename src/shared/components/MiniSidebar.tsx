@@ -60,7 +60,7 @@ export default function MiniSidebar({
               exit={Variants.slide.key.safelyHidden}
               transition={{ type: 'spring' }}
               ref={outsideRef}
-              className='fixed inset-x-0 inset-y-0 z-1000 backdrop-blur-xs'
+              className='fixed inset-0 z-1000 backdrop-blur-xs'
             >
               <div className='bg-background pointer-events-auto h-full w-2/3 max-w-3xs border-r py-4'>
                 {children}
