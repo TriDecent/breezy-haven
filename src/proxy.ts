@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse, ProxyConfig } from 'next/server';
-
 import { Auth } from '@/features/auth';
 import { ROUTES } from '@/shared/constants';
+import { NextRequest, NextResponse, ProxyConfig } from 'next/server';
+import { GUEST_TEST_EMAIL } from './features/guest/login/constants';
 
 export const config: ProxyConfig = {
   matcher: [
@@ -28,6 +28,11 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
 async function handleStaffRouteAsync(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // bypass the guest route if the user is a test user
+  const session = await Auth.guest.getThirdPartySessionAsync();
+  if (session?.user?.email === GUEST_TEST_EMAIL)
+    return NextResponse.redirect(new URL(ROUTES.cabins.href, request.nextUrl));
+
   if (pathname === ROUTES.staff.href)
     return NextResponse.redirect(
       new URL(ROUTES.staff.nested.dashboard.href, request.nextUrl)
@@ -45,6 +50,7 @@ async function handleGuestRouteAsync(request: NextRequest) {
   if (pathname.startsWith(ROUTES.account.href))
     return handleAccountRouteAsync(request);
 
+  // * move this to a route handler instead
   if (pathname.startsWith('/guest/api/auth/callback/google'))
     return handleGoogleCallback(request);
 

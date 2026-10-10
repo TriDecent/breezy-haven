@@ -4,10 +4,12 @@ import { Auth } from '@/features/auth';
 import { unauthStaffService } from '@/services';
 import type { ActionResponse } from '@/shared/actions';
 import { COOKIES_CONFIG } from '@/shared/constants';
-
 import { compare } from 'bcrypt';
+import type { User } from 'next-auth';
+import { encode } from 'next-auth/jwt';
 import { cookies } from 'next/headers';
 import z from 'zod';
+import { GUEST_TEST_EMAIL } from './constants';
 
 const LoginInputSchema = z.object({
   email: z.email({ message: 'Email must be a valid email' }).trim(),
@@ -42,6 +44,10 @@ export async function loginAction(
   if (!(await compare(safeInput.password, data.hash_password)))
     return createUnexpectedResponse(safeInput);
 
+  // ! TEMP
+  if (safeInput.email === GUEST_TEST_EMAIL)
+    return applyGuestWorkaround({ ...data, id: data.id.toString() });
+
   const tokens = await Auth.staff.session.createTokensAsync({
     userId: data.id.toString(),
     email: data.email,
@@ -71,6 +77,34 @@ export async function loginAction(
       errors: null,
       isSuccess: true,
     },
+  };
+}
+
+async function applyGuestWorkaround(guest: User): Promise<LoginActionResponse> {
+  const isProd = process.env.NODE_ENV === 'production';
+  const cookieName = isProd
+    ? '__Secure-authjs.session-token'
+    : 'authjs.session-token';
+
+  const token = await encode({
+    token: guest,
+    secret: process.env.AUTH_SECRET as string,
+    salt: cookieName,
+  });
+
+  (await cookies()).set({
+    name: cookieName,
+    value: token,
+    httpOnly: true,
+    secure: isProd,
+    path: '/',
+    sameSite: 'lax',
+    maxAge: 30 * 24 * 60 * 60,
+  });
+
+  return {
+    type: 'success',
+    payload: { userEntered: null, errors: null, isSuccess: true },
   };
 }
 
