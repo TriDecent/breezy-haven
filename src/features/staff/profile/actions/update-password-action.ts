@@ -7,6 +7,7 @@ import { SignUpSchema } from '@/shared/schemas';
 import type { Result } from '@/shared/types';
 import { hash } from 'bcrypt';
 import z from 'zod';
+import { STAFF_TEST_EMAIL } from '../../constants';
 
 const UpdatePasswordSchema = SignUpSchema.pick({
   password: true,
@@ -40,6 +41,11 @@ export async function updatePasswordAction(
   if (!accessPayload)
     throw new Error(
       'Access token is expired but the redirect before did not work'
+    );
+
+  if (accessPayload.email === STAFF_TEST_EMAIL)
+    throw new Error(
+      'You cannot update the password for the staff test account'
     );
 
   const input = Object.fromEntries(formData.entries());
