@@ -12,11 +12,11 @@ import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
-export type Sale = Readonly<{
+export type Sale = {
   date: string;
   total: number;
   extra: number;
-}>;
+};
 
 const chartConfig: ChartConfig = {
   total: {

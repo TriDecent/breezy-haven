@@ -14,11 +14,17 @@ import {
   ScrollArea,
   ScrollBar,
 } from '@/shared/components';
-import { errorHelper, formatter } from '@/shared/utils';
-import { format, isToday, isWithinInterval, parseISO, subDays } from 'date-fns';
-
 import type { Booking } from '@/shared/schemas';
-
+import { errorHelper, formatter } from '@/shared/utils';
+import {
+  eachDayOfInterval,
+  format,
+  isSameDay,
+  isToday,
+  isWithinInterval,
+  parseISO,
+  subDays,
+} from 'date-fns';
 import { ArrowBigDownDash } from 'lucide-react';
 import type { BookingQuery } from './BookingQuerySchema';
 import { DataRefresh } from './DataRefresh';
@@ -38,12 +44,13 @@ export async function DataOverview({ queryDays }: { queryDays: BookingQuery }) {
   if (cabinCountResult.type === 'error')
     throw new Error('Failed to fetch cabin count. Please try again!');
 
-  const startDate = subDays(new Date(), queryDays);
+  const today = new Date();
+  const startDate = subDays(today, queryDays);
 
   const filteredBookings = bookings.filter(booking =>
     isWithinInterval(parseISO(booking.created_at), {
       start: startDate,
-      end: new Date(),
+      end: today,
     })
   );
 
@@ -71,7 +78,7 @@ export async function DataOverview({ queryDays }: { queryDays: BookingQuery }) {
       </div>
 
       <AnimationWrapper>
-        <SalesSection bookings={filteredBookings} />
+        <SalesSection bookings={bookings} queryDays={queryDays} />
       </AnimationWrapper>
     </div>
   );
@@ -118,51 +125,12 @@ function TodayActivitySection({
   );
 }
 
-function StayDurationSection({ bookings }: { bookings: readonly Booking[] }) {
+function StayDurationSection({ bookings }: { bookings: Booking[] }) {
   const pieData = new Map<StayDurationPie['name'], number>();
 
   for (const booking of bookings) {
-    switch (getStayDurationGroup(booking.numNights)) {
-      case 'oneNight':
-        pieData.set('oneNight', (pieData.get('oneNight') ?? 0) + 1);
-        break;
-      case 'twoNight':
-        pieData.set('twoNight', (pieData.get('twoNight') ?? 0) + 1);
-        break;
-      case 'threeNight':
-        pieData.set('threeNight', (pieData.get('threeNight') ?? 0) + 1);
-        break;
-      case 'fourToFiveNight':
-        pieData.set(
-          'fourToFiveNight',
-          (pieData.get('fourToFiveNight') ?? 0) + 1
-        );
-        break;
-      case 'sixToSevenNight':
-        pieData.set(
-          'sixToSevenNight',
-          (pieData.get('sixToSevenNight') ?? 0) + 1
-        );
-        break;
-      case 'eightToFourteenNight':
-        pieData.set(
-          'eightToFourteenNight',
-          (pieData.get('eightToFourteenNight') ?? 0) + 1
-        );
-        break;
-      case 'fifteenToTwentyOneNight':
-        pieData.set(
-          'fifteenToTwentyOneNight',
-          (pieData.get('fifteenToTwentyOneNight') ?? 0) + 1
-        );
-        break;
-      case 'aboveTwentyOneNight':
-        pieData.set(
-          'aboveTwentyOneNight',
-          (pieData.get('aboveTwentyOneNight') ?? 0) + 1
-        );
-        break;
-    }
+    const durationGroup = getStayDurationGroup(booking.numNights);
+    pieData.set(durationGroup, (pieData.get(durationGroup) ?? 0) + 1);
   }
 
   return (
@@ -179,7 +147,7 @@ function StayDurationSection({ bookings }: { bookings: readonly Booking[] }) {
         {pieData.size > 0 ? (
           <StayDurationChart
             pieData={[
-              ...pieData.entries().map(([name, value]) => ({
+              ...Array.from(pieData.entries()).map(([name, value]) => ({
                 name,
                 value,
               })),
@@ -221,12 +189,7 @@ function StatsSection({
       acc.totalNights += cur.numNights;
       return acc;
     },
-    {
-      totalBookings: 0,
-      totalSales: 0,
-      totalCheckIns: 0,
-      totalNights: 0,
-    }
+    { totalBookings: 0, totalSales: 0, totalCheckIns: 0, totalNights: 0 }
   );
 
   const occupancyRate =
@@ -242,24 +205,39 @@ function StatsSection({
   );
 }
 
-function SalesSection({ bookings }: { bookings: readonly Booking[] }) {
-  const sales: Sale[] = bookings
-    .toSorted(
-      (a, b) =>
-        parseISO(a.created_at).getTime() - parseISO(b.created_at).getTime()
-    )
-    .map(booking => ({
-      date: format(parseISO(booking.created_at), 'PPP'),
-      total: booking.totalPrice,
-      extra: booking.extrasPrice,
-    }));
+function SalesSection({
+  bookings,
+  queryDays,
+}: {
+  bookings: readonly Booking[];
+  queryDays: number;
+}) {
+  const today = new Date();
+  const startDate = subDays(today, queryDays);
+
+  const allDays = eachDayOfInterval({
+    start: startDate,
+    end: today,
+  });
+
+  const sales = allDays.map(day => {
+    const dayBookings = bookings.filter(booking =>
+      isSameDay(parseISO(booking.created_at), day)
+    );
+
+    return {
+      date: format(day, 'PPP'),
+      total: dayBookings.reduce((sum, b) => sum + b.totalPrice, 0),
+      extra: dayBookings.reduce((sum, b) => sum + b.extrasPrice, 0),
+    };
+  }) satisfies Sale[];
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className='text-muted-foreground font-bold tracking-wider'>
           Sales{' '}
-          {bookings.length > 0
+          {sales.length > 0
             ? `from ${sales.at(0)?.date} — ${sales.at(-1)?.date}`
             : null}
         </CardTitle>
