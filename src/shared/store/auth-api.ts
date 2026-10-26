@@ -9,7 +9,7 @@ const GuestAuthResponseSchema = z
       .object({
         name: z.string().min(1),
         email: z.email(),
-        image: z.url().readonly(),
+        image: z.url().optional(),
       })
       .readonly(),
   })
@@ -22,7 +22,7 @@ const StaffAuthResponseSchema = z.object({
       userId: z.string(),
       email: z.email(),
       fullName: z.string(),
-      avatarUrl: z.url(),
+      avatarUrl: z.url().optional(),
     })
     .readonly(),
 });
